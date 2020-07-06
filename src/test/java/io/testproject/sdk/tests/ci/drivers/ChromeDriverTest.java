@@ -47,7 +47,7 @@ class ChromeDriverTest {
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
-        driver = new ChromeDriver(options, "CI", null);
+        driver = new ChromeDriver(options, "CI - Java");
     }
 
     @Test

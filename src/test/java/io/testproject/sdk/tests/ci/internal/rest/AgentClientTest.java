@@ -56,7 +56,7 @@ class AgentClientTest {
     @DisabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = REGEX_NOT_EMPTY)
     void testEmptyToken() {
         assertThrows(InvalidTokenException.class, () ->
-                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI", null)));
+                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI - Java", null)));
     }
 
     @Test
@@ -64,7 +64,7 @@ class AgentClientTest {
     @EnabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = REGEX_EMPTY)
     void testEmptyTokenEnv() {
         assertThrows(InvalidTokenException.class, () ->
-                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI", null)));
+                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI - Java", null)));
     }
 
     @Test
@@ -72,7 +72,7 @@ class AgentClientTest {
     @DisplayName("Malformed URL in TP_AGENT_URL")
     void testMalformedRemoteAddress() {
         assertThrows(MalformedURLException.class, () ->
-                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI", null)));
+                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI - Java", null)));
     }
 
     @Test
@@ -81,7 +81,7 @@ class AgentClientTest {
     void testUnknownRemoteAddress() {
         assertThrows(AgentConnectException.class, () -> {
             AgentClient.getClient(new URL("http://no-such-host"), new ChromeOptions(),
-                    new ReportSettings("CI", null));
+                    new ReportSettings("CI - Java", null));
         });
     }
 
@@ -91,7 +91,7 @@ class AgentClientTest {
     void testInvalidRemoteAddress() {
         assertThrows(AgentConnectException.class, () ->
                 AgentClient.getClient(new URL("http://localhost:0"), new ChromeOptions(),
-                        new ReportSettings("CI", null)));
+                        new ReportSettings("CI - Java", null)));
     }
 
     @Test
@@ -100,7 +100,7 @@ class AgentClientTest {
     void testInvalidToken() {
         assertThrows(InvalidTokenException.class, () -> {
             try (AgentClient agentClient = AgentClient.getClient(INVALID_TOKEN, new ChromeOptions(),
-                    new ReportSettings("CI", null))) {
+                    new ReportSettings("CI - Java", null))) {
                 assertNull(agentClient);
             }
         });
@@ -117,7 +117,7 @@ class AgentClientTest {
             ObsoleteVersionException {
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
-        AgentClient.getClient(options, new ReportSettings("CI", null));
+        AgentClient.getClient(options, new ReportSettings("CI - Java", null));
         AgentClient.removeClient(options);
     }
 }

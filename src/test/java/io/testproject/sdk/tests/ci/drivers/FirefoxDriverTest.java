@@ -47,7 +47,7 @@ class FirefoxDriverTest {
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
         FirefoxOptions options = new FirefoxOptions();
         options.setHeadless(true);
-        driver = new FirefoxDriver(options, "CI", null);
+        driver = new FirefoxDriver(options, "CI - Java");
     }
 
     @Test
