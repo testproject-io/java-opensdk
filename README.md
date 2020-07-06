@@ -24,14 +24,14 @@ For a Maven project, add the following to your `pom.xml` file:
 <dependency>
   <groupId>io.testproject</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>{VERSION}</version>
+  <version>0.63.2</version>
   <classifier>sources</classifier>
 </dependency>
 ```
 
 For a Gradle project, add the following to your `build.gradle` file:
 ```
-compile 'io.testproject:java-sdk:{VERSION}'
+compile 'io.testproject:java-sdk:0.63.2'
 ```
 
 # Drivers
