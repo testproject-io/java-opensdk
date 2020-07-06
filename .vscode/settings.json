@@ -1,0 +1,9 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cSpell.words": [
+        "testproject",
+        "GSON",
+        "Gson"
+    ],
+    "git.alwaysSignOff": true
+}
