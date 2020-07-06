@@ -34,11 +34,62 @@ For a Gradle project, add the following to your `build.gradle` file:
 compile 'io.testproject:java-sdk:0.63.2'
 ```
 
-# Drivers
+# Test Development
 
-TestProject SDK overrides standard Selenium/Appium drivers with extended functionality.
+Using a TestProject driver is exactly identical to using a Selenium driver.\
+Changing the import statement is enough in most cases.
+
 > Following examples are based on the `ChromeDriver`, however are applicable to any other supported drivers.
 
+Here's an example of how to create a TestProject version of `ChromeDriver`:
+
+```java
+// import org.openqa.selenium.chrome.ChromeDriver; <-- Replaced
+import io.testproject.sdk.drivers.web.ChromeDriver;
+
+...
+
+public class MyTest {
+  ChromeDriver driver = new ChromeDriver(new ChromeOptions());
+}
+
+```
+
+Here a complete test example:
+
+```java
+package io.testproject.sdk.tests.examples.simple;
+
+import io.testproject.sdk.drivers.web.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public final class WebTest {
+
+    public static void main(final String[] args) throws Exception {
+        ChromeDriver driver = new ChromeDriver(new ChromeOptions());
+
+        driver.navigate().to("https://example.testproject.io/web/");
+
+        driver.findElement(By.cssSelector("#name")).sendKeys("John Smith");
+        driver.findElement(By.cssSelector("#password")).sendKeys("12345");
+        driver.findElement(By.cssSelector("#login")).click();
+
+        boolean passed = driver.findElement(By.cssSelector("#logout")).isDisplayed();
+        if (passed) {
+            System.out.println("Test Passed");
+        } else {
+            System.out.println("Test Failed");
+        }
+
+        driver.quit();
+    }
+}
+```
+
+# Drivers
+
+TestProject SDK overrides standard Selenium/Appium drivers with extended functionality. \
 Below is the packages structure containing all supported drivers:
 
 ```ascii
@@ -54,22 +105,6 @@ io.testproject.sdk.drivers
 │   └── AndroidDriver
 └── ios
     └── IOSDriver
-```
-
-Using a TestProject driver is exactly identical to using a Selenium driver.\
-Changing the import statement is enough in most cases.\
-Here's an example of how to create a TestProject version of `ChromeDriver`:
-
-```java
-// import org.openqa.selenium.chrome.ChromeDriver; <-- Replaced
-import io.testproject.sdk.drivers.web.ChromeDriver;
-
-...
-
-public class MyTest {
-  ChromeDriver driver = new ChromeDriver(new ChromeOptions());
-}
-
 ```
 
 ## Development Token
