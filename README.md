@@ -1,6 +1,6 @@
 # TestProject SDK For Java
 
-![Build](https://github.com/testproject-io/java-sdk-dev/workflows/Build/badge.svg)
+![Build](https://github.com/testproject-io/java-sdk/workflows/Build/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.testproject/java-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.testproject/java-sdk)
 [![javadoc](https://javadoc.io/badge2/io.testproject/java-sdk/javadoc.svg)](https://javadoc.io/doc/io.testproject/java-sdk)
 
