@@ -301,7 +301,7 @@ driver.report().step("User logged in successfully");
 ## Disabling Reports
 
 If reports were **not** disabled when the driver was created, they can be disabled or enabled later.\
-However, if reporting was explicitly disabled the driver was created, it can **not** be enabled later.
+However, if reporting was explicitly disabled when the driver was created, it can **not** be enabled later.
 
 ### Disable all reports
 
