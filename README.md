@@ -16,10 +16,14 @@ With one unified SDK available across multiple languages, developers and testers
 With TestProject SDK, users save a bunch of time and enjoy the following benefits out of the box:
 
 * 100% open source and available as a [Maven](https://mvnrepository.com/artifact/io.testproject/java-sdk) dependency.
-* Automatic test reports in HTML/PDF/Rest format (including screenshots!) and integration of test results on the fly to TestProject’s beautiful and collaborative reporting dashboards. 
-* A simplified, familiar syntax for both web and mobile applications with 100% Selenium and Appium compatibility.
-* Ability to store and execute tests locally in a code repository, without requirement to upload scripts to TestProject.
-* Docker support, in addition to existing Mac, Windows, and Linux support.
+* 5-minute simple Selenium and Appium setup with a single [Agent](https://docs.testproject.io/testproject-agents) deployment.
+* Automatic test reports in HTML/PDF format (including screenshots). 
+* Collaborative reporting dashboards with execution history and RESTful API support.
+* Always up-to-date with the latest and stable Selenium driver version.
+* A simplified, familiar syntax for both web and mobile applications.
+* Complete test runner capabilities for both local and remote executions, anywhere.
+* Cross platform support for Mac, Windows, Linux and Docker.
+* Ability to store and execute tests locally on any source control tool, such as Git.
 
 # Getting Started
 
