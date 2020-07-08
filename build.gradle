@@ -124,7 +124,7 @@ publishing {
             pom {
                 name = 'TestProject SDK'
                 description = 'TestProject SDK for Java'
-                url = 'http://testproject.io'
+                url = 'https://testproject.io'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
