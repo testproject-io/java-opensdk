@@ -7,13 +7,13 @@
 [TestProject](https://testproject.io) is a **Free** Test Automation platform for Web and Mobile.\
 To get familiar with the TestProject, visit our main [documentation](https://docs.testproject.io/) website.
 
-This SDK is a single, integrated interface to scripting with the most popular open source test automation frameworks. 
+TestProject SDK is a single, integrated interface to scripting with the most popular open source test automation frameworks.
 
 From now on, you can effortlessly execute Selenium and Appium native tests using a single automation platform that already takes care of all the complex setup, maintenance and configs.
 
-With one unified SDK available across multiple languages, developers and testers receive a go-to toolset, solving some of the greatest challenges in open source test automation. 
+With one unified SDK available across multiple languages, developers and testers receive a go-to toolset, solving some of the greatest challenges in open source test automation.
 
-With this SDK, users save a bunch of time and enjoy the following benefits out of the box: 
+With TestProject SDK, users save a bunch of time and enjoy the following benefits out of the box:
 
 * 100% open source and available as a [Maven](https://mvnrepository.com/artifact/io.testproject/java-sdk) dependency.
 * Automatic test reports in HTML/PDF/Rest format (including screenshots!) and integration of test results on the fly to TestProject’s beautiful and collaborative reporting dashboards. 
