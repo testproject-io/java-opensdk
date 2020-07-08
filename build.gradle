@@ -21,6 +21,7 @@ plugins {
     id 'com.github.spotbugs' version "4.2.3"
     id 'maven-publish'
     id 'signing'
+    id 'io.codearte.nexus-staging' version '0.21.2'
 }
 
 println("> Using Java: " + JavaVersion.current())
@@ -169,6 +170,14 @@ signing {
     def signingPassword = findProperty("signingPassword")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
+}
+
+nexusStaging {
+    def ossrhUsername = findProperty("ossrhUsername")
+    def ossrhPassword = findProperty("ossrhPassword")
+
+    username "$ossrhUsername"
+    password "$ossrhPassword"
 }
 
 wrapper {
