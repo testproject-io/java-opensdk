@@ -64,7 +64,7 @@ jobs:
         export TP_DEBUG_SDK_VERSION=$SDK_VERSION
         docker-compose -f docker-compose.yml logs -f --tail=0 >> build/reports/agent/log.txt&
         ./gradlew test --tests io.testproject.sdk.tests.ci.* -Pversion=$SDK_VERSION $SDK_BUILD_ARGS
-    - name: Publish to Maven
+    - name: Upload to Maven
       if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/master')
       env:
         ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -72,6 +72,12 @@ jobs:
         ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
         ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}        
       run: ./gradlew publish -Pversion=$SDK_VERSION $SDK_BUILD_ARGS
+    - name: Publish to Maven
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
+        ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}        
+      run: ./gradlew closeAndReleaseRepository
     - name: Archive reports
       if: ${{ failure() }}
       uses: actions/upload-artifact@v1
