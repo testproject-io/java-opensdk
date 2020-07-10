@@ -52,7 +52,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
 
     // Module "junit-jupiter-params" of JUnit 5.
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.5.1'
+    implementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.5.1'
 
     // TestNG Testing framework
     testImplementation group: 'org.testng', name: 'testng', version: '7.1.0'

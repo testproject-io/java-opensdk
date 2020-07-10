@@ -49,6 +49,11 @@ public final class Reporter {
     private final ReportingDriver driver;
 
     /**
+     * Latest Reporter instance that created.
+     */
+    private static Reporter reporter;
+
+    /**
      * Initializes a new instance using provided driver and agentClient.
      *
      * @param driver      Driver instance to be used for taking screenshots.
@@ -57,10 +62,20 @@ public final class Reporter {
     public Reporter(final ReportingDriver driver, final AgentClient agentClient) {
         this.agentClient = agentClient;
         this.driver = driver;
+        reporter = this;
+    }
+
+    /**
+     * Returns that latest Reporter instance that created
+     *
+     */
+    public static Reporter getInstance() {
+        return reporter;
     }
 
     /**
      * Enables or disables all types of reports.
+     *
      * @param disable True to disable or False to enable.
      */
     public void disableReports(final boolean disable) {
@@ -69,6 +84,7 @@ public final class Reporter {
 
     /**
      * Enables or disables driver commands reporting.
+     *
      * @param disable True to disable or False to enable.
      */
     public void disableCommandReports(final boolean disable) {
@@ -160,6 +176,7 @@ public final class Reporter {
 
     /**
      * Report step with description, message, screenshot and pass/fail indication.
+     *
      * @param description Step description.
      * @param message     Step message.
      * @param passed      True to mark step as Passed, otherwise False.
@@ -172,7 +189,19 @@ public final class Reporter {
         // Report Test if needed
         if (!this.driver.getReportingCommandExecutor().isReportsDisabled()) {
             List<StackTraceElement> traces = Arrays.asList(Thread.currentThread().getStackTrace());
-            this.driver.getReportingCommandExecutor().reportTest(traces, false);
+
+            // Check if the method called from utils (TP JUnit Extension, etc)
+            boolean isExtensionCall = false;
+            for (StackTraceElement trace : traces) {
+                if (trace.getClassName().startsWith("io.testproject.sdk.utils")) {
+                    isExtensionCall = true;
+                    break;
+                }
+            }
+
+            // Proceed only if the call is not from utils
+            if (!isExtensionCall)
+                this.driver.getReportingCommandExecutor().reportTest(traces, false);
         }
 
         StepReport report = new StepReport(description, message, passed,
@@ -187,6 +216,7 @@ public final class Reporter {
             LOG.error("Failed reporting step to Agent");
         }
     }
+
 
     /**
      * Creates a new report using provided name.
