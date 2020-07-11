@@ -75,7 +75,6 @@ public final class Reporter {
 
     /**
      * Enables or disables all types of reports.
-     *
      * @param disable True to disable or False to enable.
      */
     public void disableReports(final boolean disable) {
@@ -84,7 +83,6 @@ public final class Reporter {
 
     /**
      * Enables or disables driver commands reporting.
-     *
      * @param disable True to disable or False to enable.
      */
     public void disableCommandReports(final boolean disable) {
@@ -176,7 +174,6 @@ public final class Reporter {
 
     /**
      * Report step with description, message, screenshot and pass/fail indication.
-     *
      * @param description Step description.
      * @param message     Step message.
      * @param passed      True to mark step as Passed, otherwise False.
@@ -216,7 +213,6 @@ public final class Reporter {
             LOG.error("Failed reporting step to Agent");
         }
     }
-
 
     /**
      * Creates a new report using provided name.

@@ -44,21 +44,24 @@ public class TPJunit5Extension implements AfterTestExecutionCallback {
         // Check if the test failed
         if (context.getExecutionException().isPresent()) {
 
-            // Default result message
-            String resultMessage = "Test Failed";
+            // Handle only AssertionError
+            if (context.getExecutionException().get() instanceof AssertionError) {
 
-            if (context.getExecutionException().get() instanceof AssertionFailedError ||
-                    context.getExecutionException().get() instanceof AssertionError) {
+                // Default result message
+                String resultMessage = "Test Failed";
+
                 AssertionError failedError = (AssertionError) context.getExecutionException().get();
 
                 // Get the message from the exception if available
                 if (failedError.getMessage() != null)
                     resultMessage = failedError.getMessage();
 
+                // Report the final result to the Agent
+                reporter.step(resultMessage, false);
+
             }
 
-            // Report the final result to the Agent
-            reporter.step(resultMessage, false);
+
         }
     }
 }
