@@ -47,7 +47,7 @@ public class TPJUnitExtension {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new ChromeDriver("E_i-Y-jtcTkGkLLmCvXpPncR1QVZTR6mptItwFvlyGw1", new ChromeOptions()); // Project & Job names are inferred
+        driver = new ChromeDriver(new ChromeOptions()); // Project & Job names are inferred
     }
 
     @Test
