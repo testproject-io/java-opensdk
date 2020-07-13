@@ -21,7 +21,7 @@ import io.testproject.sdk.drivers.web.ChromeDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
-import io.testproject.sdk.utils.junit.TPJunit5Extension;
+import io.testproject.sdk.utils.junit.extensions.TPAssertionsReporter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -37,8 +37,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * Runs tests on {@link ChromeDriver}.
  */
-@ExtendWith({TPJunit5Extension.class}) // This will make the fail() method and AssertionError to be reported to TestProject
-public class TPJUnitExtension {
+@ExtendWith({TPAssertionsReporter.class}) // This will make the fail() method and AssertionError to be reported to TestProject
+public class AssertionsReportTest {
 
     /**
      * Driver instance.

@@ -16,17 +16,17 @@
  */
 
 
-package io.testproject.sdk.utils.junit;
+package io.testproject.sdk.utils.junit.extensions;
 
 import io.testproject.sdk.internal.reporting.Reporter;
+import io.testproject.sdk.utils.junit.extensions.helpers.ExtendedReporter;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.opentest4j.AssertionFailedError;
 
 /**
  * JUnit 5 TestProject Extension to report failure assertions
  */
-public class TPJunit5Extension implements AfterTestExecutionCallback {
+public class TPAssertionsReporter implements AfterTestExecutionCallback {
 
 
     /**
@@ -37,9 +37,10 @@ public class TPJunit5Extension implements AfterTestExecutionCallback {
     public void afterTestExecution(ExtensionContext context) throws Exception {
 
         // Get the TestProject reporter
-        Reporter reporter = Reporter.getInstance();
-        if (reporter == null)
+        if (Reporter.getInstance() == null)
             return;
+
+        ExtendedReporter reporter = new ExtendedReporter(Reporter.getInstance());
 
         // Check if the test failed
         if (context.getExecutionException().isPresent()) {
@@ -57,11 +58,9 @@ public class TPJunit5Extension implements AfterTestExecutionCallback {
                     resultMessage = failedError.getMessage();
 
                 // Report the final result to the Agent
-                reporter.step(resultMessage, false);
+                reporter.stepOnly(resultMessage,"",false,false);
 
             }
-
-
         }
     }
 }

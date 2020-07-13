@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Steps reporter.
  */
-public final class Reporter {
+public class Reporter {
 
     /**
      * Logger instance.
@@ -41,12 +41,12 @@ public final class Reporter {
     /**
      * {@link AgentClient} instance to submit reports to the Agent.
      */
-    private final AgentClient agentClient;
+    protected final AgentClient agentClient;
 
     /**
      * Driver instance to be used for taking screenshots.
      */
-    private final ReportingDriver driver;
+    protected final ReportingDriver driver;
 
     /**
      * Latest Reporter instance that created.
@@ -63,6 +63,16 @@ public final class Reporter {
         this.agentClient = agentClient;
         this.driver = driver;
         reporter = this;
+    }
+
+    /**
+     * Copy constructor that used by JUnit / TestNG extensions
+     *
+     * @param reporter Reporter instance.
+     */
+    protected Reporter(Reporter reporter) {
+        this.agentClient = reporter.agentClient;
+        this.driver = reporter.driver;
     }
 
     /**
@@ -186,19 +196,7 @@ public final class Reporter {
         // Report Test if needed
         if (!this.driver.getReportingCommandExecutor().isReportsDisabled()) {
             List<StackTraceElement> traces = Arrays.asList(Thread.currentThread().getStackTrace());
-
-            // Check if the method called from utils (TP JUnit Extension, etc)
-            boolean isExtensionCall = false;
-            for (StackTraceElement trace : traces) {
-                if (trace.getClassName().startsWith("io.testproject.sdk.utils")) {
-                    isExtensionCall = true;
-                    break;
-                }
-            }
-
-            // Proceed only if the call is not from utils
-            if (!isExtensionCall)
-                this.driver.getReportingCommandExecutor().reportTest(traces, false);
+            this.driver.getReportingCommandExecutor().reportTest(traces, false);
         }
 
         StepReport report = new StepReport(description, message, passed,
