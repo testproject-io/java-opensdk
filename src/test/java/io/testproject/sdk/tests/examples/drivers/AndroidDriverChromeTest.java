@@ -23,7 +23,6 @@ import io.testproject.sdk.drivers.android.AndroidDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
-import io.testproject.sdk.tests.capabilities.AppiumOptions;
 import io.testproject.sdk.tests.flows.AutomationFlows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 
@@ -60,7 +60,7 @@ class AndroidDriverChromeTest {
             throws InvalidTokenException, AgentConnectException, MalformedURLException, ObsoleteVersionException {
         assertNotNull(DUT_UDID, "TP_ANDROID_DUT_UDID environment variable is not set");
 
-        AppiumOptions capabilities = new AppiumOptions();
+        DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
