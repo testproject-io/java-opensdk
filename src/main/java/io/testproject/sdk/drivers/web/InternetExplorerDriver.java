@@ -394,9 +394,6 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
 
         // Quit the driver to close Selenium session
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**

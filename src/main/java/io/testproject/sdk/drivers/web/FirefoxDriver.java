@@ -396,9 +396,6 @@ public class FirefoxDriver extends org.openqa.selenium.firefox.FirefoxDriver imp
 
         // Quit the driver to close Selenium session
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**

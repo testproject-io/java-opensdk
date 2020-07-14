@@ -396,9 +396,6 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
 
         // Quit the driver to close Selenium session
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**

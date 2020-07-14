@@ -384,9 +384,6 @@ public class AndroidDriver<T extends WebElement>
         // It will only trigger test reporting if required.
         // Actual mobile session must be preserved for re-use.
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**

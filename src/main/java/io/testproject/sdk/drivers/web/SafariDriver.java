@@ -394,9 +394,6 @@ public class SafariDriver extends org.openqa.selenium.safari.SafariDriver implem
 
         // Quit the driver to close Selenium session
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**

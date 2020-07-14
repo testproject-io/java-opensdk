@@ -392,9 +392,6 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
 
         // Quit the driver to close Selenium session
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**

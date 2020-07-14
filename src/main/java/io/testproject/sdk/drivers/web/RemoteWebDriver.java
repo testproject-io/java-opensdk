@@ -372,9 +372,6 @@ public class RemoteWebDriver extends org.openqa.selenium.remote.RemoteWebDriver 
 
         // Quit the driver to close Selenium session
         super.quit();
-
-        // Remove cached AgentClient
-        AgentClient.removeClient(this.getCapabilities());
     }
 
     /**
