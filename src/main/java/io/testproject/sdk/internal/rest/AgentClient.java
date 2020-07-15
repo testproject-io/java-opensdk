@@ -232,6 +232,9 @@ public final class AgentClient implements Closeable {
             this.reportsQueue = new ReportsQueue(this.httpClient);
             this.reportsQueueFuture = reportsExecutorService.submit(this.reportsQueue);
         }
+
+        // Make sure to exit gracefully
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
     /**
