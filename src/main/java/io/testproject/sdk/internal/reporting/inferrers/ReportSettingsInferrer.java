@@ -18,6 +18,7 @@
 package io.testproject.sdk.internal.reporting.inferrers;
 
 import io.testproject.sdk.internal.rest.ReportSettings;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,16 @@ public interface ReportSettingsInferrer {
     default ReportSettings getUnnamedEntries() {
         LOG.info("Failed to infer Project and Job names, will use default 'Unnamed' values.");
         return new ReportSettings("Unnamed Project", "Unnamed Job");
+    }
+
+    /**
+     * Get class package name, or if it's empty, the unnamed entry.
+     * @param clazz Class to infer it's package name.
+     * @return class package name, or if it's empty, the unnamed entry.
+     */
+    default String getPackageName(Class<?> clazz) {
+        return StringUtils.isEmpty(clazz.getPackageName())
+                ? getUnnamedEntries().getProjectName() : clazz.getPackageName();
     }
 
     /**
