@@ -24,6 +24,7 @@ import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.internal.helpers.DriverHelper;
 import io.testproject.sdk.internal.helpers.ReportingCommandsExecutor;
+import io.testproject.sdk.internal.helpers.DriverShutdownThread;
 import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
@@ -55,6 +56,11 @@ import java.net.URL;
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class IOSDriver<T extends WebElement>
         extends io.appium.java_client.ios.IOSDriver<T> implements ReportingDriver {
+
+    /**
+     * Shutdown thread instance.
+     */
+    private final DriverShutdownThread driverShutdownThread;
 
     /**
      * Steps reporter instance.
@@ -356,6 +362,9 @@ public class IOSDriver<T extends WebElement>
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
+
+        this.driverShutdownThread = new DriverShutdownThread(this);
+        Runtime.getRuntime().addShutdownHook(this.driverShutdownThread);
     }
 
     /**
@@ -372,10 +381,22 @@ public class IOSDriver<T extends WebElement>
     }
 
     /**
-     * Stops the session with the Agent and cleans up after itself.
+     * Removes shutdown hook and calls {@link #stop()}.
      */
     @Override
     public void quit() {
+        // Avoid performing graceful shutdown more than once
+        Runtime.getRuntime().removeShutdownHook(this.driverShutdownThread);
+
+        // Stop the driver
+        stop();
+    }
+
+    /**
+     * Stops the session with the Agent and cleans up after itself.
+     */
+    @Override
+    public void stop() {
         // Report any outstanding stashed commands
         ReportingCommandsExecutor executor = (ReportingCommandsExecutor) this.getCommandExecutor();
         executor.clearStash();

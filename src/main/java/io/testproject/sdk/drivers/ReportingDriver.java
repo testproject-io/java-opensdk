@@ -54,4 +54,9 @@ public interface ReportingDriver {
         RemoteWebDriver rwd = (RemoteWebDriver) this;
         return (ReportingCommandsExecutor) rwd.getCommandExecutor();
     }
+
+    /**
+     * Stops the driver and perform necessary cleanup.
+     */
+    void stop();
 }
