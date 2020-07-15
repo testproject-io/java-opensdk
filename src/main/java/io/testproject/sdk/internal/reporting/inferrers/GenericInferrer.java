@@ -59,7 +59,7 @@ public class GenericInferrer implements ReportSettingsInferrer {
             return getUnnamedEntries();
         }
 
-        String projectName = clazz.getPackageName();
+        String projectName = getPackageName(clazz);
         String jobName = firstTrace.getClassName();
 
         return new ReportSettings(projectName, jobName);
