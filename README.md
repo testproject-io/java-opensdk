@@ -455,7 +455,7 @@ Create a new file `src/main/resources/logback.xml` in your project and paste the
 
 # Examples
 
-Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples) for each driver:
+Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples):
 
 * Simple Flows (without JUnit / TestNG)
   * [Web](src/test/java/io/testproject/sdk/tests/examples/simple/WebTest.java)
@@ -476,8 +476,16 @@ Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples) for e
   * [Native App Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/IOSDriverTest.java)
   * [Native App Source](https://github.com/testproject-io/ios-demo-app)
   * [Web Test on Mobile Safari](/src/test/java/io/testproject/sdk/tests/examples/drivers/IOSSafariDriverTest.java)
-    
-
+* Frameworks
+  * JUnit 4
+    * [Inferred Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit4/InferredReportTest.java)
+    * [Explicit Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit4/ExplicitReportTest.java)
+  * JUnit 5
+    * [Inferred Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit5/InferredReportTest.java)
+    * [Explicit Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit5/ExplicitReportTest.java)
+  * TestNG
+    * [Inferred Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/testng/InferredReportTest.java)
+    * [Explicit Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/testng/ExplicitReportTest.java)
 # License
 
 TestProject SDK For Java is licensed under the LICENSE file in the root directory of this source tree.
