@@ -455,25 +455,28 @@ Create a new file `src/main/resources/logback.xml` in your project and paste the
 
 # Examples
 
-Here are [the examples](/src/test/java/io/testproject/sdk/tests/examples) for each driver:
+Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples) for each driver:
 
-* Mobile
-  * Android
-    * Android
-      * [Native App Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/AndroidDriverTest.java)
-      * [Native App Source](https://github.com/testproject-io/android-demo-app)
-      * [Web Test on Mobile Chrome](/src/test/java/io/testproject/sdk/tests/examples/drivers/AndroidDriverChromeTest.java)
-    * iOS
-      * [Native App Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/IOSDriverTest.java)
-      * [Native App Source](https://github.com/testproject-io/ios-demo-app)
-      * [Web Test on Mobile Safari](/src/test/java/io/testproject/sdk/tests/examples/drivers/IOSSafariDriverTest.java)
-    * Web
-      * [Chrome Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/ChromeDriverTest.java)
-      * [Edge Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/EdgeDriverTest.java)
-      * [Firefox Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/FirefoxDriverTest.java)
-      * [Internet Explorer Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/InternetExplorerDriverTest.java)
-      * [Safari Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/SafariDriverTest.java)
-      * [Remote Web Driver Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/RemoteWebDriverTest.java)
+* Simple Flows (without JUnit / TestNG)
+  * [Web](src/test/java/io/testproject/sdk/tests/examples/simple/WebTest.java)
+  * [Android](src/test/java/io/testproject/sdk/tests/examples/simple/AndroidTest.java)
+  * [iOS](src/test/java/io/testproject/sdk/tests/examples/simple/IOSTest.java)
+* Web
+  * [Chrome Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/ChromeDriverTest.java)
+  * [Edge Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/EdgeDriverTest.java)
+  * [Firefox Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/FirefoxDriverTest.java)
+  * [Internet Explorer Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/InternetExplorerDriverTest.java)
+  * [Safari Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/SafariDriverTest.java)
+  * [Remote Web Driver Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/RemoteWebDriverTest.java)
+* Android
+  * [Native App Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/AndroidDriverTest.java)
+  * [Native App Source](https://github.com/testproject-io/android-demo-app)
+  * [Web Test on Mobile Chrome](/src/test/java/io/testproject/sdk/tests/examples/drivers/AndroidDriverChromeTest.java)
+* iOS
+  * [Native App Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/IOSDriverTest.java)
+  * [Native App Source](https://github.com/testproject-io/ios-demo-app)
+  * [Web Test on Mobile Safari](/src/test/java/io/testproject/sdk/tests/examples/drivers/IOSSafariDriverTest.java)
+    
 
 # License
 
