@@ -78,6 +78,8 @@ class IOSDriverTest {
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DUT_NAME);
         capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
+
+        // Compile and deploy the App from source https://github.com/testproject-io/ios-demo-app
         capabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, AUT_BUNDLE_ID);
 
         driver = new IOSDriver<>(capabilities, "Examples", null);
