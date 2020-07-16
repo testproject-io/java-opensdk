@@ -77,6 +77,8 @@ public class MyTest {
 
 Here a complete test example:
 
+> Make sure to [configure a development token](https://github.com/testproject-io/java-sdk#test-development) before running this example.
+
 ```java
 package io.testproject.sdk.tests.examples.simple;
 
