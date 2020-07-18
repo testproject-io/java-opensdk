@@ -33,7 +33,7 @@ public class ExtendedReporter extends Reporter {
     /**
      * Logger instance.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(Reporter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExtendedReporter.class);
 
 
     /**

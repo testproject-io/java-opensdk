@@ -22,11 +22,16 @@ import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.utils.junit.extensions.internal.ExtendedReporter;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.openqa.selenium.WebDriverException;
 
 /**
- * JUnit 5 TestProject Extension to report failure assertions.
+ * JUnit 5 TestProject Extension to report failure assertions and any other exceptions
+ * Not including WebDriverException.
+ *
+ * If a test throws exception that is not WebDriverException, it is not reported to
+ * the cloud. With this JUnit 5 extension, any exception will be reported also.
  */
-public class TPAssertionsReporter implements AfterTestExecutionCallback {
+public class TPExceptionsReporter implements AfterTestExecutionCallback {
 
 
     /**
@@ -46,21 +51,29 @@ public class TPAssertionsReporter implements AfterTestExecutionCallback {
         // Check if the test failed
         if (context.getExecutionException().isPresent()) {
 
-            // Handle only AssertionError
-            if (context.getExecutionException().get() instanceof AssertionError) {
+            // Do not handle any exception from the driver.
+            // These exceptions are handled anyway by the native TestProject reporter inside the driver.
+            if (!(context.getExecutionException().get() instanceof WebDriverException)) {
 
-                // Default result message
-                String resultMessage = "Test Failed";
+                // All exceptions, including AssertionError form JUnit 5 extends Throwable.
+                // So cast it to Throwable.
+                Throwable throwable = (Throwable) context.getExecutionException().get();
 
-                AssertionError failedError = (AssertionError) context.getExecutionException().get();
+                // Do not handle any exceptions from the SDK.
+                if (!throwable.getClass().getPackage().getName().startsWith("io.testproject.sdk.internal.exceptions")) {
 
-                // Get the message from the exception if available
-                if (failedError.getMessage() != null) {
-                    resultMessage = failedError.getMessage();
+                    // Default result message
+                    String resultMessage = "Test Failed";
+
+                    // Get the message from the exception if available
+                    if (throwable.getMessage() != null) {
+                        resultMessage = throwable.getMessage();
+                    }
+
+                    // Report the final result to the Agent
+                    reporter.stepOnly(resultMessage, "", false, false);
+
                 }
-
-                // Report the final result to the Agent
-                reporter.stepOnly(resultMessage, "", false, false);
 
             }
         }

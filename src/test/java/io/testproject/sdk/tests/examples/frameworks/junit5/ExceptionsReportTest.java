@@ -21,7 +21,7 @@ import io.testproject.sdk.drivers.web.ChromeDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
-import io.testproject.sdk.utils.junit.extensions.TPAssertionsReporter;
+import io.testproject.sdk.utils.junit.extensions.TPExceptionsReporter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -37,9 +37,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * Runs tests on {@link ChromeDriver}.
  */
-// This will make the fail() method and AssertionError to be reported to TestProject
-@ExtendWith({TPAssertionsReporter.class})
-public class AssertionsReportTest {
+// This will make the fail() method and AssertionError, and any Exception to be reported to TestProject
+@ExtendWith({TPExceptionsReporter.class})
+public class ExceptionsReportTest {
 
     /**
      * Driver instance.
@@ -79,6 +79,17 @@ public class AssertionsReportTest {
         if (!title.equals("another title")) {
             throw new AssertionError("This test failed because the title is not expected");
         }
+
+    }
+
+    @Test
+    @DisplayName("Throw regular Exception at the end of the test")
+    void testExample4() throws Exception {
+        driver.navigate().to("http://example.testproject.io/");
+
+        driver.report().step("Some Step");
+
+        throw new Exception("Even regular exception is reported");
 
     }
 
