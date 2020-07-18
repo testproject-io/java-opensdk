@@ -354,7 +354,7 @@ public class IOSDriver<T extends WebElement>
                         new ReportSettings(projectName, jobName), disableReports), true),
                 AgentClient.getClient(capabilities).getSession().getCapabilities());
 
-        this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
+        this.reporter = Reporter.getInstance(this, AgentClient.getClient(this.getCapabilities()));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
     }
 
