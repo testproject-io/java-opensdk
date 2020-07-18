@@ -51,7 +51,7 @@ public class Reporter {
     /**
      * Latest Reporter instance that created.
      */
-    private static Reporter reporter;
+    private static Reporter instance = null;
 
     /**
      * Initializes a new instance using provided driver and agentClient.
@@ -59,10 +59,9 @@ public class Reporter {
      * @param driver      Driver instance to be used for taking screenshots.
      * @param agentClient {@link AgentClient} instance to submit reports to the Agent.
      */
-    public Reporter(final ReportingDriver driver, final AgentClient agentClient) {
+    protected Reporter(final ReportingDriver driver, final AgentClient agentClient) {
         this.agentClient = agentClient;
         this.driver = driver;
-        reporter = this;
     }
 
     /**
@@ -76,12 +75,28 @@ public class Reporter {
     }
 
     /**
-     * Returns that latest Reporter instance that created.
+     * Returns Reporter instance and create new instance if not available.
+     *
+     * @param driver ReportingDriver instance.
+     * @param agentClient AgentClient instance.
+     *
+     * @return {@link Reporter} instance
+     */
+    public static Reporter getInstance(final ReportingDriver driver, final AgentClient agentClient) {
+        if (instance == null) {
+            instance = new Reporter(driver, agentClient);
+        }
+
+        return instance;
+    }
+
+    /**
+     * Returns Reporter instance.
      *
      * @return {@link Reporter} instance
      */
     public static Reporter getInstance() {
-        return reporter;
+        return instance;
     }
 
     /**

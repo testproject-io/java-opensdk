@@ -366,7 +366,7 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
                         new ReportSettings(projectName, jobName), disableReports)
                 .getSession().getCapabilities()));
 
-        this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
+        this.reporter = Reporter.getInstance(this, AgentClient.getClient(this.getCapabilities()));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
     }
 
