@@ -41,12 +41,12 @@ public class Reporter {
     /**
      * {@link AgentClient} instance to submit reports to the Agent.
      */
-    protected final AgentClient agentClient;
+    private final AgentClient agentClient;
 
     /**
      * Driver instance to be used for taking screenshots.
      */
-    protected final ReportingDriver driver;
+    private final ReportingDriver driver;
 
     /**
      * Latest Reporter instance that created.
@@ -66,21 +66,40 @@ public class Reporter {
     }
 
     /**
-     * Copy constructor that used by JUnit / TestNG extensions
+     * Copy constructor that used by JUnit / TestNG extensions.
      *
      * @param reporter Reporter instance.
      */
-    protected Reporter(Reporter reporter) {
+    protected Reporter(final Reporter reporter) {
         this.agentClient = reporter.agentClient;
         this.driver = reporter.driver;
     }
 
     /**
-     * Returns that latest Reporter instance that created
+     * Returns that latest Reporter instance that created.
      *
+     * @return {@link Reporter} instance
      */
     public static Reporter getInstance() {
         return reporter;
+    }
+
+    /**
+     * Returns AgentClient instance.
+     *
+     * @return {@link AgentClient} instance
+     */
+    protected AgentClient getAgentClient() {
+        return agentClient;
+    }
+
+    /**
+     * Returns ReportingDriver instance.
+     *
+     * @return {@link ReportingDriver} instance
+     */
+    protected ReportingDriver getDriver() {
+        return driver;
     }
 
     /**
