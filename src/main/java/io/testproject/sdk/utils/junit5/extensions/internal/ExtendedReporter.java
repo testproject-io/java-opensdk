@@ -56,20 +56,14 @@ public class ExtendedReporter extends Reporter {
     }
 
     /**
-     * Custom step reporter that used by the TestProject Junit assertion reporting extension.
+     * Custom step reporter that used by the TestProject Junit 5 extensions.
      *
      * @param description Step description.
      * @param message     Step message.
-     * @param passed      True to mark step as Passed, otherwise False.
-     * @param screenshot  True to take a screenshot, otherwise False.
      */
-    public void stepOnly(final String description,
-                     final String message,
-                     final boolean passed,
-                     final boolean screenshot) {
+    public void reportTestFailure(final String description, final String message) {
 
-        StepReport report = new StepReport(description, message, passed,
-                screenshot ? getDriver().getScreenshot() : null);
+        StepReport report = new StepReport(description, message, false, null);
 
         if (getDriver().getReportingCommandExecutor().isReportsDisabled()) {
             LOG.trace("Reporting test as failed to TestProject cloud report");

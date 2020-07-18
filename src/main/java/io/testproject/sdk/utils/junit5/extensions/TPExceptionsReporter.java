@@ -63,15 +63,15 @@ public class TPExceptionsReporter implements AfterTestExecutionCallback {
                 if (!throwable.getClass().getPackage().getName().startsWith("io.testproject.sdk.internal.exceptions")) {
 
                     // Default result message
-                    String resultMessage = "Test Failed";
+                    String resultDescription = "Test Failed";
 
                     // Get the message from the exception if available
                     if (throwable.getMessage() != null) {
-                        resultMessage = throwable.getMessage();
+                        resultDescription = throwable.getMessage();
                     }
 
-                    // Report the final result to the Agent
-                    reporter.stepOnly(resultMessage, "", false, false);
+                    // Report the test failure with the description
+                    reporter.reportTestFailure(resultDescription, "");
 
                 }
 
