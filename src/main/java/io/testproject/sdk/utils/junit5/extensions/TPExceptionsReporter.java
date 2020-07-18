@@ -16,10 +16,10 @@
  */
 
 
-package io.testproject.sdk.utils.junit.extensions;
+package io.testproject.sdk.utils.junit5.extensions;
 
 import io.testproject.sdk.internal.reporting.Reporter;
-import io.testproject.sdk.utils.junit.extensions.internal.ExtendedReporter;
+import io.testproject.sdk.utils.junit5.extensions.internal.ExtendedReporter;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriverException;

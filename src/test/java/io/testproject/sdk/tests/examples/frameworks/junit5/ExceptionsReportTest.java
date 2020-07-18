@@ -21,7 +21,7 @@ import io.testproject.sdk.drivers.web.ChromeDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
-import io.testproject.sdk.utils.junit.extensions.TPExceptionsReporter;
+import io.testproject.sdk.utils.junit5.extensions.TPExceptionsReporter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

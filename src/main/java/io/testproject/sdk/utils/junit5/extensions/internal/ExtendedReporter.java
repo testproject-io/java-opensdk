@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.testproject.sdk.utils.junit.extensions.internal;
+package io.testproject.sdk.utils.junit5.extensions.internal;
 
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.reporting.Reporter;

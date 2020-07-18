@@ -16,6 +16,6 @@
  */
 
 /**
- * JUnit 5 extensions by TestProject.
+ * Internal helpers for TestProject JUnit 5 extensions.
  */
-package io.testproject.sdk.utils.junit.extensions;
+package io.testproject.sdk.utils.junit5.extensions.internal;
