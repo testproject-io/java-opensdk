@@ -4,7 +4,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.testproject/java-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.testproject/java-sdk)
 [![javadoc](https://javadoc.io/badge2/io.testproject/java-sdk/javadoc.svg)](https://javadoc.io/doc/io.testproject/java-sdk)
 
-[TestProject](https://testproject.io) is a **Free** Test Automation platform for Web and Mobile.\
+[TestProject](https://testproject.io) is a **Free** Test Automation platform for Web, Mobile and API testing. \
 To get familiar with the TestProject, visit our main [documentation](https://docs.testproject.io/) website.
 
 TestProject SDK is a single, integrated interface to scripting with the most popular open source test automation frameworks.
@@ -44,14 +44,14 @@ For a Maven project, add the following to your `pom.xml` file:
 <dependency>
   <groupId>io.testproject</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>0.63.2-RELEASE</version>
+  <version>0.63.3-RELEASE</version>
   <classifier>sources</classifier>
 </dependency>
 ```
 
 For a Gradle project, add the following to your `build.gradle` file:
 ```
-implementation 'io.testproject:java-sdk:0.63.2-RELEASE'
+implementation 'io.testproject:java-sdk:0.63.3-RELEASE'
 ```
 
 # Test Development
