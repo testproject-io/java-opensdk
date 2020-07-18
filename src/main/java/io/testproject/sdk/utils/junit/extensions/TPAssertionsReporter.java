@@ -19,26 +19,27 @@
 package io.testproject.sdk.utils.junit.extensions;
 
 import io.testproject.sdk.internal.reporting.Reporter;
-import io.testproject.sdk.utils.junit.extensions.helpers.ExtendedReporter;
+import io.testproject.sdk.utils.junit.extensions.internal.ExtendedReporter;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
- * JUnit 5 TestProject Extension to report failure assertions
+ * JUnit 5 TestProject Extension to report failure assertions.
  */
 public class TPAssertionsReporter implements AfterTestExecutionCallback {
 
 
     /**
      * After test method finish execute, check here if an AssertionError exception has be throw
-     * And in such a case, report the agent the failure
+     * And in such a case, report the agent the failure.
      */
     @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
+    public void afterTestExecution(final ExtensionContext context) throws Exception {
 
         // Get the TestProject reporter
-        if (Reporter.getInstance() == null)
+        if (Reporter.getInstance() == null) {
             return;
+        }
 
         ExtendedReporter reporter = new ExtendedReporter(Reporter.getInstance());
 
@@ -54,11 +55,12 @@ public class TPAssertionsReporter implements AfterTestExecutionCallback {
                 AssertionError failedError = (AssertionError) context.getExecutionException().get();
 
                 // Get the message from the exception if available
-                if (failedError.getMessage() != null)
+                if (failedError.getMessage() != null) {
                     resultMessage = failedError.getMessage();
+                }
 
                 // Report the final result to the Agent
-                reporter.stepOnly(resultMessage,"",false,false);
+                reporter.stepOnly(resultMessage, "", false, false);
 
             }
         }

@@ -37,7 +37,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * Runs tests on {@link ChromeDriver}.
  */
-@ExtendWith({TPAssertionsReporter.class}) // This will make the fail() method and AssertionError to be reported to TestProject
+// This will make the fail() method and AssertionError to be reported to TestProject
+@ExtendWith({TPAssertionsReporter.class})
 public class AssertionsReportTest {
 
     /**
@@ -75,8 +76,9 @@ public class AssertionsReportTest {
 
         String title = driver.getTitle();
 
-        if (!title.equals("another title"))
+        if (!title.equals("another title")) {
             throw new AssertionError("This test failed because the title is not expected");
+        }
 
     }
 
