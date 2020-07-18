@@ -25,7 +25,6 @@ import io.testproject.sdk.drivers.ios.IOSDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
-import io.testproject.sdk.tests.capabilities.AppiumOptions;
 import io.testproject.sdk.tests.flows.AutomationFlows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 
@@ -72,7 +72,7 @@ class IOSDriverTest {
         assertNotNull(DUT_NAME, "TP_IOS_DUT_NAME environment variable is not set");
         assertNotNull(AUT_BUNDLE_ID, "TP_IOS_AUT_BUNDLE_ID environment variable is not set");
 
-        AppiumOptions capabilities = new AppiumOptions();
+        DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);

@@ -95,7 +95,7 @@ public class TestNGInferrer implements ReportSettingsInferrer {
                 // If TestNG @BeforeClass or @BeforeSuite annotations with description were found -> return it.
                 // Otherwise -> return clazz package name and clazz simple name
                 return Objects.requireNonNullElseGet(result, () ->
-                        new ReportSettings(clazz.getPackageName(), clazz.getSimpleName()));
+                        new ReportSettings(getPackageName(clazz), clazz.getSimpleName()));
             }
         }
 
@@ -143,7 +143,7 @@ public class TestNGInferrer implements ReportSettingsInferrer {
                 String description = descriptionMethod.invoke(annotation.get()).toString();
 
                 if (!StringUtils.isEmpty(description)) {
-                    return new ReportSettings(clazz.getPackageName(), description);
+                    return new ReportSettings(getPackageName(clazz), description);
                 }
 
                 // Description is empty

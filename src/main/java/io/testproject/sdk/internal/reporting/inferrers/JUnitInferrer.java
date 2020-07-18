@@ -93,7 +93,7 @@ public class JUnitInferrer implements ReportSettingsInferrer {
                 // If JUnit's DisplayName annotation was found -> return it.
                 // Otherwise -> return clazz package name and clazz simple name
                 return Objects.requireNonNullElseGet(result, () ->
-                        new ReportSettings(clazz.getPackageName(), clazz.getSimpleName()));
+                        new ReportSettings(getPackageName(clazz), clazz.getSimpleName()));
             }
         }
 
@@ -117,9 +117,7 @@ public class JUnitInferrer implements ReportSettingsInferrer {
 
         try {
             Method valueMethod = annotation.get().annotationType().getDeclaredMethod(JUNIT5_DISPLAY_NAME_VALUE);
-            return new ReportSettings(
-                    clazz.getPackageName(),
-                    valueMethod.invoke(annotation.get()).toString());
+            return new ReportSettings(getPackageName(clazz), valueMethod.invoke(annotation.get()).toString());
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             LOG.error("Failed to infer JobName from DisplayName annotation", e);
             return null;
