@@ -118,6 +118,6 @@ class AgentClientTest {
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
         AgentClient.getClient(options, new ReportSettings("CI - Java", null));
-        AgentClient.removeClient(options);
+        AgentClient.cleanup();
     }
 }

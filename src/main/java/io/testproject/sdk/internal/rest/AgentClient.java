@@ -109,9 +109,9 @@ public final class AgentClient implements Closeable {
     private static final Logger LOG = LoggerFactory.getLogger(AgentClient.class);
 
     /**
-     * HashMap to save AgentClient instances and return to Drivers when they initialize.
+     * AgentClient instance used by active driver.
      */
-    private static final HashMap<String, AgentClient> CLIENTS_MAP = new HashMap<>();
+    private static AgentClient instance;
 
     /**
      * An instance of the Google JSON serializer to serialize and deserialize objects.
@@ -232,6 +232,9 @@ public final class AgentClient implements Closeable {
             this.reportsQueue = new ReportsQueue(this.httpClient);
             this.reportsQueueFuture = reportsExecutorService.submit(this.reportsQueue);
         }
+
+        // Make sure to exit gracefully
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
     /**
@@ -385,30 +388,27 @@ public final class AgentClient implements Closeable {
             capabilities = capabilities.merge(newCapabilities);
         }
 
-        // Check if an instance of an AgentClient class has been already cached
-        String guid = capabilities.getCapability(TP_GUID).toString();
-        if (!CLIENTS_MAP.containsKey(guid)) {
-            // No cached instance found,
-            // meaning that a session with the Agent has not been yet initialized
-            // Initializing it now
-            AgentClient agentClient =
-                    new AgentClient(remoteAddress, token, capabilities, reportSettings, disableReports);
+        // Synchronized to avoid possible multiple threads race condition
+        synchronized (AgentClient.class) {
 
-            // Caching the instance
-            CLIENTS_MAP.put(guid, agentClient);
+            // Check if an instance of an AgentClient class has been already cached
+            if (instance == null || !instance.getSession().getCapabilities().getCapability(TP_GUID).equals(
+                    capabilities.getCapability(TP_GUID))) {
+
+
+                // No instance yet or it's for another driver and needs to be re-initialized
+                instance = new AgentClient(remoteAddress, token, capabilities, reportSettings, disableReports);
+            }
         }
 
-        return CLIENTS_MAP.get(guid);
+        return instance;
     }
 
     /**
-     * Removed cached client and closes it.
-     *
-     * @param capabilities capabilities with custom TestProject tracking capability
+     * Closes the cached instance and removes it.
      */
-    public static void removeClient(final Capabilities capabilities) {
-        // Remove AgentClient from map and stop Agent Session
-        CLIENTS_MAP.remove(Objects.requireNonNull(capabilities.getCapability(TP_GUID)).toString()).close();
+    public static void cleanup() {
+        Objects.requireNonNull(instance).close();
     }
 
     private RequestConfig getDefaultHttpConfig() {
