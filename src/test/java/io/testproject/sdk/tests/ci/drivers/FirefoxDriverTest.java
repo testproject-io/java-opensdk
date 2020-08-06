@@ -22,11 +22,7 @@ import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.tests.flows.AutomationFlows;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 import java.io.IOException;
@@ -34,7 +30,6 @@ import java.io.IOException;
 /**
  * Runs tests on {@link FirefoxDriver}.
  */
-@EnabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = ".*?")
 @DisplayName("Firefox Driver")
 class FirefoxDriverTest {
 
@@ -45,6 +40,8 @@ class FirefoxDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
+        Assertions.assertNotNull(System.getenv().get("TP_DEV_TOKEN"));
+
         FirefoxOptions options = new FirefoxOptions();
         options.setHeadless(true);
         driver = new FirefoxDriver(options, "CI - Java");

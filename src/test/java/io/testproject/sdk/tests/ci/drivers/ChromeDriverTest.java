@@ -22,11 +22,7 @@ import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.tests.flows.AutomationFlows;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
@@ -34,7 +30,6 @@ import java.io.IOException;
 /**
  * Runs tests on {@link ChromeDriver}.
  */
-@EnabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = ".*?")
 @DisplayName("Chrome Driver")
 class ChromeDriverTest {
 
@@ -45,6 +40,8 @@ class ChromeDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
+        Assertions.assertNotNull(System.getenv().get("TP_DEV_TOKEN"));
+
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
         driver = new ChromeDriver(options, "CI - Java");
