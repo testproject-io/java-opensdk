@@ -17,38 +17,40 @@
 
 package io.testproject.sdk.tests.ci.drivers;
 
-import io.testproject.sdk.drivers.web.FirefoxDriver;
+import io.testproject.sdk.drivers.TestProjectCapabilityType;
+import io.testproject.sdk.drivers.web.ChromeDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.tests.flows.AutomationFlows;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
 
 /**
- * Runs tests on {@link FirefoxDriver}.
+ * Runs tests on {@link ChromeDriver}.
  */
-@DisplayName("Firefox Driver")
-class FirefoxDriverTest {
+@DisplayName("Cloud Driver")
+class CloudDriverTest {
 
     /**
      * Driver instance.
      */
-    private static FirefoxDriver driver;
+    private static ChromeDriver driver;
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
         Assertions.assertNotNull(System.getenv().get("TP_DEV_TOKEN"));
+        Assertions.assertNotNull(System.getenv().get("TP_CLOUD_URL"));
 
-        FirefoxOptions options = new FirefoxOptions();
-        options.setHeadless(true);
-        driver = new FirefoxDriver(options, "CI - Java");
+        ChromeOptions options = new ChromeOptions();
+        options.setCapability(TestProjectCapabilityType.CLOUD_URL, System.getenv().get("TP_CLOUD_URL"));
+        driver = new ChromeDriver(options, "CI - Java");
     }
 
     @Test
-    @DisplayName("Example Test")
+    @DisplayName("Example Test on Cloud Driver")
     void testExample() {
         AutomationFlows.runFlow(driver);
     }
