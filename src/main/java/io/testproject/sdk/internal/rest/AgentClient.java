@@ -25,6 +25,7 @@ import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.internal.reporting.inferrers.GenericInferrer;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.messages.*;
+import io.testproject.sdk.internal.rest.serialization.DriverExclusionStrategy;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -116,7 +117,7 @@ public final class AgentClient implements Closeable {
     /**
      * An instance of the Google JSON serializer to serialize and deserialize objects.
      */
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final Gson GSON = new GsonBuilder().setExclusionStrategies(new DriverExclusionStrategy()).create();
 
     /**
      * Reports executor service with a single thread.
@@ -701,7 +702,13 @@ public final class AgentClient implements Closeable {
         // Prepare payload
         DriverCommandReport report =
                 new DriverCommandReport(command.getName(), command.getParameters(), result, passed);
-        StringEntity entity = new StringEntity(GSON.toJson(report), StandardCharsets.UTF_8);
+        String json;
+        try {
+            json = GSON.toJson(report);
+        } catch (Exception e) {
+            return false;
+        }
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         httpPost.setEntity(entity);
 
         // Send POST request
