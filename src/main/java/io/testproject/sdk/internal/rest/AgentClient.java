@@ -702,7 +702,13 @@ public final class AgentClient implements Closeable {
         // Prepare payload
         DriverCommandReport report =
                 new DriverCommandReport(command.getName(), command.getParameters(), result, passed);
-        StringEntity entity = new StringEntity(GSON.toJson(report), StandardCharsets.UTF_8);
+        String json;
+        try {
+            json = GSON.toJson(report);
+        } catch (Exception e) {
+            return false;
+        }
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         httpPost.setEntity(entity);
 
         // Send POST request
