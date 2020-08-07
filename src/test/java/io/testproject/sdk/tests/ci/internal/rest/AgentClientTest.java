@@ -19,7 +19,6 @@ package io.testproject.sdk.tests.ci.internal.rest;
 
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
-import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +27,9 @@ import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("AgentClient")
 class AgentClientTest {
@@ -60,22 +58,6 @@ class AgentClientTest {
     }
 
     @Test
-    @DisplayName("Empty token in TP_DEV_TOKEN")
-    @EnabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = REGEX_EMPTY)
-    void testEmptyTokenEnv() {
-        assertThrows(InvalidTokenException.class, () ->
-                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI - Java", null)));
-    }
-
-    @Test
-    @EnabledIfEnvironmentVariable(named = "TP_AGENT_URL", matches = REGEX_EMPTY)
-    @DisplayName("Malformed URL in TP_AGENT_URL")
-    void testMalformedRemoteAddress() {
-        assertThrows(MalformedURLException.class, () ->
-                AgentClient.getClient(new ChromeOptions(), new ReportSettings("CI - Java", null)));
-    }
-
-    @Test
     @DisplayName("Unknown hostname")
     @EnabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = REGEX_NOT_EMPTY)
     void testUnknownRemoteAddress() {
@@ -92,32 +74,5 @@ class AgentClientTest {
         assertThrows(AgentConnectException.class, () ->
                 AgentClient.getClient(new URL("http://localhost:0"), new ChromeOptions(),
                         new ReportSettings("CI - Java", null)));
-    }
-
-    @Test
-    @DisplayName("Invalid non-empty Token")
-    @DisabledIfEnvironmentVariable(named = "TP_AGENT_URL", matches = REGEX_NOT_EMPTY)
-    void testInvalidToken() {
-        assertThrows(InvalidTokenException.class, () -> {
-            try (AgentClient agentClient = AgentClient.getClient(INVALID_TOKEN, new ChromeOptions(),
-                    new ReportSettings("CI - Java", null))) {
-                assertNull(agentClient);
-            }
-        });
-    }
-
-    @Test
-    @DisplayName("Default remote address")
-    @EnabledIfEnvironmentVariable(named = "TP_DEV_TOKEN", matches = REGEX_NOT_EMPTY)
-    @DisabledIfEnvironmentVariable(named = "TP_AGENT_URL", matches = REGEX_NOT_EMPTY)
-    void testDefaultRemoteAddress() throws
-            InvalidTokenException,
-            AgentConnectException,
-            MalformedURLException,
-            ObsoleteVersionException {
-        ChromeOptions options = new ChromeOptions();
-        options.setHeadless(true);
-        AgentClient.getClient(options, new ReportSettings("CI - Java", null));
-        AgentClient.cleanup();
     }
 }
