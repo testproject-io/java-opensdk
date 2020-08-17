@@ -17,6 +17,7 @@
 
 package io.testproject.sdk.drivers;
 
+import io.testproject.sdk.internal.addons.AddonsHelper;
 import io.testproject.sdk.internal.helpers.ReportingCommandsExecutor;
 import io.testproject.sdk.internal.reporting.Reporter;
 import org.openqa.selenium.remote.Command;
@@ -59,4 +60,13 @@ public interface ReportingDriver {
      * Stops the driver and perform necessary cleanup.
      */
     void stop();
+
+    /**
+     * Provides access to the addons functionality.
+     *
+     * @return {@link io.testproject.sdk.internal.addons.AddonsHelper} instance.
+     */
+    default AddonsHelper addons() {
+        return new AddonsHelper(getReportingCommandExecutor().getAgentClient());
+    }
 }
