@@ -526,8 +526,8 @@ public final class AgentClient implements Closeable {
     /**
      * Infer Project and Job names from call stack.
      *
-     * @return {@link ReportSettings} instance with discovered Project and Job names.
      * @param reportSettings Project and Job names provided explicitly.
+     * @return {@link ReportSettings} instance with discovered Project and Job names.
      */
     private ReportSettings inferReportSettings(final ReportSettings reportSettings) {
 
@@ -689,12 +689,16 @@ public final class AgentClient implements Closeable {
     /**
      * Reports a driver command execution to the Agent.
      *
-     * @param command Command executed by the driver.
-     * @param result  Command result formatted as String
-     * @param passed  Boolean flag to indicate command successful execution or failure.
+     * @param command    Command executed by the driver.
+     * @param result     Command result formatted as String
+     * @param passed     Boolean flag to indicate command successful execution or failure.
+     * @param screenshot Screenshot as base64 string.
      * @return True if successfully reported, otherwise False.
      */
-    public boolean reportCommand(final Command command, final Object result, final boolean passed) {
+    public boolean reportCommand(final Command command,
+                                 final Object result,
+                                 final boolean passed,
+                                 final String screenshot) {
         // Initialize POST request to Agent API
         HttpPost httpPost = new HttpPost(remoteAddress + Routes.REPORT_COMMAND);
         httpPost.setConfig(getDefaultHttpConfig());
@@ -702,12 +706,19 @@ public final class AgentClient implements Closeable {
         // Prepare payload
         DriverCommandReport report =
                 new DriverCommandReport(command.getName(), command.getParameters(), result, passed);
+
+        // Set screenshot into report when provided
+        if (screenshot != null) {
+            report.setScreenshot(screenshot);
+        }
+
         String json;
         try {
             json = GSON.toJson(report);
         } catch (Exception e) {
             return false;
         }
+
         StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         httpPost.setEntity(entity);
 
