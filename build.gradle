@@ -53,7 +53,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.13'
 
     // JUnit5
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
 
     // Module "junit-jupiter-params" of JUnit 5.
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.5.1'

@@ -1,0 +1,35 @@
+/*
+ * Copyright 2020 TestProject LTD. and/or its affiliates
+ * and other contributors as indicated by the @author tags.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.testproject.sdk.interfaces.junit5;
+
+import io.testproject.sdk.drivers.ReportingDriver;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+/**
+ * Implementing this interface enabled automatic JUnit5 assertions reporting.
+ */
+@ExtendWith({io.testproject.sdk.internal.reporting.extensions.junit5.ExceptionsReporter.class})
+public interface ExceptionsReporter {
+
+    /**
+     * Getter for a reporting driver instance.
+     * @return ReportingDriver instance.
+     */
+    ReportingDriver getDriver();
+
+}
