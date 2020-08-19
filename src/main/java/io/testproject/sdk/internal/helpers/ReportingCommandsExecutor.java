@@ -20,6 +20,7 @@ package io.testproject.sdk.internal.helpers;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.messages.TestReport;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.Response;
@@ -239,9 +240,19 @@ public interface ReportingCommandsExecutor {
             return true;
         }
 
+        String screenshot = null;
+        if (!passed) {
+            try {
+                Command screenshotCommand = new Command(command.getSessionId(), DriverCommand.SCREENSHOT);
+                screenshot = this.execute(screenshotCommand, true).getValue().toString();
+            } catch (WebDriverException e) {
+                LOG.error("Failed to take a screenshot for failed command: {}", command.getName(), e);
+            }
+        }
+
         return agentClient.reportCommand(
                 isRedactionDisabled() ? command : redactCommand(executor, command), extractResponse(response),
-                passed);
+                passed, screenshot);
     }
 
     /**

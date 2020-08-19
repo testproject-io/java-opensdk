@@ -44,6 +44,28 @@ public final class DriverCommandReport extends Report {
     private final boolean passed;
 
     /**
+     * Screenshot as base64 string.
+     */
+    private String screenshot;
+
+    /**
+     * Getter for {@link #screenshot} field.
+     *
+     * @return value of {@link #screenshot} field
+     */
+    public String getScreenshot() {
+        return screenshot;
+    }
+
+    /**
+     * Setter for {@link #screenshot} field.
+     * @param screenshot Screenshot (as base64 string) to be set.
+     */
+    public void setScreenshot(final String screenshot) {
+        this.screenshot = screenshot;
+    }
+
+    /**
      * Creates a new instance using provided commandName, result and boolean success/failure flag.
      *
      * @param commandName       Name of the commandName executed by the driver.
