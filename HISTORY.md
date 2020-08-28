@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.63.5] - 2020-08-28
+
+### Added 
+
+- Screenshots are now being reported when command execution fails.
+- Reporting extension for JUnit5 has been added.
+
+### Fixed
+
+- Removed bundled logback.xml that can interfere with explicitly specified logback configuration.
+
 ## [0.63.4] - 2020-08-07
 
 ### Fixed 
