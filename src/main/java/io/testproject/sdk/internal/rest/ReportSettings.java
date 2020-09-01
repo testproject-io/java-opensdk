@@ -17,6 +17,8 @@
 
 package io.testproject.sdk.internal.rest;
 
+import java.util.Objects;
+
 /**
  * Report settings model provided to the Agent upon session initialization.
  */
@@ -25,6 +27,7 @@ public class ReportSettings {
      * Project name to report.
      */
     private final String projectName;
+
     /**
      * Job name to report.
      */
@@ -50,11 +53,43 @@ public class ReportSettings {
 
     /**
      * Creates a new instance of the class.
+     *
      * @param projectName Project name to report
-     * @param jobName Job name to report
+     * @param jobName     Job name to report
      */
     public ReportSettings(final String projectName, final String jobName) {
         this.projectName = projectName;
         this.jobName = jobName;
+    }
+
+    /**
+     * Check if two objects are equal.
+     *
+     * @param object instance.
+     * @return True if equals, otherwise False.
+     */
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+
+        ReportSettings that = (ReportSettings) object;
+        return Objects.equals(projectName, that.projectName)
+                && Objects.equals(jobName, that.jobName);
+    }
+
+    /**
+     * Calculate object hashcode.
+     *
+     * @return Hashcode integer.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(projectName, jobName);
     }
 }
