@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.0] - 2020-09-08
+
+### Added 
+
+- SDK will keep a development session open and only restart the driver when reporting the same Job (only when working with Agent 0.64.20 or newer).
+
 ## [0.63.5] - 2020-08-28
 
 ### Added 
