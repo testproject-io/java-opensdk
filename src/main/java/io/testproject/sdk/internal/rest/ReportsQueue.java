@@ -57,22 +57,31 @@ public class ReportsQueue implements Runnable {
     private final CloseableHttpClient httpClient;
 
     /**
+     * Driver session ID.
+     */
+    private final String sessionId;
+
+    /**
      * Flag to keep running the loop of taking items from the queue.
      */
     private boolean running;
 
     /**
      * Initializes a new instance of the class.
+     *
      * @param httpClient HTTP client ot use for communicating with the Agent.
+     * @param sessionId  Driver session ID.
      */
-    public ReportsQueue(final CloseableHttpClient httpClient) {
+    public ReportsQueue(final CloseableHttpClient httpClient, final String sessionId) {
         this.httpClient = httpClient;
+        this.sessionId = sessionId;
     }
 
     /**
      * Adds a report to the queue.
+     *
      * @param request Request to be sent over HTTP.
-     * @param report Report that this request contains.
+     * @param report  Report that this request contains.
      */
     void submit(final HttpEntityEnclosingRequestBase request, final Report report) {
         this.queue.add(new QueueItem(request, report));
@@ -94,7 +103,7 @@ public class ReportsQueue implements Runnable {
             }
         }
 
-        LOG.trace("Reports queue has been stopped.");
+        LOG.trace("Reports queue for session [{}] has been stopped.", sessionId);
 
         if (!this.queue.isEmpty()) {
             LOG.warn("There are {} unreported items in the queue", this.queue.size());
@@ -103,6 +112,7 @@ public class ReportsQueue implements Runnable {
 
     /**
      * Submits a report to the Agent via HTTP RESTFul API endpoint.
+     *
      * @param item Item retrieved from the queue (report & HTTP request).
      */
     private void sendReport(final QueueItem item) {
@@ -140,7 +150,7 @@ public class ReportsQueue implements Runnable {
      * Stops the runnable and the queue processing.
      */
     public void stop() {
-        LOG.trace("Raising flag to stop reports queue.");
+        LOG.trace("Raising flag to stop reports queue for session [{}]", sessionId);
         this.running = false;
 
         // Feed the queue with one more (null) object.
@@ -184,8 +194,9 @@ public class ReportsQueue implements Runnable {
 
         /**
          * Initializes a new instance of the class.
+         *
          * @param request HTTP request to be transmitted to the Agent.
-         * @param report Report that the request contains.
+         * @param report  Report that the request contains.
          */
         QueueItem(final HttpEntityEnclosingRequestBase request, final Report report) {
             this.request = request;

@@ -72,6 +72,10 @@ dependencies {
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+
+    // Maven Artifact
+    implementation 'org.apache.maven:maven-artifact:3.6.3'
+
 }
 
 checkstyle.configFile file("config/checkstyle/checkstyle.xml")

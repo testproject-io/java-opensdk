@@ -26,6 +26,7 @@ import io.testproject.sdk.internal.reporting.inferrers.GenericInferrer;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.messages.*;
 import io.testproject.sdk.internal.rest.serialization.DriverExclusionStrategy;
+import io.testproject.sdk.internal.tcp.SocketManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -39,6 +40,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriverException;
@@ -51,7 +53,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -105,6 +106,11 @@ public final class AgentClient implements Closeable {
     private static final int ADDON_EXECUTION_SOCKET_TIMEOUT_MS = 60 * 1000;
 
     /**
+     * Minimum Agent version that support session reuse.
+     */
+    private static final String MIN_SESSION_REUSE_CAPABLE_VERSION = "0.64.20";
+
+    /**
      * Logger instance.
      */
     private static final Logger LOG = LoggerFactory.getLogger(AgentClient.class);
@@ -113,6 +119,11 @@ public final class AgentClient implements Closeable {
      * AgentClient instance used by active driver.
      */
     private static AgentClient instance;
+
+    /**
+     * Class member to store Agent version obtained when session is initialized.
+     */
+    private static String version;
 
     /**
      * An instance of the Google JSON serializer to serialize and deserialize objects.
@@ -140,6 +151,11 @@ public final class AgentClient implements Closeable {
     private final CloseableHttpClient httpClient;
 
     /**
+     * Shutdown thread instance.
+     */
+    private final Thread shutdownThread;
+
+    /**
      * Future to keep the async task of starting the reports queue.
      */
     private Future<?> reportsQueueFuture;
@@ -153,11 +169,6 @@ public final class AgentClient implements Closeable {
      * Class member to store Agent session details.
      */
     private AgentSession session;
-
-    /**
-     * Class member to hold an instance of a TCP socket between the SDK and the Agent.
-     */
-    private Socket socket;
 
     /**
      * Project name to report.
@@ -230,12 +241,35 @@ public final class AgentClient implements Closeable {
 
         // Start reports queue
         if (!disableReports) {
-            this.reportsQueue = new ReportsQueue(this.httpClient);
+            this.reportsQueue = new ReportsQueue(this.httpClient, this.getSession().getSessionId());
             this.reportsQueueFuture = reportsExecutorService.submit(this.reportsQueue);
         }
 
         // Make sure to exit gracefully
-        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+        shutdownThread = new Thread(this::close);
+        Runtime.getRuntime().addShutdownHook(shutdownThread);
+    }
+
+    /**
+     * Determine whether the Agent support session reuse.
+     * @return True if session can be reused, otherwise False.
+     */
+    private static boolean canReuseSession() {
+        if (version == null) {
+            return false;
+        }
+
+        boolean result = false;
+        try {
+            ComparableVersion agentVersion = new ComparableVersion(version);
+            result = agentVersion.compareTo(new ComparableVersion(MIN_SESSION_REUSE_CAPABLE_VERSION)) >= 0;
+            LOG.trace("Agent [{}] {} session re-use", version, result ? "supports" : "does not support");
+            return result;
+        } catch (IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+        }
+
+        return result;
     }
 
     /**
@@ -396,6 +430,20 @@ public final class AgentClient implements Closeable {
             if (instance == null || !instance.getSession().getCapabilities().getCapability(TP_GUID).equals(
                     capabilities.getCapability(TP_GUID))) {
 
+                // Close existing session if required
+                if (instance != null) {
+                    boolean sameReportSettings = instance.getReportSetting() != null
+                            && instance.getReportSetting().equals(reportSettings);
+
+                    // If the report doesn't go to the same Project/Job,
+                    // or Agent doesn't support session reuse - close it.
+                    if (!sameReportSettings || !canReuseSession()) {
+                        SocketManager.getInstance().closeSocket();
+                    }
+
+                    // Close existing instance
+                    instance.stop();
+                }
 
                 // No instance yet or it's for another driver and needs to be re-initialized
                 instance = new AgentClient(remoteAddress, token, capabilities, reportSettings, disableReports);
@@ -403,13 +451,6 @@ public final class AgentClient implements Closeable {
         }
 
         return instance;
-    }
-
-    /**
-     * Closes the cached instance and removes it.
-     */
-    public static void cleanup() {
-        Objects.requireNonNull(instance).close();
     }
 
     private RequestConfig getDefaultHttpConfig() {
@@ -484,7 +525,7 @@ public final class AgentClient implements Closeable {
             throw new AgentConnectException("Failed reading Agent response", e);
         }
 
-        LOG.trace("Session initialized: {}", responseBody);
+        LOG.trace("Session initialization response: {}", responseBody);
 
         SessionResponse agentResponse;
         try {
@@ -493,6 +534,8 @@ public final class AgentClient implements Closeable {
             LOG.error("Failed to parse Agent response", e);
             throw new AgentConnectException("Failed to parse Agent response", e);
         }
+
+        LOG.info("Session [{}] initialized", agentResponse.getSessionId());
 
         // Process Response
         try {
@@ -503,6 +546,7 @@ public final class AgentClient implements Closeable {
             // And now does't return it with the actual driver capabilities
             // It has to be set again to avoid initializing an new AgentClient instance for these capabilities again
             mutableCapabilities.setCapability(TP_GUID, guid);
+            this.version = agentResponse.getVersion();
             this.session = new AgentSession(
                     new URL(agentResponse.getServerAddress()),
                     agentResponse.getSessionId(),
@@ -513,14 +557,8 @@ public final class AgentClient implements Closeable {
             throw new AgentConnectException("Failed initializing a session", e);
         }
 
-        // Connect to Agent TCP socket
-        try {
-            socket = new Socket(this.remoteAddress.getHost(), agentResponse.getDevSocketPort());
-        } catch (IOException e) {
-            LOG.error("Failed connecting to Agent socket at {}:{}",
-                    this.remoteAddress.getHost(), agentResponse.getDevSocketPort(), e);
-            throw new AgentConnectException("Failed connecting to Agent socket", e);
-        }
+        // Open TCP socket
+        SocketManager.getInstance().openSocket(this.remoteAddress.getHost(), agentResponse.getDevSocketPort());
     }
 
     /**
@@ -619,6 +657,15 @@ public final class AgentClient implements Closeable {
     }
 
     /**
+     * Getter for {@link #version} field.
+     *
+     * @return value of {@link #version} field
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
      * Getter for {@link #projectName}.
      *
      * @return value of {@link #projectName} field
@@ -649,11 +696,20 @@ public final class AgentClient implements Closeable {
     }
 
     /**
-     * Implementation of {@link Closeable Closable} interface.
-     * Disconnects the TCP socket between the SDK and the Agent to stop the development session.
+     * Removes shutdown hook and calls {@link #close()}.
      */
-    @Override
+    private void stop() {
+        Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
+        LOG.trace("Removed shutdown thread to avoid unnecessary close() calls");
+        close();
+    }
+
+    /**
+     * Implementation of {@link Closeable Closable} interface.
+     * Close all open resources such as the reporting queue and the TCP socket open with the Agent.
+     */
     public void close() {
+        LOG.trace("Closing AgentClient for driver session [{}]", this.getSession().getSessionId());
         if (reportsQueueFuture != null && !reportsQueueFuture.isDone()) {
             reportsQueue.stop();
             try {
@@ -676,14 +732,7 @@ public final class AgentClient implements Closeable {
             reportsExecutorService.shutdown();
         }
 
-        if (socket != null && socket.isConnected()) {
-            try {
-                socket.close();
-                LOG.info("Session closed.");
-            } catch (IOException e) {
-                LOG.error("Failed closing socket connected to the Agent at {}", this.remoteAddress, e);
-            }
-        }
+        LOG.info("Session [{}] closed", this.getSession().getSessionId());
     }
 
     /**

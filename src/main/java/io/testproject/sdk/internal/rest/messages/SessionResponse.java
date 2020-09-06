@@ -50,6 +50,11 @@ public class SessionResponse {
     private Map<String, Object> capabilities;
 
     /**
+     * Agent version.
+     */
+    private String version;
+
+    /**
      * Getter for {@link #devSocketPort} field.
      *
      * @return value of {@link #devSocketPort} field
@@ -92,5 +97,14 @@ public class SessionResponse {
      */
     public Map<String, Object> getCapabilities() {
         return capabilities;
+    }
+
+    /**
+     * Getter for {@link #version} field.
+     *
+     * @return value of {@link #version} field
+     */
+    public String getVersion() {
+        return version;
     }
 }
