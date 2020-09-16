@@ -108,7 +108,7 @@ public final class AgentClient implements Closeable {
     /**
      * Minimum Agent version that support session reuse.
      */
-    private static final String MIN_SESSION_REUSE_CAPABLE_VERSION = "0.64.20";
+    private static final String MIN_SESSION_REUSE_CAPABLE_VERSION = "0.64.32";
 
     /**
      * Logger instance.
