@@ -630,18 +630,24 @@ public final class AgentClient implements Closeable {
 
         // Process Response
         try {
-            MutableCapabilities mutableCapabilities =
-                    new MutableCapabilities(agentResponse.getCapabilities());
+            MutableCapabilities mutableCapabilities;
+            if (agentResponse.getCapabilities() != null) {
+                mutableCapabilities = new MutableCapabilities(agentResponse.getCapabilities());
+            } else {
+                mutableCapabilities = new MutableCapabilities();
+            }
 
             // There's a chance that driver ignored our custom tracking capability
             // And now does't return it with the actual driver capabilities
             // It has to be set again to avoid initializing an new AgentClient instance for these capabilities again
             mutableCapabilities.setCapability(TP_GUID, guid);
-            this.version = agentResponse.getVersion();
+            version = agentResponse.getVersion();
             this.session = new AgentSession(
                     new URL(agentResponse.getServerAddress()),
-                    agentResponse.getSessionId(),
-                    Dialect.valueOf(agentResponse.getDialect()),
+                    !StringUtils.isEmpty(agentResponse.getSessionId())
+                            ? agentResponse.getSessionId() : UUID.randomUUID().toString(),
+                    agentResponse.getDialect() != null
+                            ? Dialect.valueOf(agentResponse.getDialect()) : null,
                     mutableCapabilities);
         } catch (MalformedURLException e) {
             LOG.error("Agent returned an invalid server URL: [{}]", agentResponse.getServerAddress(), e);
