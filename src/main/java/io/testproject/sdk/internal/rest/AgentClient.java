@@ -34,6 +34,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -465,6 +466,84 @@ public final class AgentClient implements Closeable {
         return instance;
     }
 
+    /**
+     * Retrieves the version of the target Agent.
+     *
+     * @param remoteAddress Agent API base URL<br>
+     *                      If not provided, will attempt to get the value from <b>TP_AGENT_URL</b>
+     *                      environment variable.<br>
+     *                      If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * @return Agent version.
+     * @throws AgentConnectException if Agent is not responding or responds with an error
+     * @throws MalformedURLException if the Agent API base URL provided is malformed
+     */
+    public static String getVersion(final URL remoteAddress)
+            throws AgentConnectException, MalformedURLException {
+
+        // Determine Agent API address
+        URL agentAddress = inferRemoteAddress(remoteAddress);
+
+        // Initialize GET request to Agent API
+        HttpGet httpGet = new HttpGet(agentAddress + Routes.STATUS);
+
+        // Addon execution can take time,
+        // This is why this config is unique and other calls use getDefaultConfig() method
+        RequestConfig config = RequestConfig.custom()
+                .setConnectionRequestTimeout(CONNECTION_TIMEOUT_MS)
+                .setConnectTimeout(CONNECTION_TIMEOUT_MS)
+                .setSocketTimeout(CONNECTION_TIMEOUT_MS)
+                .build();
+        httpGet.setConfig(config);
+
+        // Prepare HTTP client
+        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+                .addInterceptorLast((HttpRequestInterceptor) (request, context) -> {
+                    request.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());
+                    request.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());
+                });
+
+        // Send POST request
+        CloseableHttpResponse response;
+        try {
+            response = httpClientBuilder.build().execute(httpGet);
+        } catch (IOException e) {
+            LOG.error("Failed to get Agent status", e);
+            throw new AgentConnectException("Failed to get Agent status", e);
+        }
+
+        // Handle unsuccessful response
+        if (response != null && response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
+            LOG.error("Agent responded with an unexpected status {} to status request",
+                    response.getStatusLine().getStatusCode());
+        }
+
+        if (response == null) {
+            LOG.error("Agent response is empty");
+            throw new AgentConnectException("Failed to get Agent status");
+        }
+
+        // Read Response
+        String responseBody;
+        try {
+            responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            LOG.error("Failed reading Agent status response", e);
+            throw new AgentConnectException("Failed to get Agent status", e);
+        }
+
+        // Parse response to an object
+        AgentStatusResponse status = null;
+        try {
+            status = GSON.fromJson(responseBody, AgentStatusResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOG.error("Failed to parse Agent response", e);
+            throw new AgentConnectException("Failed to parse Agent response", e);
+        }
+
+        // Return tag as version
+        return status.getTag();
+    }
+
     private RequestConfig getDefaultHttpConfig() {
         return RequestConfig.custom()
                 .setConnectionRequestTimeout(CONNECTION_REQUEST_TIMEOUT_MS)
@@ -890,13 +969,23 @@ public final class AgentClient implements Closeable {
             throw new WebDriverException("Failed reading action proxy execution response", e);
         }
 
-        return GSON.fromJson(responseBody, ActionExecutionResponse.class);
+        try {
+            return GSON.fromJson(responseBody, ActionExecutionResponse.class);
+        } catch (JsonSyntaxException e) {
+            LOG.error("Failed reading action proxy execution response", e);
+            throw new WebDriverException("Failed reading action proxy execution response", e);
+        }
     }
 
     /**
      * Internal class used to store Agent API routes.
      */
     private static class Routes {
+        /**
+         * Agent "status" endpoint address.
+         */
+        static final String STATUS = "/api/status";
+
         /**
          * Development endpoint address.
          */
