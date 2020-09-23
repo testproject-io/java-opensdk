@@ -207,15 +207,7 @@ public final class AgentClient implements Closeable {
             ObsoleteVersionException {
 
         // Determine Agent API address
-        if (remoteAddress != null) {
-            this.remoteAddress = remoteAddress;
-        } else {
-            if (!StringUtils.isEmpty(System.getenv(TP_AGENT_URL))) {
-                this.remoteAddress = new URL(System.getenv(TP_AGENT_URL));
-            } else {
-                this.remoteAddress = new URL(AGENT_DEFAULT_API_ADDRESS);
-            }
-        }
+        this.remoteAddress = inferRemoteAddress(remoteAddress);
 
         // Determine Development Token
         if (!StringUtils.isEmpty(token)) {
@@ -251,7 +243,27 @@ public final class AgentClient implements Closeable {
     }
 
     /**
+     * Infers remote address of the Agent API.
+     *
+     * @param url optional remote address specified.
+     * @return Inferred address.
+     * @throws MalformedURLException When provided URL is invalid.
+     */
+    private static URL inferRemoteAddress(final URL url) throws MalformedURLException {
+        if (url != null) {
+            return url;
+        } else {
+            if (!StringUtils.isEmpty(System.getenv(TP_AGENT_URL))) {
+                return new URL(System.getenv(TP_AGENT_URL));
+            } else {
+                return new URL(AGENT_DEFAULT_API_ADDRESS);
+            }
+        }
+    }
+
+    /**
      * Determine whether the Agent support session reuse.
+     *
      * @return True if session can be reused, otherwise False.
      */
     private static boolean canReuseSession() {
