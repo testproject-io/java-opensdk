@@ -125,9 +125,12 @@ io.testproject.sdk.drivers
 │   └── RemoteWebDriver
 ├── android
 │   └── AndroidDriver
-└── ios
-    └── IOSDriver
+├── ios
+│   └── IOSDriver
+└── GenericDriver
 ```
+
+> GenericDriver can be used to run non-UI tests.
 
 ## Development Token
 
