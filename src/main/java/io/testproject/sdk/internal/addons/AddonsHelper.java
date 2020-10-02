@@ -78,7 +78,7 @@ public class AddonsHelper {
      * @return Presumably modified class with updated output fields.
      */
     public ActionProxy execute(final ActionProxy action, final By by) {
-        return execute(action, null, -1);
+        return execute(action, by, -1);
     }
 
     /**
