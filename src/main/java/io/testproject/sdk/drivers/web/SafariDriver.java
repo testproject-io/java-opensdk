@@ -413,6 +413,9 @@ public class SafariDriver extends org.openqa.selenium.safari.SafariDriver implem
         ReportingCommandsExecutor executor = (ReportingCommandsExecutor) this.getCommandExecutor();
         executor.clearStash();
 
+        // Close resources.
+        executor.getAgentClient().close();
+
         // Quit the driver to close Selenium session
         super.quit();
     }
