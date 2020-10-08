@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.1] - 2020-10-08
+
+### Added 
+
+- Added Generic driver to execute non-UI tests.
+
+### Fixed
+
+- Close the agent client when the driver quits to allow the process to exit.
+
 ## [0.64.0] - 2020-09-08
 
 ### Added 
