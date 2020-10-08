@@ -24,11 +24,18 @@ import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Interface to reference drivers reporting commands execution.
  */
 public interface ReportingDriver {
+
+    /**
+     * Logger instance.
+     */
+    Logger LOG = LoggerFactory.getLogger(ReportingDriver.class);
 
     /**
      * Extension method to get an instance of the reporter initialized by the driver.
@@ -41,6 +48,11 @@ public interface ReportingDriver {
      * @return Screenshot taken (PNG) as base64 string.
      */
     default String getScreenshot() {
+        if (this instanceof GenericDriver) {
+            LOG.warn("Taking screenshots is not possible with Generic Driver");
+            return null;
+        }
+
         RemoteWebDriver rwd = (RemoteWebDriver) this;
         Command command = new Command(rwd.getSessionId(), DriverCommand.SCREENSHOT);
         Response response = getReportingCommandExecutor().execute(command, true);
