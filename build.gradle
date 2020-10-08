@@ -186,6 +186,9 @@ nexusStaging {
 
     username "$ossrhUsername"
     password "$ossrhPassword"
+
+    numberOfRetries 30
+    delayBetweenRetriesInMillis 10000
 }
 
 wrapper {
