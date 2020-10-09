@@ -47,7 +47,12 @@ repositories {
 dependencies {
 
     // Java client for Appium Mobile Webdriver
-    api group: 'io.appium', name: 'java-client', version: '7.3.0'
+    api (group: 'io.appium', name: 'java-client', version: '7.3.0') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+
+    // Guava
+    api group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 
     // JUnit4
     testImplementation group: 'junit', name: 'junit', version: '4.13'
