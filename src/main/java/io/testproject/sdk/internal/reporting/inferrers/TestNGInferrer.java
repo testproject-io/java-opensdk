@@ -170,10 +170,9 @@ public class TestNGInferrer implements ReportSettingsInferrer {
             try {
                 clazz = Class.forName(stackTraceElement.getClassName());
             } catch (ClassNotFoundException e) {
-                LOG.error("Failed to create an instance of a class", e);
-
-                // Return a name of the first method in call stack.
-                return traces.get(traces.size() - 1).getMethodName();
+                LOG.debug("Failed to create an instance of a class [{}]: {}",
+                        stackTraceElement.getClassName(), e.getMessage());
+                continue;
             }
 
             // Find the method
