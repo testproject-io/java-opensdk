@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.1] - 2020-10-13
+
+### Fixed
+
+- Fixed compatibility issue with ChromeOptions class, upgrading Guava library to version 29.
+- Fixed a scenario in which instantiation of a proxy class failed during test name inferring.
+
 ## [0.64.1] - 2020-10-08
 
 ### Added 
