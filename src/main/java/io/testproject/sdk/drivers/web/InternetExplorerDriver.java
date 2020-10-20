@@ -17,21 +17,29 @@
 
 package io.testproject.sdk.drivers.web;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.internal.helpers.DriverHelper;
-import io.testproject.sdk.internal.helpers.ReportingCommandsExecutor;
 import io.testproject.sdk.internal.helpers.DriverShutdownThread;
+import io.testproject.sdk.internal.helpers.ReportingCommandsExecutor;
 import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -55,6 +63,11 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * Steps reporter instance.
      */
     private Reporter reporter;
+
+    /**
+     * Logger instance.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(InternetExplorerDriver.class);
 
     /**
      * Initiates a new session with the Agent using default token and URL.
@@ -365,9 +378,8 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final boolean disableReports)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        super(new InternetExplorerOptions(AgentClient
-                .getClient(remoteAddress, token, options,
-                        new ReportSettings(projectName, jobName), disableReports)
+        super(fakeDriverService(), new InternetExplorerOptions().merge(AgentClient
+                .getClient(remoteAddress, token, options, new ReportSettings(projectName, jobName), disableReports)
                 .getSession().getCapabilities()));
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
@@ -425,5 +437,25 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
     @Override
     public Reporter report() {
         return reporter;
+    }
+
+    /**
+     *
+     * Creates fake DriverService to avoid searching for driver executable.
+     *
+     * @return a new DriverService with dummy data.
+     */
+    private static InternetExplorerDriverService fakeDriverService() {
+        try {
+            Constructor<InternetExplorerDriverService> serviceConstructor = InternetExplorerDriverService.class
+                    .getDeclaredConstructor(File.class, int.class, ImmutableList.class, ImmutableMap.class);
+            serviceConstructor.setAccessible(true);
+            return serviceConstructor.newInstance(new File(""), 0, null, null);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
+                | InvocationTargetException e) {
+            LOG.error("Failed to create driver service", e);
+            throw new WebDriverException("Failed creating Internet Explorer driver service while initializing driver",
+                    e);
+        }
     }
 }
