@@ -153,6 +153,8 @@ public interface ReportingCommandsExecutor {
         }
 
         if (isQuitCommand) {
+            // Close client after finishing the test via driver quit command.
+            getAgentClient().close();
             // Do not report quit to avoid creating new test in reports
             return;
         }
