@@ -6,7 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.64.1] - 2020-10-13
+## [0.64.3] - 2020-10-21
+
+### Fixed
+
+- Fixed a case when tets name was not reported after session ends.
+- Fixed IE driver re-initialization logic.
+
+## [0.64.2] - 2020-10-13
 
 ### Fixed
 
