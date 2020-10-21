@@ -403,9 +403,6 @@ public class AndroidDriver<T extends WebElement>
         ReportingCommandsExecutor executor = (ReportingCommandsExecutor) this.getCommandExecutor();
         executor.clearStash();
 
-        // Close resources.
-        executor.getAgentClient().close();
-
         // It will only trigger test reporting if required.
         // Actual mobile session must be preserved for re-use.
         super.quit();

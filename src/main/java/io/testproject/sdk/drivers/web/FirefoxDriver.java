@@ -415,9 +415,6 @@ public class FirefoxDriver extends org.openqa.selenium.firefox.FirefoxDriver imp
         ReportingCommandsExecutor executor = (ReportingCommandsExecutor) this.getCommandExecutor();
         executor.clearStash();
 
-        // Close resources.
-        executor.getAgentClient().close();
-
         // Quit the driver to close Selenium session
         super.quit();
     }

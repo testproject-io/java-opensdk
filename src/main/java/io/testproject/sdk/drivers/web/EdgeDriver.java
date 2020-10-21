@@ -415,9 +415,6 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
         ReportingCommandsExecutor executor = (ReportingCommandsExecutor) this.getCommandExecutor();
         executor.clearStash();
 
-        // Close resources.
-        executor.getAgentClient().close();
-
         // Quit the driver to close Selenium session
         super.quit();
     }
