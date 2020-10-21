@@ -391,9 +391,6 @@ public class RemoteWebDriver extends org.openqa.selenium.remote.RemoteWebDriver 
         ReportingCommandsExecutor executor = (ReportingCommandsExecutor) this.getCommandExecutor();
         executor.clearStash();
 
-        // Close resources.
-        executor.getAgentClient().close();
-
         // Quit the driver to close Selenium session
         super.quit();
     }
