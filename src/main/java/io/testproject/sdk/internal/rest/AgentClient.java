@@ -52,9 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
@@ -597,7 +595,7 @@ public final class AgentClient implements Closeable {
         try {
             response = httpClient.execute(httpPost);
         } catch (IOException e) {
-            throw new AgentConnectException("Failed communicating with the Agent at " + this.remoteAddress, e);
+            throw translateAgentConnectFailure(e);
         }
 
         // Handle unsuccessful response (not 2xx)
@@ -656,6 +654,24 @@ public final class AgentClient implements Closeable {
 
         // Open TCP socket
         SocketManager.getInstance().openSocket(this.remoteAddress.getHost(), agentResponse.getDevSocketPort());
+    }
+
+    /**
+     * Translates an IOException to an informative exception.
+     * @param e the original exception
+     * @return the translated exception
+     */
+    private AgentConnectException translateAgentConnectFailure(final IOException e) {
+        Throwable rootCause = ExceptionUtils.getRootCause(e);
+        if (SocketTimeoutException.class.isAssignableFrom(rootCause.getClass())) {
+            return new AgentConnectException("Could not complete the request to start a new session. "
+                    + "Another program such as an antivirus/firewall seems to be interfering with the connection.");
+        }
+        if (ConnectException.class.isAssignableFrom(rootCause.getClass())) {
+            return new AgentConnectException("Could not connect to agent. "
+                    + "Please make sure it is running and try again");
+        }
+        return new AgentConnectException("Failed communicating with the Agent at " + this.remoteAddress, e);
     }
 
     /**
