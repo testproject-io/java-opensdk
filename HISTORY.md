@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.4] - 2020-10-26
+
+### Changed
+
+- Improved error messages logged when initializing a development session fails.
+
 ## [0.64.3] - 2020-10-21
 
 ### Fixed
