@@ -20,7 +20,8 @@ jobs:
       run: |
         SDK_VERSION=$(git describe --tags || echo v0.0.0-$(git rev-list --all --count)-g$(git rev-parse --short HEAD))
         SDK_VERSION="${SDK_VERSION:1}"
-        echo "::set-env name=SDK_VERSION::$SDK_VERSION"
+        echo "SDK_VERSION=${SDK_VERSION}"
+        echo "TP_SDK_VERSION=${SDK_VERSION}" >> $GITHUB_ENV
     - name: Mark build as release
       if: startsWith(github.ref, 'refs/tags/v')
       run: echo "::set-env name=SDK_BUILD_ARGS::$(echo '-Prelease=true')"
@@ -31,7 +32,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build -x test -Pversion=$SDK_VERSION $SDK_BUILD_ARGS
+      run: ./gradlew build -x test -Pversion=$TP_SDK_VERSION $SDK_BUILD_ARGS
     - name: Run TestProject Agent
       env:
         TP_API_KEY: ${{ secrets.TP_API_KEY }}
@@ -62,9 +63,9 @@ jobs:
         TP_CLOUD_URL: ${{ secrets.TP_CLOUD_URL }}
       run: |
         trap 'kill $(jobs -p)' EXIT
-        export TP_DEBUG_SDK_VERSION=$SDK_VERSION
+        export TP_DEBUG_SDK_VERSION=$TP_SDK_VERSION
         docker-compose -f docker-compose.yml logs -f --tail=0 >> build/reports/agent/log.txt&
-        ./gradlew test --tests io.testproject.sdk.tests.ci.* -Pversion=$SDK_VERSION $SDK_BUILD_ARGS
+        ./gradlew test --tests io.testproject.sdk.tests.ci.* -Pversion=$TP_SDK_VERSION $SDK_BUILD_ARGS
     - name: Upload to Maven
       if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/master')
       env:
@@ -72,7 +73,7 @@ jobs:
         ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
         ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
         ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}        
-      run: ./gradlew publish -Pversion=$SDK_VERSION $SDK_BUILD_ARGS
+      run: ./gradlew publish -Pversion=$TP_SDK_VERSION $SDK_BUILD_ARGS
     - name: Publish to Maven
       if: startsWith(github.ref, 'refs/tags/v')
       env:

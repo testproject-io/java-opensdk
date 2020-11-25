@@ -140,7 +140,7 @@ public class AddonsHelper {
             // Use reflection to set the output value
             proxyField.get().setAccessible(true);
             try {
-                proxyField.get().set(action, field.getValue());
+                proxyField.get().set(action, convertToType(proxyField.get().getType(), (String) field.getValue()));
             } catch (IllegalAccessException e) {
                 LOG.error("Failed to set field [{}] value to [{}]", field.getName(), field.getValue());
             }
@@ -148,5 +148,36 @@ public class AddonsHelper {
 
         // Return potentially updated proxy.
         return action;
+    }
+
+    /**
+     * Convert string to specified type.
+     * @param clazz target type for conversion..
+     * @param value the value that will be converted.
+     * @return value converted to correct type.
+     */
+    private Object convertToType(final Class<?> clazz, final String value) {
+        if (Boolean.class == clazz || boolean.class == clazz) {
+            return Boolean.parseBoolean(value);
+        }
+        if (Byte.class == clazz || byte.class == clazz) {
+            return Byte.parseByte(value);
+        }
+        if (Short.class == clazz || short.class == clazz) {
+            return Short.parseShort(value);
+        }
+        if (Integer.class == clazz || int.class == clazz) {
+            return Integer.parseInt(value);
+        }
+        if (Long.class == clazz || long.class == clazz) {
+            return Long.parseLong(value);
+        }
+        if (Float.class == clazz || float.class == clazz) {
+            return Float.parseFloat(value);
+        }
+        if (Double.class == clazz || double.class == clazz) {
+            return Double.parseDouble(value);
+        }
+        return value;
     }
 }
