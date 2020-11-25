@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.5] - 2020-11-25
+
+### Fixed
+
+- Fixed logic assigning output values to proxy classes after addon execution.
+
 ## [0.64.4] - 2020-10-26
 
 ### Changed
