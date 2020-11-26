@@ -19,9 +19,7 @@ package io.testproject.sdk.internal.rest;
 
 import com.google.gson.*;
 import io.testproject.sdk.internal.addons.ActionProxy;
-import io.testproject.sdk.internal.exceptions.AgentConnectException;
-import io.testproject.sdk.internal.exceptions.InvalidTokenException;
-import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
+import io.testproject.sdk.internal.exceptions.*;
 import io.testproject.sdk.internal.reporting.inferrers.GenericInferrer;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.messages.*;
@@ -229,7 +227,15 @@ public final class AgentClient implements Closeable {
 
         // Start Session
         ReportSettings sessionReportSettings = disableReports ? null : inferReportSettings(reportSettings);
-        startSession(capabilities, sessionReportSettings);
+        try {
+            startSession(capabilities, sessionReportSettings);
+        } catch (MissingBrowserException e) {
+            throw new AgentConnectException(String.format("Requested browser %s is not installed",
+                    capabilities.getBrowserName()), e);
+        } catch (DeviceNotConnectedException e) {
+            throw new AgentConnectException(String.format("Requested device %s is not connected",
+                    capabilities.getCapability("udid")), e);
+        }
 
         // Start reports queue
         if (!disableReports) {
@@ -560,9 +566,12 @@ public final class AgentClient implements Closeable {
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     * @throws MissingBrowserException if the requested browser is not installed.
+     * @throws DeviceNotConnectedException if the requested device is not found.
      */
     private void startSession(final Capabilities capabilities, final ReportSettings reportSettings)
-            throws InvalidTokenException, AgentConnectException, ObsoleteVersionException {
+            throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, MissingBrowserException,
+            DeviceNotConnectedException {
         LOG.info("Initializing new session...");
         LOG.trace("Initializing new session with capabilities: {}", GSON.toJson(capabilities));
 
@@ -602,7 +611,7 @@ public final class AgentClient implements Closeable {
         // Handle unsuccessful response (not 2xx)
         if (response.getStatusLine().getStatusCode() < HttpURLConnection.HTTP_OK
                 || response.getStatusLine().getStatusCode() >= HttpURLConnection.HTTP_MULT_CHOICE) {
-            handleSessionStartFailure(response);
+            handleSessionStartFailure(response, capabilities);
             return;
         }
 
@@ -732,14 +741,17 @@ public final class AgentClient implements Closeable {
      * Handle a scenario when Agent session initialization fails.
      *
      * @param response Response to the RESTful endpoint call sent to Agent
+     * @param capabilities capabilities with requested driver details.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     * @throws MissingBrowserException if the requested browser is not installed.
+     * @throws DeviceNotConnectedException if the requested device is not found.
      */
-    private void handleSessionStartFailure(final CloseableHttpResponse response)
-            throws InvalidTokenException, ObsoleteVersionException, AgentConnectException {
+    private void handleSessionStartFailure(final CloseableHttpResponse response, final Capabilities capabilities)
+            throws InvalidTokenException, ObsoleteVersionException, AgentConnectException, MissingBrowserException,
+            DeviceNotConnectedException {
         String statusMessage = null;
-
         try {
             String responseBody = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
             JsonObject json = (JsonObject) new JsonParser().parse(responseBody);
@@ -757,6 +769,13 @@ public final class AgentClient implements Closeable {
             case HttpURLConnection.HTTP_NOT_ACCEPTABLE:
                 LOG.error("Failed to initialize a session with the Agent - obsolete SDK version");
                 throw new ObsoleteVersionException(statusMessage);
+            case HttpURLConnection.HTTP_NOT_FOUND:
+                if (statusMessage != null && capabilities.getBrowserName().equals("")) {
+                    LOG.error("Failed to initialize a session with the Agent - Requested device is not connected");
+                    throw new DeviceNotConnectedException();
+                }
+                LOG.error("Failed to initialize a session with the Agent - requested browser is not installed");
+                throw new MissingBrowserException();
             default:
                 LOG.error("Failed to initialize a session with the Agent");
                 throw new AgentConnectException("Agent responded with status "
