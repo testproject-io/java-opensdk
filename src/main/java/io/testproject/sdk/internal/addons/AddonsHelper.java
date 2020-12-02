@@ -160,24 +160,29 @@ public class AddonsHelper {
         if (Boolean.class == clazz || boolean.class == clazz) {
             return Boolean.parseBoolean(value);
         }
-        if (Byte.class == clazz || byte.class == clazz) {
-            return Byte.parseByte(value);
+        try {
+            if (Byte.class == clazz || byte.class == clazz) {
+                return Byte.parseByte(value);
+            }
+            if (Short.class == clazz || short.class == clazz) {
+                return Short.parseShort(value);
+            }
+            if (Integer.class == clazz || int.class == clazz) {
+                return Integer.parseInt(value);
+            }
+            if (Long.class == clazz || long.class == clazz) {
+                return Long.parseLong(value);
+            }
+            if (Float.class == clazz || float.class == clazz) {
+                return Float.parseFloat(value);
+            }
+            if (Double.class == clazz || double.class == clazz) {
+                return Double.parseDouble(value);
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            LOG.error("Error parsing {} to {}", value, clazz.toString(), e);
+            throw new IllegalArgumentException(String.format("Could not parse %s to %s", value, clazz.toString()));
         }
-        if (Short.class == clazz || short.class == clazz) {
-            return Short.parseShort(value);
-        }
-        if (Integer.class == clazz || int.class == clazz) {
-            return Integer.parseInt(value);
-        }
-        if (Long.class == clazz || long.class == clazz) {
-            return Long.parseLong(value);
-        }
-        if (Float.class == clazz || float.class == clazz) {
-            return Float.parseFloat(value);
-        }
-        if (Double.class == clazz || double.class == clazz) {
-            return Double.parseDouble(value);
-        }
-        return value;
     }
 }
