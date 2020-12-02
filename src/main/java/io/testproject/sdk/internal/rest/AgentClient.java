@@ -44,6 +44,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.Dialect;
@@ -640,8 +641,11 @@ public final class AgentClient implements Closeable {
             // It has to be set again to avoid initializing an new AgentClient instance for these capabilities again
             mutableCapabilities.setCapability(TP_GUID, guid);
             version = agentResponse.getVersion();
+            // Set the server URL to null if using the Generic driver.
+            URL serverUrl = ((capabilities.getPlatform() == Platform.ANY) ? null
+                    : new URL(agentResponse.getServerAddress()));
             this.session = new AgentSession(
-                    new URL(agentResponse.getServerAddress()),
+                    serverUrl,
                     !StringUtils.isEmpty(agentResponse.getSessionId())
                             ? agentResponse.getSessionId() : UUID.randomUUID().toString(),
                     agentResponse.getDialect() != null
