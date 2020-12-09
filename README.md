@@ -335,7 +335,7 @@ driver.report().test("My First Test").submit();
 > It's important to disable automatic tests reporting when using the manual option to avoid collision.
 
 Note that `driver.report().test()` returns a `ClosableTestReport` object.\
-An explicit call to `submit()` or closing hte object is required for the report to be sent.
+An explicit call to `submit()` or closing the object is required for the report to be sent.
 
 Using this closable object can be beneficial in the following case:
 
