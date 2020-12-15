@@ -20,6 +20,7 @@ package io.testproject.sdk.internal.helpers;
 import io.testproject.sdk.internal.rest.AgentClient;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Command;
+import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.Response;
 
@@ -74,6 +75,13 @@ public final class CustomHttpCommandExecutor extends HttpCommandExecutor
     private final StashedCommands stashedCommands = new StashedCommands();
 
     /**
+     * Constant for environment variable name that will determine if the driver should be quit.
+     * Used by the agent to avoid terminating the Selenium server session when executing coded
+     * tests through the recorder.
+     */
+    private static final String TP_KEEP_DRIVER_SESSION = "TP_KEEP_DRIVER_SESSION";
+
+    /**
      * Initializes a new instance of this an Executor restoring command/response codecs.
      *
      * @param agentClient           an instance of {@link AgentClient} used to pen the original driver session.
@@ -107,11 +115,18 @@ public final class CustomHttpCommandExecutor extends HttpCommandExecutor
      */
     @Override
     public Response execute(final Command command, final boolean skipReporting) {
-        Response response;
-        try {
-            response = super.execute(command);
-        } catch (IOException e) {
-            throw new WebDriverException(e);
+        boolean isQuitCommand = command.getName().equals(DriverCommand.QUIT);
+        boolean keepSessionOpen = Boolean.parseBoolean(System.getenv(TP_KEEP_DRIVER_SESSION));
+        Response response = new Response();
+        // Do not close the Selenium session if the incoming command is quit and the TP_KEEP_DRIVER_SESSION
+        // environment variable is set to true.
+        // Used when running tests through the platform to avoid closing the session.
+        if (!(keepSessionOpen && isQuitCommand)) {
+            try {
+                response = super.execute(command);
+            } catch (IOException e) {
+                throw new WebDriverException(e);
+            }
         }
 
         if (!skipReporting) {
