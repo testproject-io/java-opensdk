@@ -114,7 +114,18 @@ javadoc {
     options.addStringOption('encoding', 'UTF-8')
 }
 
+
+task generateVersionInfo {
+    def genOutputDir = file("src/main/resources")
+    def outputFile = file("$genOutputDir/testproject-opensdk.properties")
+    outputs.file(outputFile)
+    doLast {
+        outputFile.text = "version=${version}"
+    }
+}
+
 jar {
+    dependsOn generateVersionInfo
     manifest {
         attributes 'Implementation-Title': project.name,
                  'Implementation-Version': project.version
