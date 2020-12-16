@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.0] - 2020-12-16
+
+### Added
+
+- Environment variable that will be set to allow executing OpenSDK coded tests from within recorded tests.
+- Resource file `testproject-opensdk.properties` that will be created during build, to indicate SDK version in dependant projects. 
+
+### Changed
+
+- Throw `DeviceNotConnectedException` and `MissingBrowserException` in relevant cases.
+### Fixed
+
+- Handled parsing errors when assigning non-string outputs from addon actions to it's proxy class members.
+- Skip Selenium server address parsing when using a Generic driver.
 ## [0.64.5] - 2020-11-25
 
 ### Fixed
