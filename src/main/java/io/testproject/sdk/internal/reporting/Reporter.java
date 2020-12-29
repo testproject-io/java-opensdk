@@ -17,6 +17,7 @@
 
 package io.testproject.sdk.internal.reporting;
 
+import io.testproject.sdk.drivers.GenericDriver;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.helpers.ReportingCommandsExecutor;
 import io.testproject.sdk.internal.rest.AgentClient;
@@ -220,8 +221,14 @@ public final class Reporter {
      * @return {@link ClosableTestReport} instance
      */
     public ClosableTestReport test(final String name, final boolean passed, final String message) {
-        ReportingCommandsExecutor executor =
-                (ReportingCommandsExecutor) ((RemoteWebDriver) driver).getCommandExecutor();
+
+        ReportingCommandsExecutor executor;
+
+        if (driver instanceof GenericDriver) {
+            executor = driver.getReportingCommandExecutor();
+        } else {
+            executor = (ReportingCommandsExecutor) ((RemoteWebDriver) driver).getCommandExecutor();
+        }
 
         if (!executor.isTestAutoReportsDisabled()) {
             LOG.warn("Automatic test reports is enabled, disable it to report tests manually and avoid duplicates.");
