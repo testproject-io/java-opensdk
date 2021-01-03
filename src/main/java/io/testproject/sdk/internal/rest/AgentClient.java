@@ -868,6 +868,8 @@ public final class AgentClient implements Closeable {
             reportsExecutorService.shutdown();
         }
 
+        // Make sure to close the socket when exiting.
+        SocketManager.getInstance().closeSocket();
         LOG.info("Session [{}] closed", this.getSession().getSessionId());
     }
 
