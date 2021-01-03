@@ -58,8 +58,6 @@ public final class SocketManager {
      * Private constructor to prevent creating more than one instance.
      */
     private SocketManager() {
-        // Make sure to close the socket when process exits
-        Runtime.getRuntime().addShutdownHook(new Thread(this::closeSocket));
     }
 
     /**
