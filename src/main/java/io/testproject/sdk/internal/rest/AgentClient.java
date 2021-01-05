@@ -840,11 +840,15 @@ public final class AgentClient implements Closeable {
         close();
     }
 
+
     /**
      * Implementation of {@link Closeable Closable} interface.
-     * Close all open resources such as the reporting queue and the TCP socket open with the Agent.
+     * Closes all open resources such as the reporting queue without closing
+     * the TCP socket open with the agent.
      */
     public void close() {
+        close(false);
+    }
 
     /**
      * Close all open resources such as the reporting queue and the TCP socket open with the Agent
