@@ -845,6 +845,14 @@ public final class AgentClient implements Closeable {
      * Close all open resources such as the reporting queue and the TCP socket open with the Agent.
      */
     public void close() {
+
+    /**
+     * Close all open resources such as the reporting queue and the TCP socket open with the Agent
+     * if the process is exiting.
+     *
+     * @param exiting used to determine if the socket should be closed.
+     */
+    public void close(boolean exiting) {
         LOG.trace("Closing AgentClient for driver session [{}]", this.getSession().getSessionId());
         if (reportsQueueFuture != null && !reportsQueueFuture.isDone()) {
             reportsQueue.stop();
