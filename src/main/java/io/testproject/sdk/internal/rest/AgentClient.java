@@ -877,7 +877,11 @@ public final class AgentClient implements Closeable {
         }
 
         // Make sure to close the socket when exiting.
-        SocketManager.getInstance().closeSocket();
+        if (exiting) {
+            LOG.debug("Agent client is closing development socket as process is exiting...");
+            SocketManager.getInstance().closeSocket();
+        }
+
         LOG.info("Session [{}] closed", this.getSession().getSessionId());
     }
 
