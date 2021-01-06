@@ -243,8 +243,8 @@ public final class AgentClient implements Closeable {
             this.reportsQueueFuture = reportsExecutorService.submit(this.reportsQueue);
         }
 
-        // Make sure to exit gracefully
-        shutdownThread = new Thread(this::close);
+        // Make sure to exit gracefully and close the development socket
+        shutdownThread = new Thread(() -> close(true));
         Runtime.getRuntime().addShutdownHook(shutdownThread);
     }
 
@@ -840,11 +840,23 @@ public final class AgentClient implements Closeable {
         close();
     }
 
+
     /**
      * Implementation of {@link Closeable Closable} interface.
-     * Close all open resources such as the reporting queue and the TCP socket open with the Agent.
+     * Closes all open resources such as the reporting queue without closing
+     * the TCP socket open with the agent.
      */
     public void close() {
+        close(false);
+    }
+
+    /**
+     * Close all open resources such as the reporting queue and the TCP socket open with the Agent
+     * if the process is exiting.
+     *
+     * @param exiting used to determine if the socket should be closed.
+     */
+    public void close(final boolean exiting) {
         LOG.trace("Closing AgentClient for driver session [{}]", this.getSession().getSessionId());
         if (reportsQueueFuture != null && !reportsQueueFuture.isDone()) {
             reportsQueue.stop();
@@ -866,6 +878,12 @@ public final class AgentClient implements Closeable {
 
         if (!reportsExecutorService.isTerminated()) {
             reportsExecutorService.shutdown();
+        }
+
+        // Make sure to close the socket when exiting.
+        if (exiting) {
+            LOG.debug("Agent client is closing development socket as process is exiting...");
+            SocketManager.getInstance().closeSocket();
         }
 
         LOG.info("Session [{}] closed", this.getSession().getSessionId());
