@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.1] - 2021-01-07
+
+### Added
+
+- Reporting extension for TestNG has been added.
+
+### Fixed
+
+- Fixed issue where TCP socket would close before all test steps were reported.
+
 ## [0.65.0] - 2020-12-16
 
 ### Added
