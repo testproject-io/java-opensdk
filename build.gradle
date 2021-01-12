@@ -64,7 +64,7 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.5.1'
 
     // TestNG Testing framework
-    testImplementation group: 'org.testng', name: 'testng', version: '7.1.0'
+    implementation group: 'org.testng', name: 'testng', version: '7.1.0'
 
     // Logback classic module
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
