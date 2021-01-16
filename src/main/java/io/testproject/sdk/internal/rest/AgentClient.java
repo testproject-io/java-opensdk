@@ -20,6 +20,7 @@ package io.testproject.sdk.internal.rest;
 import com.google.gson.*;
 import io.testproject.sdk.internal.addons.ActionProxy;
 import io.testproject.sdk.internal.exceptions.*;
+import io.testproject.sdk.internal.helpers.ShutdownThreadManager;
 import io.testproject.sdk.internal.reporting.inferrers.GenericInferrer;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.messages.*;
@@ -149,11 +150,6 @@ public final class AgentClient implements Closeable {
     private final CloseableHttpClient httpClient;
 
     /**
-     * Shutdown thread instance.
-     */
-    private final Thread shutdownThread;
-
-    /**
      * Future to keep the async task of starting the reports queue.
      */
     private Future<?> reportsQueueFuture;
@@ -244,8 +240,8 @@ public final class AgentClient implements Closeable {
         }
 
         // Make sure to exit gracefully and close the development socket
-        shutdownThread = new Thread(() -> close(true));
-        Runtime.getRuntime().addShutdownHook(shutdownThread);
+        // Add with the highest priority to be executed last.
+        ShutdownThreadManager.getInstance().addAgentClient(() -> close(true));
     }
 
     /**
@@ -835,7 +831,7 @@ public final class AgentClient implements Closeable {
      * Removes shutdown hook and calls {@link #close()}.
      */
     private void stop() {
-        Runtime.getRuntime().removeShutdownHook(this.shutdownThread);
+        ShutdownThreadManager.getInstance().removeAgentClient();
         LOG.trace("Removed shutdown thread to avoid unnecessary close() calls");
         close();
     }

@@ -24,7 +24,7 @@ import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.internal.helpers.DriverHelper;
 import io.testproject.sdk.internal.helpers.ReportingCommandsExecutor;
-import io.testproject.sdk.internal.helpers.DriverShutdownThread;
+import io.testproject.sdk.internal.helpers.ShutdownThreadManager;
 import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
@@ -46,11 +46,6 @@ import java.net.URL;
         justification = "Minimize changes required in any migrated tests")
 @SuppressWarnings("WeakerAccess") // Prevent compiler complaining about unused overloaded constructors
 public class FirefoxDriver extends org.openqa.selenium.firefox.FirefoxDriver implements ReportingDriver {
-
-    /**
-     * Shutdown thread instance.
-     */
-    private final DriverShutdownThread driverShutdownThread;
 
     /**
      * Steps reporter instance.
@@ -375,8 +370,7 @@ public class FirefoxDriver extends org.openqa.selenium.firefox.FirefoxDriver imp
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
 
-        this.driverShutdownThread = new DriverShutdownThread(this);
-        Runtime.getRuntime().addShutdownHook(this.driverShutdownThread);
+        ShutdownThreadManager.getInstance().addDriver(this, this::stop);
     }
 
     /**
@@ -400,7 +394,7 @@ public class FirefoxDriver extends org.openqa.selenium.firefox.FirefoxDriver imp
     @Override
     public void quit() {
         // Avoid performing graceful shutdown more than once
-        Runtime.getRuntime().removeShutdownHook(this.driverShutdownThread);
+        ShutdownThreadManager.getInstance().removeDriver(this);
 
         // Stop the driver
         stop();
