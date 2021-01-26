@@ -58,6 +58,10 @@ public final class Reporter {
     public Reporter(final ReportingDriver driver, final AgentClient agentClient) {
         this.agentClient = agentClient;
         this.driver = driver;
+        if (Boolean.getBoolean(System.getProperty("TP_DISABLE_AUTO_REPORTS"))) {
+            this.disableTestAutoReports(true);
+            this.disableCommandReports(true);
+        }
     }
 
     /**
