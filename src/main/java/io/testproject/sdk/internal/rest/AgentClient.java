@@ -176,6 +176,12 @@ public final class AgentClient implements Closeable {
     private String jobName;
 
     /**
+     * When getting the AgentClient instance warn only once
+     * that there is no active AgentClient instance.
+     */
+    private static boolean warned = false;
+
+    /**
      * Boolean value to determine if report settings were inferred.
      * Used in the CucumberReporter to avoid updating the job name
      * if it was explicitly set.
@@ -292,6 +298,21 @@ public final class AgentClient implements Closeable {
         }
 
         return result;
+    }
+
+    /**
+     * Get current instance of the AgentClient.
+     * Method is meant for internal use only.
+     *
+     * @return current instance of AgentClient.
+     */
+    public static AgentClient getInstance() {
+        if (instance == null) {
+            if (!warned) {
+                warned = true;
+            }
+        }
+        return instance;
     }
 
     /**
@@ -840,13 +861,22 @@ public final class AgentClient implements Closeable {
     }
 
     /**
-     * Getter for skipInferring.
+     * Getter for {@link #skipInferring field}.
      * Used to check if the report settings were explicitly set.
      *
      * @return true if the report settings were inferred, false otherwise.
      */
     public boolean getSkipInferring() {
         return skipInferring;
+    }
+
+    /**
+     * Getter for {@link #warned field}.
+     *
+     * @return true if warned once the client is null.
+     */
+    public static boolean isWarned() {
+        return warned;
     }
 
     /**
