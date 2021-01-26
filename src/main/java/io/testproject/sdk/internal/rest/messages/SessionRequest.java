@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -76,6 +77,16 @@ public class SessionRequest {
         }
 
         this.capabilities = capabilities;
+    }
+
+    /**
+     * Creates a new instance with a specified job name.
+     *
+     * @param jobName of the session request.
+     */
+    public SessionRequest(final String jobName) {
+        this.jobName = jobName;
+        this.capabilities = new HashMap<>();
     }
 
     /**
