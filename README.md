@@ -44,14 +44,14 @@ For a Maven project, add the following to your `pom.xml` file:
 <dependency>
   <groupId>io.testproject</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>0.65.1-RELEASE</version>
+  <version>0.65.2-RELEASE</version>
   <classifier>sources</classifier>
 </dependency>
 ```
 
 For a Gradle project, add the following to your `build.gradle` file:
 ```
-implementation 'io.testproject:java-sdk:0.65.1-RELEASE'
+implementation 'io.testproject:java-sdk:0.65.2-RELEASE'
 ```
 
 # Test Development
