@@ -66,6 +66,11 @@ dependencies {
     // TestNG Testing framework
     implementation group: 'org.testng', name: 'testng', version: '7.1.0'
 
+    // Cucumber framework.
+    implementation 'io.cucumber:cucumber-java:6.9.1'
+
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.9.1'
+
     // Logback classic module
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 

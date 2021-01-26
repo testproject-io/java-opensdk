@@ -35,6 +35,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -175,6 +176,19 @@ public final class AgentClient implements Closeable {
     private String jobName;
 
     /**
+     * When getting the AgentClient instance warn only once
+     * that there is no active AgentClient instance.
+     */
+    private static boolean warned = false;
+
+    /**
+     * Boolean value to determine if report settings were inferred.
+     * Used in the CucumberReporter to avoid updating the job name
+     * if it was explicitly set.
+     */
+    private boolean skipInferring = false;
+
+    /**
      * Creates a new instance of the class.
      * Initiates a development session with the Agent.
      *
@@ -284,6 +298,21 @@ public final class AgentClient implements Closeable {
         }
 
         return result;
+    }
+
+    /**
+     * Get current instance of the AgentClient.
+     * Method is meant for internal use only.
+     *
+     * @return current instance of AgentClient.
+     */
+    public static AgentClient getInstance() {
+        if (instance == null) {
+            if (!warned) {
+                warned = true;
+            }
+        }
+        return instance;
     }
 
     /**
@@ -730,6 +759,10 @@ public final class AgentClient implements Closeable {
         LOG.info("Using [{}] and [{}] for Project and Job names accordingly.",
                 result.getProjectName(), result.getJobName());
 
+        if (Boolean.getBoolean(System.getProperty("TP_DISABLE_AUTO_REPORTS"))) {
+            skipInferring = true;
+        }
+
         return result;
     }
 
@@ -825,6 +858,25 @@ public final class AgentClient implements Closeable {
             return null;
         }
         return new ReportSettings(this.projectName, this.jobName);
+    }
+
+    /**
+     * Getter for {@link #skipInferring field}.
+     * Used to check if the report settings were explicitly set.
+     *
+     * @return true if the report settings were inferred, false otherwise.
+     */
+    public boolean getSkipInferring() {
+        return skipInferring;
+    }
+
+    /**
+     * Getter for {@link #warned field}.
+     *
+     * @return true if warned once the client is null.
+     */
+    public static boolean isWarned() {
+        return warned;
     }
 
     /**
@@ -1033,6 +1085,40 @@ public final class AgentClient implements Closeable {
         } catch (JsonSyntaxException e) {
             LOG.error("Failed reading action proxy execution response", e);
             throw new WebDriverException("Failed reading action proxy execution response", e);
+        }
+    }
+
+    /**
+     * Sent request to Agent API to update job name at runtime.
+     *
+     * @param updatedJobName to update original with.
+     */
+    public void updateJobName(final String updatedJobName) {
+
+        // Initialize PUT request to Agent API to override configuration.
+        HttpPut httpPut = new HttpPut(remoteAddress + AgentClient.Routes.DEVELOPMENT_SESSION);
+        httpPut.setConfig(getDefaultHttpConfig());
+
+        SessionRequest request = new SessionRequest(updatedJobName);
+
+        // Prepare payload
+        String data = GSON.toJson(request);
+
+        LOG.trace("Sending request to update job name to: {}", data);
+        StringEntity entity = new StringEntity(data, StandardCharsets.UTF_8);
+        httpPut.setEntity(entity);
+
+        // Send PUT request
+        CloseableHttpResponse response;
+        try {
+            response = this.httpClient.execute(httpPut);
+        } catch (IOException e) {
+            LOG.error("Failed to execute request to update job name: [{}]", updatedJobName, e);
+            return;
+        }
+
+        if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
+            LOG.error("Failed to update job name to {}", updatedJobName);
         }
     }
 
