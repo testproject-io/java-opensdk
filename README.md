@@ -514,6 +514,42 @@ Create a new file `src/main/resources/logback.xml` in your project and paste the
 
 </configuration>
 ```
+# Cucumber Framework
+
+The SDK also supports automatic reporting of Cucumber features, scenarios and steps using the internal CucumberReporter
+plugin.
+
+It will disable the reporting of driver commands and automatic reporting of tests.
+Instead, it will report:
+
+* A test for every scenario in a feature file
+* All steps in a scenario as steps in the corresponding test
+* Steps are automatically marked as passed or failed, to create comprehensive living documentation from your 
+  specifications on TestProject Cloud.
+  
+To use the plugin you must have an active TestProject driver instance before the execution of the features
+begins, either initializing the driver as the first step in your test or in a @BeforeClass annotated method.
+
+If you are running your features via a JUnit Cucumber runner, you will need to specify the plugin from 
+the @CucumberOptions annotation as seen below:
+
+```java
+@RunWith(Cucumber.class)
+@CucumberOptions(features = "path/to/feature/files",
+        glue = "step.definitions.package",
+        plugin = "io.testproject.sdk.internal.reporting.extensions.cucumber.CucumberReporter")
+public class JunitTestRunner
+```
+
+If you are executing your features without a JUnit runner, you will need to specify the plugin in your
+in your program's Run/Debug configuration as :
+
+```ascii
+--plugin io.testproject.sdk.internal.reporting.extensions.cucumber.CucumberReporter
+```
+
+    If executing without a runner, it is possible to initialize
+    the driver as part of the step definition class constructor.
 
 # Examples
 
