@@ -176,6 +176,13 @@ public final class AgentClient implements Closeable {
     private String jobName;
 
     /**
+     * Boolean value to determine if report settings were inferred.
+     * Used in the CucumberReporter to avoid updating the job name
+     * if it was explicitly set.
+     */
+    private boolean skipInferring = false;
+
+    /**
      * Creates a new instance of the class.
      * Initiates a development session with the Agent.
      *
@@ -731,6 +738,10 @@ public final class AgentClient implements Closeable {
         LOG.info("Using [{}] and [{}] for Project and Job names accordingly.",
                 result.getProjectName(), result.getJobName());
 
+        if (Boolean.getBoolean(System.getProperty("TP_DISABLE_AUTO_REPORTS"))) {
+            skipInferring = true;
+        }
+
         return result;
     }
 
@@ -826,6 +837,16 @@ public final class AgentClient implements Closeable {
             return null;
         }
         return new ReportSettings(this.projectName, this.jobName);
+    }
+
+    /**
+     * Getter for skipInferring.
+     * Used to check if the report settings were explicitly set.
+     *
+     * @return true if the report settings were inferred, false otherwise.
+     */
+    public boolean getSkipInferring() {
+        return skipInferring;
     }
 
     /**
