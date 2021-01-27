@@ -169,9 +169,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/testproject-io/java-sdk.git'
-                    developerConnection = 'scm:git:ssh://github.com/testproject-io/java-sdk.git'
-                    url = 'https://github.com/testproject-io/java-sdk'
+                    connection = 'scm:git:git://github.com/testproject-io/java-opensdk.git'
+                    developerConnection = 'scm:git:ssh://github.com/testproject-io/java-opensdk.git'
+                    url = 'https://github.com/testproject-io/java-opensdk'
                 }
             }
         }
