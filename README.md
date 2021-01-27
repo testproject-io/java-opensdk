@@ -550,6 +550,26 @@ in your program's Run/Debug configuration as :
 
     If executing without a runner, it is possible to initialize
     the driver as part of the step definition class constructor.
+  
+# Package & Upload Tests to TestProject
+
+Tests can be executed locally using the SDK, or triggered remotely from the TestProject platform. \
+Before uploading your Tests, they should be packaged into a JAR.
+
+This JAR must contain all the dependencies (including TestProject SDK) and your unit tests (JUnit / TestNG). \
+Since unit Tests are not packaged by default, they must be included explicitly during build.
+
+Here's an example of how this can be done with Gradle in build.gradle:
+
+```gradle
+jar {
+    // Include compiled test classes and their sources
+    from sourceSets.test.output+sourceSets.test.allSource
+
+    // Collect and zip all classes from both test and runtime configurations
+    from { configurations.testRuntimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+```
 
 # Examples
 
