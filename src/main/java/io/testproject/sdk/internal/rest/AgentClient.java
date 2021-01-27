@@ -759,7 +759,7 @@ public final class AgentClient implements Closeable {
         LOG.info("Using [{}] and [{}] for Project and Job names accordingly.",
                 result.getProjectName(), result.getJobName());
 
-        if (Boolean.getBoolean(System.getProperty("TP_DISABLE_AUTO_REPORTS"))) {
+        if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS")) {
             skipInferring = true;
         }
 
