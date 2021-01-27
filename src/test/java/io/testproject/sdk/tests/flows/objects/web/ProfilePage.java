@@ -17,11 +17,25 @@
 
 package io.testproject.sdk.tests.flows.objects.web;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public final class ProfilePage {
+
+    /**
+     * Driver timeout in seconds.
+     */
+    private static final int TIMEOUT = 60;
+
+    /**
+     * Web driver to be used.
+     */
+    private final WebDriver driver;
 
     /**
      * Element object for the 'logout' button.
@@ -66,6 +80,9 @@ public final class ProfilePage {
     private WebElement savedElement;
 
     private void selectCountry(final String country) {
+        WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
+        wait.until(ExpectedConditions.elementToBeClickable(countryElement));
+
         Select countrySelect = new Select(countryElement);
         countrySelect.selectByVisibleText(country);
     }
@@ -84,6 +101,15 @@ public final class ProfilePage {
 
     private void save() {
         saveElement.click();
+    }
+
+    /**
+     * Default constructor.
+     * @param driver Driver instance.
+     */
+    public ProfilePage(final WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
 
     /**
