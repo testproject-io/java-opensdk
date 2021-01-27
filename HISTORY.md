@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.3] - 2021-01-28
+
+### Added
+
+- Added package and upload instructions.
+
+### Fixed
+
+- Fixed Cucumber reporting plugin logic.
+- Fixed CI tests.
+
 ## [0.65.2] - 2021-01-27
 
 ### Added
