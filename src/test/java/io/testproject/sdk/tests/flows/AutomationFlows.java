@@ -23,6 +23,7 @@ import io.testproject.sdk.drivers.ios.IOSDriver;
 import io.testproject.sdk.tests.flows.objects.android.LoginPage;
 import io.testproject.sdk.tests.flows.objects.android.ProfilePage;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -62,6 +63,16 @@ public final class AutomationFlows {
     private static final String PHONE = "+1 555 555 55";
 
     /**
+     * Default resolution width.
+     */
+    public static final int DEFAULT_WIDTH = 1920;
+
+    /**
+     * Default resolution height.
+     */
+    public static final int DEFAULT_HEIGHT = 1080;
+
+    /**
      * Private default constructor to prevent instance initialization of this utility class.
      */
     private AutomationFlows() { }
@@ -71,6 +82,9 @@ public final class AutomationFlows {
      * @param driver WebDriver to use for autoamting the browser
      */
     public static void runFlow(final WebDriver driver) {
+        // Setting window size to avoid element being obscured in headless mode
+        driver.manage().window().setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+
         // Navigate to TestProject Example website
         driver.navigate().to("https://example.testproject.io/web/");
 
@@ -82,8 +96,7 @@ public final class AutomationFlows {
 
         // Complete profile forms and save it
         io.testproject.sdk.tests.flows.objects.web.ProfilePage profilePage =
-                PageFactory.initElements(driver,
-                        io.testproject.sdk.tests.flows.objects.web.ProfilePage.class);
+                new io.testproject.sdk.tests.flows.objects.web.ProfilePage(driver);
         profilePage.updateProfile(COUNTRY_NAME, ADDRESS, EMAIL, PHONE);
 
         // Make sure profile is saved
