@@ -1,6 +1,6 @@
-# TestProject SDK For Java
+# TestProject OpenSDK For Java
 
-![Build](https://github.com/testproject-io/java-sdk/workflows/Build/badge.svg)
+![Build](https://github.com/testproject-io/java-opensdk/workflows/Build/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.testproject/java-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.testproject/java-sdk)
 [![javadoc](https://javadoc.io/badge2/io.testproject/java-sdk/javadoc.svg)](https://javadoc.io/doc/io.testproject/java-sdk)
 
@@ -77,7 +77,7 @@ public class MyTest {
 
 Here a complete test example:
 
-> Make sure to [configure a development token](https://github.com/testproject-io/java-sdk#test-development) before running this example.
+> Make sure to [configure a development token](https://github.com/testproject-io/java-opensdk#test-development) before running this example.
 
 ```java
 package io.testproject.sdk.tests.examples.simple;
