@@ -559,7 +559,12 @@ Before uploading your Tests, they should be packaged into a JAR.
 This JAR must contain all the dependencies (including TestProject SDK) and your unit tests (JUnit / TestNG). \
 Since unit Tests are not packaged by default, they must be included explicitly during build.
 
-Here's an example of how this can be done with Gradle in build.gradle:
+## Gradle
+
+Here's an example of additions to `build.gradle` that will create a JAR with dependencies and test classes:
+
+<details><summary>build.gradle</summary>
+<p>
 
 ```gradle
 jar {
@@ -570,6 +575,88 @@ jar {
     from { configurations.testRuntimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 ```
+
+</p>
+</details>
+
+## Maven
+
+Here's an example of additions to `pom.xml` and a descriptor that will create a JAR with dependencies and test classes:
+
+<details><summary>pom.xml</summary>
+<p>
+
+```xml
+<build>
+    <plugins>
+        <!-- Use maven-jar-plugin to include tests -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>test-jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <!-- Use maven-assembly-plugin plugin with a custom descriptor -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptors>
+                    <!-- Path to the descriptor file -->
+                    <descriptor>src/main/java/assembly/test-jar-with-dependencies.xml</descriptor>
+                </descriptors>
+            </configuration>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+</p>
+</details>
+
+<br>
+
+<details><summary>Assembly Descriptor</summary>
+<p>
+
+Save this file under `src/main/java/assembly` as `test-jar-with-dependencies.xml`:
+
+```xml
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>test-jar-with-dependencies</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <useProjectAttachments>true</useProjectAttachments>
+            <unpack>true</unpack>
+            <scope>test</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
+```
+
+</p>
+</details>
 
 # Examples
 
