@@ -45,7 +45,6 @@ For a Maven project, add the following to your `pom.xml` file:
   <groupId>io.testproject</groupId>
   <artifactId>java-sdk</artifactId>
   <version>0.65.3-RELEASE</version>
-  <classifier>sources</classifier>
 </dependency>
 ```
 
