@@ -140,7 +140,8 @@ public class CucumberReporter implements EventListener {
         if (result.getStatus() == Status.PASSED) {
             stepPassed = true;
         } else {
-            String errorMessage = System.lineSeparator() + result.getError().getMessage();
+            String errorMessage = (result.getError() != null) ? System.lineSeparator()
+                    + result.getError().getMessage() : "";
             stepMessage = String.format("%s %s", stepMessage, errorMessage);
         }
 
