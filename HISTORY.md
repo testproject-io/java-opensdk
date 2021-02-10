@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.4] - 2021-02-12
+
+### Fixed
+
+- Fixed exception thrown when reporting failed Cucumber steps.
+
 ## [0.65.3] - 2021-01-28
 
 ### Added
