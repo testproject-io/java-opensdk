@@ -271,10 +271,10 @@ public final class GenericDriver implements ReportingDriver {
         AgentClient agentClient = AgentClient.getClient(remoteAddress, token, capabilities,
                         new ReportSettings(projectName, jobName), disableReports);
 
-        this.reporter = new Reporter(this, AgentClient.getClient(capabilities));
-
         reportingCommandExecutor = new GenericCommandExecutor(agentClient);
         reportingCommandExecutor.setReportsDisabled(disableReports);
+
+        this.reporter = new Reporter(this, AgentClient.getClient(capabilities));
     }
 
     /**
