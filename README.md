@@ -19,6 +19,7 @@ With TestProject SDK, users save a bunch of time and enjoy the following benefit
 * 5-minute simple Selenium and Appium setup with a single [Agent](https://docs.testproject.io/testproject-agents) deployment.
 * Automatic test reports in HTML/PDF format (including screenshots). 
 * Collaborative reporting dashboards with execution history and RESTful API support.
+* Automatic distribution and deployment of test artifacts in case uploaded to the platform.
 * Always up-to-date with the latest and stable Selenium driver version.
 * A simplified, familiar syntax for both web and mobile applications.
 * Complete test runner capabilities for both local and remote executions, anywhere.
