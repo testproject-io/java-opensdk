@@ -46,6 +46,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.Dialect;
 import org.slf4j.Logger;
@@ -665,7 +666,12 @@ public final class AgentClient implements Closeable {
         try {
             MutableCapabilities mutableCapabilities;
             if (agentResponse.getCapabilities() != null) {
-                mutableCapabilities = new MutableCapabilities(agentResponse.getCapabilities());
+                Map<String, Object> agentResponseCapabilities = agentResponse.getCapabilities();
+                // Handle 'loggingPrefs' capability object.
+                if (agentResponseCapabilities.getOrDefault(CapabilityType.LOGGING_PREFS, null) != null) {
+                    handleLoggingPrefs(agentResponseCapabilities);
+                }
+                mutableCapabilities = new MutableCapabilities(agentResponseCapabilities);
             } else {
                 mutableCapabilities = new MutableCapabilities();
             }
@@ -1119,6 +1125,46 @@ public final class AgentClient implements Closeable {
 
         if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
             LOG.error("Failed to update job name to {}", updatedJobName);
+        }
+    }
+
+    /**
+     * Handles a special case for the 'loggingPrefs' capability object.
+     *
+     * @param capabilitiesMap to put the updated 'loggingPrefs' object into.
+     */
+    private void handleLoggingPrefs(final Map<String, Object> capabilitiesMap) {
+        // Handle 'loggingPrefs' special case, see https://dev.testproject.io/jira/browse/TP-14214.
+        Map<String, String> loggingPrefsMap = new HashMap<>();
+        boolean instanceOfMap = true;
+        try {
+            Map<?, ?> tempLoggingPrefsMap;
+            Object tempLoggingPrefsObject = capabilitiesMap.getOrDefault(CapabilityType.LOGGING_PREFS,
+                    null);
+            if (tempLoggingPrefsObject != null) {
+                if (tempLoggingPrefsObject instanceof Map<?, ?>) {
+                    tempLoggingPrefsMap = (Map<?, ?>) tempLoggingPrefsObject;
+                    tempLoggingPrefsObject = tempLoggingPrefsMap.getOrDefault("prefs", null);
+                    if (tempLoggingPrefsObject != null) {
+                        if (tempLoggingPrefsObject instanceof Map<?, ?>) {
+                            tempLoggingPrefsMap = (Map<?, ?>) tempLoggingPrefsObject;
+                            tempLoggingPrefsMap.forEach((type, levelMap) ->
+                                    loggingPrefsMap.put((String) type, (String) ((Map<?, ?>) levelMap).get("name")));
+                        } else {
+                            instanceOfMap = false;
+                        }
+                    }
+                } else {
+                    instanceOfMap = false;
+                }
+            }
+            if (instanceOfMap) {
+                capabilitiesMap.put(CapabilityType.LOGGING_PREFS, loggingPrefsMap);
+            } else {
+                LOG.warn("Was unable to handle 'loggingPrefs' due to casting mismatch.");
+            }
+        } catch (Exception e) {
+            LOG.error("Failed to handle 'loggingPrefs' capability.", e);
         }
     }
 
