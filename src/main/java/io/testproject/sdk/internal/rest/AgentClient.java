@@ -189,6 +189,11 @@ public final class AgentClient implements Closeable {
     private boolean skipInferring = false;
 
     /**
+     * Session initialization response.
+     */
+    private SessionResponse agentResponse;
+
+    /**
      * Creates a new instance of the class.
      * Initiates a development session with the Agent.
      *
@@ -651,7 +656,6 @@ public final class AgentClient implements Closeable {
 
         LOG.trace("Session initialization response: {}", responseBody);
 
-        SessionResponse agentResponse;
         try {
             agentResponse = GSON.fromJson(responseBody, SessionResponse.class);
         } catch (JsonSyntaxException e) {
@@ -935,6 +939,10 @@ public final class AgentClient implements Closeable {
         }
 
         LOG.info("Session [{}] closed", this.getSession().getSessionId());
+
+        if (!StringUtils.isEmpty(agentResponse.getLocalReport())) {
+            LOG.info("Execution Report: {}", agentResponse.getLocalReport());
+        }
     }
 
     /**
