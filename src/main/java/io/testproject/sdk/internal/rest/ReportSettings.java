@@ -17,6 +17,8 @@
 
 package io.testproject.sdk.internal.rest;
 
+import io.testproject.sdk.drivers.ReportType;
+
 import java.util.Objects;
 
 /**
@@ -32,6 +34,11 @@ public class ReportSettings {
      * Job name to report.
      */
     private final String jobName;
+
+    /**
+     * Report type = cloud, local ort both.
+     */
+    private ReportType reportType;
 
     /**
      * Getter for {@link #projectName} field.
@@ -52,6 +59,15 @@ public class ReportSettings {
     }
 
     /**
+     * Getter for {@link #reportType} field.
+     *
+     * @return value of {@link #reportType} field
+     */
+    public ReportType getReportType() {
+        return reportType;
+    }
+
+    /**
      * Creates a new instance of the class.
      *
      * @param projectName Project name to report
@@ -60,6 +76,20 @@ public class ReportSettings {
     public ReportSettings(final String projectName, final String jobName) {
         this.projectName = projectName;
         this.jobName = jobName;
+        this.reportType = ReportType.CLOUD_AND_LOCAL;
+    }
+
+    /**
+     * Creates a new instance of the class.
+     *
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType  Report type to produce - cloud, local or both.
+     */
+    public ReportSettings(final String projectName, final String jobName, final ReportType reportType) {
+        this.projectName = projectName;
+        this.jobName = jobName;
+        this.reportType = reportType;
     }
 
     /**
