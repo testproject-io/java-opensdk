@@ -18,6 +18,7 @@
 package io.testproject.sdk.drivers.web;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
@@ -61,12 +62,35 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
      * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
      * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
      * <p>
+     *
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws IOException              if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public ChromeDriver()
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, new ChromeOptions());
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     *
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
         this(null, null, new ChromeOptions());
@@ -96,6 +120,30 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
     }
 
     /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options    take a look at {@link ChromeOptions}
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final ChromeOptions options, final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, options, reportType);
+    }
+
+    /**
      * Initiates a new session with the Agent using default token and URL and reports commands.
      * <p>
      * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
@@ -117,7 +165,34 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final boolean disableReports)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, options, null, null, disableReports);
+        this(null, null, options, null, null, disableReports, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL and reports commands.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options        take a look at {@link ChromeOptions}
+     * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final ChromeOptions options,
+                        final boolean disableReports,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, options, null, null, disableReports, reportType);
     }
 
     /**
@@ -142,7 +217,34 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final String projectName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, options, projectName, null, false);
+        this(null, null, options, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL with Project name.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options     take a look at {@link ChromeOptions}
+     * @param projectName Project name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final ChromeOptions options,
+                        final String projectName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, options, projectName, null, false, reportType);
     }
 
     /**
@@ -169,7 +271,36 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final String jobName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, options, projectName, jobName, false);
+        this(null, null, options, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options     take a look at {@link ChromeOptions}
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final ChromeOptions options,
+                        final String projectName,
+                        final String jobName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, options, projectName, jobName, false, reportType);
     }
 
     /**
@@ -196,6 +327,31 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
     }
 
     /**
+     * Initiates a new session with the Agent using provided token and default URL.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token      Development token that should be obtained from
+     *                   <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options    take a look at {@link ChromeOptions}
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final String token,
+                        final ChromeOptions options,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, token, options, reportType);
+    }
+
+    /**
      * Initiates a new session with the Agent using provided token and default URL and Project name.
      * <p>
      * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
@@ -215,7 +371,34 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
     public ChromeDriver(final String token, final ChromeOptions options, final String projectName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, token, options, projectName, null, false);
+        this(null, token, options, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL and Project name.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token       Development token that should be obtained from
+     *                    <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options     take a look at {@link ChromeOptions}
+     * @param projectName Project name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final String token,
+                        final ChromeOptions options,
+                        final String projectName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, token, options, projectName, null, false, reportType);
     }
 
     /**
@@ -240,7 +423,33 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final String projectName, final String jobName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, token, options, projectName, jobName, false);
+        this(null, token, options, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL, Project and Job names.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token       Development token that should be obtained from
+     *                    <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options     take a look at {@link ChromeOptions}
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final String token, final ChromeOptions options,
+                        final String projectName, final String jobName, final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, token, options, projectName, jobName, false, reportType);
     }
 
     /**
@@ -266,6 +475,30 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
     }
 
     /**
+     * Initiates a new session with the Agent using provided Agent URL and default token.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link ChromeOptions}
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final URL remoteAddress,
+                        final ChromeOptions options,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, reportType);
+    }
+
+    /**
      * Initiates a new session with the Agent using provided Agent URL, default token and Project name.
      * <p>
      * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
@@ -286,7 +519,33 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final String projectName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(remoteAddress, null, options, projectName, null, false);
+        this(remoteAddress, null, options, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL, default token and Project name.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link ChromeOptions}
+     * @param projectName   Project name to report
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final URL remoteAddress,
+                        final ChromeOptions options,
+                        final String projectName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, projectName, null, false, reportType);
     }
 
     /**
@@ -312,7 +571,35 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final String jobName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(remoteAddress, null, options, projectName, jobName, false);
+        this(remoteAddress, null, options, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL, default token, Project and Job names.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link ChromeOptions}
+     * @param projectName   Project name to report
+     * @param jobName       Job name to report
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final URL remoteAddress,
+                        final ChromeOptions options,
+                        final String projectName,
+                        final String jobName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, projectName, jobName, false, reportType);
     }
 
     /**
@@ -332,7 +619,29 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final ChromeOptions options)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(remoteAddress, token, options, null, null, false);
+        this(remoteAddress, token, options, null, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and token.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param token         Development token that should be obtained from
+     *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options       take a look at {@link ChromeOptions}
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public ChromeDriver(final URL remoteAddress,
+                        final String token,
+                        final ChromeOptions options,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, options, null, null, false, reportType);
     }
 
     /**
@@ -345,6 +654,7 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
      * @param projectName    Project name to report
      * @param jobName        Job name to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws IOException              if the Agent API base URL provided is malformed
@@ -355,12 +665,13 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
                         final ChromeOptions options,
                         final String projectName,
                         final String jobName,
-                        final boolean disableReports)
+                        final boolean disableReports,
+                        final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
         super(new FakeDriverService(), new ChromeOptions().merge(AgentClient
                 .getClient(remoteAddress, token, options,
-                        new ReportSettings(projectName, jobName), disableReports)
+                        new ReportSettings(projectName, jobName, reportType), disableReports)
                 .getSession().getCapabilities()));
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
