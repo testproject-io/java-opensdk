@@ -20,6 +20,7 @@ package io.testproject.sdk.drivers.web;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
@@ -73,12 +74,35 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
      * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
      * <p>
+     *
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public InternetExplorerDriver()
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, null, new InternetExplorerOptions());
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     *
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
         this(null, null, new InternetExplorerOptions());
@@ -118,6 +142,30 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
+     * @param options    take a look at {@link InternetExplorerOptions}
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final InternetExplorerOptions options, final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, null, options, reportType);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
      * @param options        take a look at {@link InternetExplorerOptions}
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -129,7 +177,34 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final boolean disableReports)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(null, null, options, null, null, disableReports);
+        this(null, null, options, null, null, disableReports, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options        take a look at {@link InternetExplorerOptions}
+     * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final InternetExplorerOptions options,
+                                  final boolean disableReports,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, null, options, null, null, disableReports, reportType);
     }
 
     /**
@@ -154,7 +229,34 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final String projectName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(null, null, options, projectName, null, false);
+        this(null, null, options, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL with Project name.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options     take a look at {@link InternetExplorerOptions}
+     * @param projectName Project name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, null, options, projectName, null, false, reportType);
     }
 
     /**
@@ -181,7 +283,36 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final String jobName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(null, null, options, projectName, jobName, false);
+        this(null, null, options, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL, Project and Job names.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param options     take a look at {@link InternetExplorerOptions}
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final String jobName,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, null, options, projectName, jobName, false, reportType);
     }
 
     /**
@@ -204,7 +335,32 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final InternetExplorerOptions options)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(null, token, options, null, null, false);
+        this(null, token, options, null, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token      Development token that should be obtained from
+     *                   <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options    take a look at {@link InternetExplorerOptions}
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final String token,
+                                  final InternetExplorerOptions options,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, token, options, null, null, false, reportType);
     }
 
     /**
@@ -229,7 +385,34 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final String projectName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(null, token, options, projectName, null, false);
+        this(null, token, options, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL with Project name.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token       Development token that should be obtained from
+     *                    <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options     take a look at {@link InternetExplorerOptions}
+     * @param projectName Project name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final String token,
+                                  final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, token, options, projectName, null, false, reportType);
     }
 
     /**
@@ -256,7 +439,36 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final String jobName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(null, token, options, projectName, jobName, false);
+        this(null, token, options, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL, Project and Job names.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token       Development token that should be obtained from
+     *                    <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options     take a look at {@link InternetExplorerOptions}
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType  A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final String token,
+                                  final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final String jobName,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, token, options, projectName, jobName, false, reportType);
     }
 
     /**
@@ -277,7 +489,31 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
     public InternetExplorerDriver(final URL remoteAddress, final InternetExplorerOptions options)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(remoteAddress, null, options, null, null, false);
+        this(remoteAddress, null, options, null, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and default token.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link InternetExplorerOptions}
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress,
+                                  final InternetExplorerOptions options,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, null, null, false, reportType);
     }
 
     /**
@@ -301,7 +537,33 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final String projectName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(remoteAddress, null, options, projectName, null, false);
+        this(remoteAddress, null, options, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL and Project name.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link InternetExplorerOptions}
+     * @param projectName   Project name to report
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress,
+                                  final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, projectName, null, false, reportType);
     }
 
     /**
@@ -327,7 +589,35 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final String jobName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(remoteAddress, null, options, projectName, jobName, false);
+        this(remoteAddress, null, options, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and default token, Project and Job names.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link InternetExplorerOptions}
+     * @param projectName   Project name to report
+     * @param jobName       Job name to report
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress,
+                                  final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final String jobName,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, projectName, jobName, false, reportType);
     }
 
     /**
@@ -347,7 +637,29 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final InternetExplorerOptions options)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
-        this(remoteAddress, token, options, null, null, false);
+        this(remoteAddress, token, options, null, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and token.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param token         Development token that should be obtained from
+     *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options       take a look at {@link InternetExplorerOptions}
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress,
+                                  final String token,
+                                  final InternetExplorerOptions options,
+                                  final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, options, null, null, false, reportType);
     }
 
     /**
@@ -360,6 +672,7 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * @param projectName    Project name to report
      * @param jobName        Job name to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
@@ -370,11 +683,13 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                                   final InternetExplorerOptions options,
                                   final String projectName,
                                   final String jobName,
-                                  final boolean disableReports)
+                                  final boolean disableReports,
+                                  final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
         super(fakeDriverService(), new InternetExplorerOptions().merge(AgentClient
-                .getClient(remoteAddress, token, options, new ReportSettings(projectName, jobName), disableReports)
+                .getClient(remoteAddress, token, options,
+                        new ReportSettings(projectName, jobName, reportType), disableReports)
                 .getSession().getCapabilities()));
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
@@ -434,7 +749,6 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
     }
 
     /**
-     *
      * Creates fake DriverService to avoid searching for driver executable.
      *
      * @return a new DriverService with dummy data.
