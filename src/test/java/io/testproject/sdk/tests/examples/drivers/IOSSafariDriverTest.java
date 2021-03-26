@@ -72,7 +72,7 @@ class IOSSafariDriverTest {
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DUT_NAME);
         capabilities.setCapability(CapabilityType.BROWSER_NAME, BrowserType.SAFARI);
 
-        driver = new IOSDriver<>(capabilities, "Examples", null);
+        driver = new IOSDriver<>(capabilities, "Examples");
     }
 
     @Test

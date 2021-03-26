@@ -43,7 +43,7 @@ class GenericDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new GenericDriver("Examples", null);
+        driver = new GenericDriver("Examples");
     }
 
     @Test

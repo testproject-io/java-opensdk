@@ -48,7 +48,7 @@ class InternetExplorerDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new InternetExplorerDriver(new InternetExplorerOptions(), "Examples", null);
+        driver = new InternetExplorerDriver(new InternetExplorerOptions(), "Examples");
     }
 
     @Test
