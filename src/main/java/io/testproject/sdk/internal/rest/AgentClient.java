@@ -18,6 +18,7 @@
 package io.testproject.sdk.internal.rest;
 
 import com.google.gson.*;
+import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.internal.addons.ActionProxy;
 import io.testproject.sdk.internal.exceptions.*;
 import io.testproject.sdk.internal.helpers.ShutdownThreadManager;
@@ -109,6 +110,11 @@ public final class AgentClient implements Closeable {
      * Minimum Agent version that support session reuse.
      */
     private static final String MIN_SESSION_REUSE_CAPABLE_VERSION = "0.64.32";
+
+    /**
+     * Minimum Agent version that supports local reports.
+     */
+    private static final String MIN_LOCAL_REPORT_SUPPORTED_VERSION = "2.1.0";
 
     /**
      * Logger instance.
@@ -242,6 +248,7 @@ public final class AgentClient implements Closeable {
 
         // Start Session
         ReportSettings sessionReportSettings = disableReports ? null : inferReportSettings(reportSettings);
+
         try {
             startSession(capabilities, sessionReportSettings);
         } catch (MissingBrowserException e) {
@@ -251,6 +258,9 @@ public final class AgentClient implements Closeable {
             throw new AgentConnectException(String.format("Requested device %s is not connected",
                     capabilities.getCapability("udid")), e);
         }
+
+        // Make sure local reports are supported
+        verifyLocalReportsSupported(reportSettings.getReportType());
 
         // Start reports queue
         if (!disableReports) {
@@ -770,6 +780,22 @@ public final class AgentClient implements Closeable {
         }
 
         return result;
+    }
+
+    /**
+     * Verify that target Agent supports local reports, otherwise throw an exception.
+     * @param reportType Report type requested.
+     * @throws AgentConnectException when local reports are not supported.
+     */
+    private void verifyLocalReportsSupported(final ReportType reportType) throws AgentConnectException {
+        if (reportType == ReportType.LOCAL && new ComparableVersion(version).compareTo(
+                new ComparableVersion(MIN_LOCAL_REPORT_SUPPORTED_VERSION)) < 0) {
+            StringBuilder message = new StringBuilder()
+                    .append("Target Agent version").append(" [").append(version).append("] ")
+                    .append("doesn't support local reports. ")
+                    .append("Upgrade the Agent to the latest version and try again.");
+            throw new AgentConnectException(message.toString());
+        }
     }
 
     /**
