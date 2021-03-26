@@ -17,6 +17,7 @@
 
 package io.testproject.sdk.internal.rest.messages;
 
+import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,6 +52,10 @@ public class SessionRequest {
      * Job name to report.
      */
     private String jobName;
+    /**
+     * Type of report to produce - cloud, local or both.
+     */
+    private ReportType reportType;
 
     /**
      * Creates a new instance using provided capabilities.
@@ -62,6 +67,7 @@ public class SessionRequest {
         if (reportSettings != null) {
             this.projectName = reportSettings.getProjectName();
             this.jobName = reportSettings.getJobName();
+            this.reportType = reportSettings.getReportType();
         }
 
         // Retrieves the version sent bu gradle when creating the JAR
@@ -132,5 +138,14 @@ public class SessionRequest {
      */
     public String getJobName() {
         return jobName;
+    }
+
+    /**
+     * Getter for {@link #reportType} field.
+     *
+     * @return value of {@link #reportType} field
+     */
+    public ReportType getReportType() {
+        return reportType;
     }
 }
