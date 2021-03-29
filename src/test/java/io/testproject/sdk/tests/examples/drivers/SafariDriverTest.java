@@ -48,7 +48,7 @@ class SafariDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new SafariDriver(new SafariOptions(), "Examples", null);
+        driver = new SafariDriver(new SafariOptions(), "Examples");
     }
 
     @Test

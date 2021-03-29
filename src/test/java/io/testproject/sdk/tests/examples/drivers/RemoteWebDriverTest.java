@@ -48,7 +48,7 @@ class RemoteWebDriverTest {
     void testExampleChrome()
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new ChromeOptions(),
-                "Examples", null);
+                "Examples");
         AutomationFlows.runFlow(driver);
         driver.quit();
     }
@@ -58,7 +58,7 @@ class RemoteWebDriverTest {
     void testExampleFirefox()
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new FirefoxOptions(),
-                "Examples", null);
+                "Examples");
         AutomationFlows.runFlow(driver);
         driver.quit();
     }
@@ -69,7 +69,7 @@ class RemoteWebDriverTest {
     void testExampleSafari()
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new SafariOptions(),
-                "Examples", null);
+                "Examples");
         AutomationFlows.runFlow(driver);
         driver.quit();
     }
@@ -80,7 +80,7 @@ class RemoteWebDriverTest {
     void testExampleInternetExplorer()
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new InternetExplorerOptions(),
-                "Examples", null);
+                "Examples");
         AutomationFlows.runFlow(driver);
         driver.quit();
     }
@@ -90,7 +90,7 @@ class RemoteWebDriverTest {
     void testExampleEdge()
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new EdgeOptions(),
-                "Examples", null);
+                "Examples");
         AutomationFlows.runFlow(driver);
         driver.quit();
     }

@@ -21,6 +21,7 @@
 
 package io.testproject.sdk;
 
+import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.openqa.selenium.Capabilities;
@@ -72,6 +73,11 @@ public final class DriverBuilder<T extends ReportingDriver> {
      * Enable / Disable reports flag.
      */
     private boolean builderDisableReports;
+
+    /**
+     * Report type to produce.
+     */
+    private ReportType builderReportType;
 
     /**
      * Initializes a new instance of the builder.
@@ -158,6 +164,16 @@ public final class DriverBuilder<T extends ReportingDriver> {
     }
 
     /**
+     * Set report type - cloud, local or both.
+     * @param reportType report type - cloud, local or both.
+     * @return Modified builder.
+     */
+    public DriverBuilder<T> withReportType(final ReportType reportType) {
+        this.builderReportType = reportType;
+        return this;
+    }
+
+    /**
      * Builds an instance of the requested driver using set values.
      *
      * @param clazz Required driver type.
@@ -189,7 +205,8 @@ public final class DriverBuilder<T extends ReportingDriver> {
                     builderCapabilities,
                     builderProjectName,
                     builderJobName,
-                    builderDisableReports);
+                    builderDisableReports,
+                    builderReportType);
         } catch (Exception e) {
             throw new WebDriverException("Failed to create an instance of " + clazz.getName(), e);
         }

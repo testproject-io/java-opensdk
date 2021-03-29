@@ -45,7 +45,7 @@ class EdgeDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new EdgeDriver(new EdgeOptions(), "Examples", null);
+        driver = new EdgeDriver(new EdgeOptions(), "Examples");
     }
 
     @Test

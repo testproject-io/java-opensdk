@@ -45,7 +45,7 @@ class ChromeDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new ChromeDriver(new ChromeOptions(), "Examples", null);
+        driver = new ChromeDriver(new ChromeOptions(), "Examples");
     }
 
     @Test

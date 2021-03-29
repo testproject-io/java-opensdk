@@ -78,6 +78,28 @@ public final class GenericDriver implements ReportingDriver {
     }
 
     /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     *
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(false, reportType);
+    }
+
+    /**
      * Initiates a new session with the Agent using default token and URL and reports commands.
      * <p>
      * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
@@ -97,7 +119,31 @@ public final class GenericDriver implements ReportingDriver {
     public GenericDriver(final boolean disableReports)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, null, null, disableReports);
+        this(null, null, null, null, disableReports, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL and reports commands.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final boolean disableReports, final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, null, null, disableReports, reportType);
     }
 
     /**
@@ -120,7 +166,31 @@ public final class GenericDriver implements ReportingDriver {
     public GenericDriver(final String projectName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, projectName, null, false);
+        this(null, null, projectName, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL with Project name.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param projectName Project name to report
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final String projectName, final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, projectName, null, false, reportType);
     }
 
     /**
@@ -145,7 +215,34 @@ public final class GenericDriver implements ReportingDriver {
                          final String jobName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, projectName, jobName, false);
+        this(null, null, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final String projectName,
+                         final String jobName,
+                         final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(null, null, projectName, jobName, false, reportType);
     }
 
     /**
@@ -168,7 +265,33 @@ public final class GenericDriver implements ReportingDriver {
     public GenericDriver(final String token, final String projectName, final String jobName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, token, projectName, jobName, false);
+        this(null, token, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL and Project name.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param token       Development token that should be obtained from
+     *                    <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final String token,
+                         final String projectName,
+                         final String jobName,
+                         final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException, ObsoleteVersionException {
+        this(null, token, projectName, jobName, false, reportType);
     }
 
     /**
@@ -188,7 +311,28 @@ public final class GenericDriver implements ReportingDriver {
     public GenericDriver(final URL remoteAddress)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(remoteAddress, null);
+        this(remoteAddress, null, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and default token.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final URL remoteAddress, final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, reportType);
     }
 
     /**
@@ -212,7 +356,33 @@ public final class GenericDriver implements ReportingDriver {
                          final String jobName)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(remoteAddress, null, projectName, jobName, false);
+        this(remoteAddress, null, projectName, jobName, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL, default token, Project and Job names.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param projectName   Project name to report
+     * @param jobName       Job name to report
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final URL remoteAddress,
+                         final String projectName,
+                         final String jobName,
+                         final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, projectName, jobName, false, reportType);
     }
 
     /**
@@ -230,7 +400,27 @@ public final class GenericDriver implements ReportingDriver {
                          final String token)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(remoteAddress, token, null, null, false);
+        this(remoteAddress, token, null, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and token.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param token         Development token that should be obtained from
+     *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param reportType A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public GenericDriver(final URL remoteAddress,
+                         final String token,
+                         final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, null, null, false, reportType);
     }
 
     /**
@@ -242,6 +432,7 @@ public final class GenericDriver implements ReportingDriver {
      * @param projectName    Project name to report
      * @param jobName        Job name to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws IOException              if the Agent API base URL provided is malformed
@@ -251,7 +442,8 @@ public final class GenericDriver implements ReportingDriver {
                          final String token,
                          final String projectName,
                          final String jobName,
-                         final boolean disableReports)
+                         final boolean disableReports,
+                         final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
 
@@ -269,7 +461,7 @@ public final class GenericDriver implements ReportingDriver {
         }
 
         AgentClient agentClient = AgentClient.getClient(remoteAddress, token, capabilities,
-                        new ReportSettings(projectName, jobName), disableReports);
+                        new ReportSettings(projectName, jobName, reportType), disableReports);
 
         reportingCommandExecutor = new GenericCommandExecutor(agentClient);
         reportingCommandExecutor.setReportsDisabled(disableReports);

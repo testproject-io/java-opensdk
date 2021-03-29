@@ -432,6 +432,32 @@ ChromeDriver driver = new ChromeDriver(new ChromeOptions());
 driver.report().disableRedaction(true);
 ```
 
+## Cloud and Local Report
+
+By default, the execution report is uploaded to the cloud, and a local report is created, as an HTML file in a temporary folder.
+
+At the end of execution, the report is uploaded to the cloud and SDK outputs to the console/terminal the path for a local report file:
+
+`Execution Report: {temporary_folder}/report.html`
+
+This behavior can be controlled, by requesting only a `LOCAL` or only a `CLOUD` report.
+
+> When the Agent is offline, and only a _cloud_ report is requested, execution will fail with appropriate message.
+
+Via a driver constructor:
+
+```java
+ChromeDriver driver = new ChromeDriver(new ChromeOptions(), ReportType.LOCAL);
+```
+
+Or via the builder:
+
+```java
+ChromeDriver driver = new DriverBuilder<ChromeDriver>(new ChromeOptions())
+  .withReportType(ReportType.LOCAL)
+  .build(ChromeDriver.class);
+```
+
 # Logging
 
 TestProject SDK uses SLF4J API for logging.\

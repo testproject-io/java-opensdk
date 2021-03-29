@@ -66,7 +66,7 @@ class AndroidDriverChromeTest {
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
         capabilities.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
 
-        driver = new AndroidDriver<>(capabilities, "Examples", null);
+        driver = new AndroidDriver<>(capabilities, "Examples");
     }
 
     @Test

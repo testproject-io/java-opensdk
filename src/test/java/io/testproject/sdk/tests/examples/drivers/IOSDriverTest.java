@@ -82,7 +82,7 @@ class IOSDriverTest {
         // Compile and deploy the App from source https://github.com/testproject-io/ios-demo-app
         capabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, AUT_BUNDLE_ID);
 
-        driver = new IOSDriver<>(capabilities, "Examples", null);
+        driver = new IOSDriver<>(capabilities, "Examples");
     }
 
     @Test

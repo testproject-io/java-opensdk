@@ -45,7 +45,7 @@ class FirefoxDriverTest {
 
     @BeforeAll
     static void setup() throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
-        driver = new FirefoxDriver(new FirefoxOptions(), "Example Project", null);
+        driver = new FirefoxDriver(new FirefoxOptions(), "Example Project");
     }
 
     @Test

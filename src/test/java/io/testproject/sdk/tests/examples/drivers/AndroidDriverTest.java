@@ -79,7 +79,7 @@ class AndroidDriverTest {
         capabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, AUT_PACKAGE_NAME);
         capabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, AUT_ACTIVITY);
 
-        driver = new AndroidDriver<>(capabilities, "Examples", null);
+        driver = new AndroidDriver<>(capabilities, "Examples");
     }
 
     @Test

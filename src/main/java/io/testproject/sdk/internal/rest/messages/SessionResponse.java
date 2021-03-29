@@ -55,6 +55,11 @@ public class SessionResponse {
     private String version;
 
     /**
+     * Local Report File Path.
+     */
+    private String localReport;
+
+    /**
      * Getter for {@link #devSocketPort} field.
      *
      * @return value of {@link #devSocketPort} field
@@ -106,5 +111,14 @@ public class SessionResponse {
      */
     public String getVersion() {
         return version;
+    }
+
+    /**
+     * Getter for {@link #localReport} field.
+     *
+     * @return value of {@link #localReport} field
+     */
+    public String getLocalReport() {
+        return localReport;
     }
 }
