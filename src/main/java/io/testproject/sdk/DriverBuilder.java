@@ -189,7 +189,8 @@ public final class DriverBuilder<T extends ReportingDriver> {
                         this.builderCapabilities.getClass(),
                         String.class,
                         String.class,
-                        boolean.class);
+                        boolean.class,
+                        ReportType.class);
 
         // Make sure that requested constructor was found
         if (constructor == null) {
