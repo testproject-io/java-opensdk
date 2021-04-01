@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0] - 2021-04-01
+
+## Added
+
+- Added option to configure report type (cloud, local or both).
+- Added Cucumber framework mobile example test.
+
 ## [0.65.4] - 2021-02-12
 
 ### Fixed
