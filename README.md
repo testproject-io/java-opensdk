@@ -245,7 +245,7 @@ Examples of explicit Project & Job names configuration:
 
 Reporting extensions extend the TestProject SDK reporting capabilities by intercepting unit testing framework assertions or exceptions thrown, and reporting them as failing steps.
 
-### JUnit
+### JUnit5
 
 In order to integrate it, a relevant interface needs to be implemented by your test class, for example:
 
@@ -282,6 +282,19 @@ ReportingDriver getDriver();
 ```
 
 The method should provide access to the driver that is used for reporting.
+
+### JUnit4
+
+In order to integrate it, your test class will need to use the ExceptionsReportListener from the SDK.
+
+To use it, annoate your test class with the @RunWith annotation and specify the ExceptionsReportListener class.
+
+```java
+import io.testproject.sdk.internal.reporting.extensions.junit4.ExceptionsReportListener;
+
+@RunWith(ExceptionsReportListener.class)
+public class ExceptionsReportTest
+```
 
 ## Tests Reports
 
