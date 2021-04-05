@@ -195,6 +195,11 @@ public final class AgentClient implements Closeable {
     private boolean skipInferring = false;
 
     /**
+     * Boolean value to determine if reporting was disabled.
+     */
+    private boolean reportsDisabled = false;
+
+    /**
      * Session initialization response.
      */
     private SessionResponse agentResponse;
@@ -247,6 +252,7 @@ public final class AgentClient implements Closeable {
         this.httpClient = httpClientBuilder.build();
 
         // Start Session
+        this.reportsDisabled = disableReports;
         ReportSettings sessionReportSettings = disableReports ? null : inferReportSettings(reportSettings);
 
         try {
@@ -900,6 +906,16 @@ public final class AgentClient implements Closeable {
      */
     public boolean getSkipInferring() {
         return skipInferring;
+    }
+
+    /**
+     * Getter for {@link #reportsDisabled field}.
+     * Used to check if the reports were explicitly disabled.
+     *
+     * @return true if the reports were disabled.
+     */
+    public boolean getReportsDisabled() {
+        return reportsDisabled;
     }
 
     /**
