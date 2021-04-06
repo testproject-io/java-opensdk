@@ -55,7 +55,7 @@ dependencies {
     api group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 
     // JUnit4
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    implementation group: 'junit', name: 'junit', version: '4.13'
 
     // JUnit5
     implementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
