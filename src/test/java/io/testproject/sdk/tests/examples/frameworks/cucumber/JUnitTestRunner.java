@@ -34,12 +34,12 @@ import org.junit.runner.RunWith;
 @CucumberOptions(features = "src/test/java/io/testproject/sdk/tests/examples/frameworks/cucumber/features/",
         glue = "io.testproject.sdk.tests.examples.frameworks.cucumber.stepdefinitions",
         plugin = "io.testproject.sdk.internal.reporting.extensions.cucumber.CucumberReporter")
-final class JunitTestRunner {
+final class JUnitTestRunner {
 
     /**
      * Default constructor.
      */
-    private JunitTestRunner() {
+    private JUnitTestRunner() {
 
     }
 
