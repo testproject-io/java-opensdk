@@ -52,6 +52,8 @@ public class CucumberReporter implements EventListener {
         LOG.info("Initializing Cucumber reporter");
         // Disable auto reporting for tests and driver commands.
         System.setProperty("TP_DISABLE_AUTO_REPORTS", "true");
+        // Force session reuse for Cucumber tests.
+        System.setProperty("TP_FORCE_SESSION_REUSE", "true");
     }
 
     /**

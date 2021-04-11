@@ -501,7 +501,9 @@ public final class AgentClient implements Closeable {
 
                     // If the report doesn't go to the same Project/Job,
                     // or Agent doesn't support session reuse - close it.
-                    if (!sameReportSettings || !canReuseSession()) {
+                    // and Cucumber does not force session reuse.
+                    if ((!sameReportSettings || !canReuseSession())
+                            && !(Boolean.getBoolean("TP_FORCE_SESSION_REUSE"))) {
                         SocketManager.getInstance().closeSocket();
                     }
 
