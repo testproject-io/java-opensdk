@@ -174,7 +174,13 @@ public final class Reporter {
                      final String message,
                      final boolean passed,
                      final boolean screenshot) {
-        // Report Test if needed
+        // Report test step if needed.
+
+        // If manual reporting is disabled, skip.
+        if (Boolean.getBoolean("TP_DISABLE_MANUAL_REPORTS")) {
+            return;
+        }
+
         if (!this.driver.getReportingCommandExecutor().isReportsDisabled()) {
             List<StackTraceElement> traces = Arrays.asList(Thread.currentThread().getStackTrace());
             this.driver.getReportingCommandExecutor().reportTest(traces, false);
