@@ -41,12 +41,19 @@ public class CucumberReporter implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(CucumberReporter.class);
 
     /**
+     * Updated job name.
+     */
+    private String updatedJobName;
+
+    /**
      * Cucumber requires empty constructor.
      */
     public CucumberReporter() {
         LOG.info("Initializing Cucumber reporter");
         // Disable auto reporting for tests and driver commands.
         System.setProperty("TP_DISABLE_AUTO_REPORTS", "true");
+        // Force session reuse for Cucumber tests.
+        System.setProperty("TP_FORCE_SESSION_REUSE", "true");
     }
 
     /**
@@ -56,11 +63,12 @@ public class CucumberReporter implements EventListener {
      */
     @Override
     public void setEventPublisher(final EventPublisher publisher) {
-
         // Report each step in the test.
         publisher.registerHandlerFor(TestStepFinished.class, this::reportCucumberStepFinished);
         // Report when a test finishes (Scenario).
         publisher.registerHandlerFor(TestCaseFinished.class, this::reportCucumberTestFinished);
+        // Update the job name to the feature file name after test execution.
+        publisher.registerHandlerFor(TestRunFinished.class, this::updateCucumberJobName);
     }
 
     /**
@@ -78,15 +86,13 @@ public class CucumberReporter implements EventListener {
         }
 
         // Extract feature file name to override job name during runtime.
-        // Example: in 'C:/user/feature/my_job.feature' will match between last '/' and '.' and give 'my_job'.
+        // Example: in 'C:/user/feat_tests/my_job.feature' will match between two last '/' and and give 'feat_tests'.
         String uri = testCaseFinished.getTestCase().getUri().toString();
-        Pattern pattern = Pattern.compile("([^/]+)\\.");
+        Pattern pattern = Pattern.compile("/([^/]*)/[^/]*$");
         Matcher matcher = pattern.matcher(uri);
-        // If found the pattern and the report settings for the report were not explicitly set, call the endpoint
-        // to override the job name.
-        if (matcher.find() && matcher.groupCount() > 0 && AgentClient.getInstance().getSkipInferring()) {
-            String featureFileName = matcher.group(1);
-            AgentClient.getInstance().updateJobName(featureFileName);
+        // Set a job name to use to override existing one during runtime.
+        if (matcher.find() && matcher.groupCount() > 0) {
+            updatedJobName = matcher.group(1);
         }
 
         // Submit test report of this scenario.
@@ -104,7 +110,6 @@ public class CucumberReporter implements EventListener {
      * @param event of current step finish.
      */
     private void reportCucumberStepFinished(final TestStepFinished event) {
-
         // Check if step is Cucumber annotated method (Given, When, Then, And, But).
         if (event.getTestStep() instanceof PickleStepTestStep) {
             // Convert to step.
@@ -117,7 +122,7 @@ public class CucumberReporter implements EventListener {
      * Analyze the Cucumber step and report it.
      *
      * @param cucumberStep the Cucumber test step.
-     * @param result of the Cucumber test step.
+     * @param result       of the Cucumber test step.
      */
     private void reportCucumberStep(final PickleStepTestStep cucumberStep, final Result result) {
         // Do not report if no active driver instance.
@@ -161,5 +166,25 @@ public class CucumberReporter implements EventListener {
     private String getCucumberStepArguments(final PickleStepTestStep cucumberStep) {
         return StringUtils.join(cucumberStep.getDefinitionArgument().stream().map(Argument::getValue).toArray(),
                 ",");
+    }
+
+    /**
+     * Will update the report job name if not specified.
+     *
+     * @param testRunFinished event for test run finishing.
+     */
+    private void updateCucumberJobName(final TestRunFinished testRunFinished) {
+        // Do not report if no active driver instance.
+        if (AgentClient.getInstance() == null) {
+            if (AgentClient.isWarned()) {
+                LOG.warn("No active AgentClient instance, skipped reporting test step");
+            }
+            return;
+        }
+
+        // Update the JobName by calling a REST endpoint in the Agent.
+        if (AgentClient.getInstance().getSkipInferring()) {
+            AgentClient.getInstance().updateJobName(updatedJobName);
+        }
     }
 }
