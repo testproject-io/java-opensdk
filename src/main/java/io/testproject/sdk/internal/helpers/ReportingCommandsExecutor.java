@@ -145,6 +145,7 @@ public interface ReportingCommandsExecutor {
      */
     default void reportCommand(final Command command, final Response response) {
         boolean isQuitCommand = command.getName().equals(DriverCommand.QUIT);
+        AgentClient.getInstance().setQuitCalled(isQuitCommand);
         List<StackTraceElement> traces = Arrays.asList(Thread.currentThread().getStackTrace());
 
         // Report Tests
@@ -192,11 +193,24 @@ public interface ReportingCommandsExecutor {
             getCurrentTest().set(testName);
         }
 
-        if (testName == null) {
+        // testName will be null if the method is not annotated with @Test, but it can be a quit command.
+        if (testName == null && AgentClient.getInstance().isQuitCalled()) {
+            if (isReportsDisabled()) {
+                LOG.trace("Test [{}] - [Passed]", getCurrentTest().get());
+                return;
+            }
+
+            // Report finished test
+            if (!getAgentClient().reportTest(new TestReport(getCurrentTest().get(), true, null))) {
+                LOG.error("Failed reporting test [{}] to the Agent", getCurrentTest().get());
+            }
+
+            getCurrentTest().set(null);
             return;
         }
 
-        if (!testName.equals(getCurrentTest().get()) || force) {
+
+        if (testName != null && !testName.equals(getCurrentTest().get()) || force) {
             if (isReportsDisabled()) {
                 LOG.trace("Test [{}] - [Passed]", getCurrentTest().get());
                 return;
@@ -211,6 +225,8 @@ public interface ReportingCommandsExecutor {
             getCurrentTest().set(testName);
         }
     }
+
+
 
     /**
      * Infer Test name from call stack.
