@@ -205,6 +205,11 @@ public final class AgentClient implements Closeable {
     private SessionResponse agentResponse;
 
     /**
+     * Session initialization response.
+     */
+    private boolean isQuitCalled;
+
+    /**
      * Creates a new instance of the class.
      * Initiates a development session with the Agent.
      *
@@ -1174,6 +1179,23 @@ public final class AgentClient implements Closeable {
         if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
             LOG.error("Failed to update job name to {}", updatedJobName);
         }
+    }
+
+    /**
+     * Setter when Quit Command has been executed.
+     * @return True if Quit has been called, False otherwise.
+     */
+    public boolean isQuitCalled() {
+        return isQuitCalled;
+    }
+
+    /**
+     * Getter for the quitCalled property.
+     *
+     * @param quitCalled to update original with.
+     */
+    public void setQuitCalled(final boolean quitCalled) {
+        isQuitCalled = quitCalled;
     }
 
     /**
