@@ -93,7 +93,7 @@ public class ChromeDriver extends org.openqa.selenium.chrome.ChromeDriver implem
     public ChromeDriver(final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
-        this(null, null, new ChromeOptions());
+        this(null, null, new ChromeOptions(), reportType);
     }
 
     /**
