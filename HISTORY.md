@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added data providers that allow uploading parameterized tests to TestProject platform.
+- ([#104](https://github.com/testproject-io/java-opensdk/issues/104)) - Fix for Report Type being ignored on Chrome Driver.
+
 
 ## [1.0.0] - 2021-04-01
 
