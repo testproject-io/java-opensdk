@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added data providers that allow uploading parameterized tests to TestProject platform.
+
 ## [1.0.0] - 2021-04-01
 
-## Added
+### Added
 
 - Added option to configure report type (cloud, local or both).
 - Added Cucumber framework mobile example test.

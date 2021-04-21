@@ -697,6 +697,114 @@ Save this file under `src/main/java/assembly` as `test-jar-with-dependencies.xml
 </p>
 </details>
 
+## Uploading parameterized tests
+
+TestProject's platform supports running tests with dynamic parameter values. We can do this with OpenSDK tests as well, using the TestProjectParameterizer class.
+
+**NOTE:** tests written in JUnit 4 do not support parameterization.
+
+### Revealing parameter names
+
+If you want your test parameter names to show in TestProject platform, you must build your jar to expose them.
+
+Gradle configuration:
+
+```
+// Place anywhere in the build.gradle file
+compileTestJava.options.compilerArgs.add '-parameters'
+```
+
+Maven configuration:
+
+```
+<!-- If you already have a compiler plugin, just add the compilerArgs tag. -->
+    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+   </plugin>
+```
+
+### JUnit 5
+
+To let TestProject parameterize JUnit 5, OpenSDK provided a custom *ArgumentsSource* class called `TestProjectParameterizer`.
+Here's a simple example of a parameterized test that is ready for upload:
+
+```java
+import io.testproject.sdk.drivers.web.ChromeDriver;
+import io.testproject.sdk.interfaces.parameterization.TestProjectParameterizer;
+import io.testproject.sdk.internal.exceptions.AgentConnectException;
+import io.testproject.sdk.internal.exceptions.InvalidTokenException;
+import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.io.IOException;
+public class JUnit5Example {
+    @ParameterizedTest
+    @ArgumentsSource(TestProjectParameterizer.class)
+    public void paramTest(String username, String password)
+            throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
+        ChromeDriver driver = new ChromeDriver(new ChromeOptions());
+
+        // Navigate to TestProject Example website
+        driver.navigate().to("https://example.testproject.io/web/");
+
+        // Login using provided credentials
+        driver.findElement(By.cssSelector("#name")).sendKeys(username);
+        driver.findElement(By.cssSelector("#password")).sendKeys(password);
+        driver.findElement(By.cssSelector("#login")).click();
+        driver.quit();
+    }
+}
+```
+
+### TestNG
+
+To let TestProject parameterize JUnit 5, OpenSDK provided a custom *dataProvider* inside the `TestProjectParameterizer` class called "TestProject".
+Here's a simple example of a parameterized test that is ready for upload:
+
+```java
+import io.testproject.sdk.drivers.web.ChromeDriver;
+import io.testproject.sdk.interfaces.parameterization.TestProjectParameterizer;
+import io.testproject.sdk.internal.exceptions.AgentConnectException;
+import io.testproject.sdk.internal.exceptions.InvalidTokenException;
+import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+
+public class TestNGExample {
+    @Test(dataProvider = "TestProject", dataProviderClass = TestProjectParameterizer.class)
+    public void paramTest(final String username, final String password)
+            throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, IOException {
+        ChromeDriver driver = new ChromeDriver(new ChromeOptions());
+
+        // Navigate to TestProject Example website
+        driver.navigate().to("https://example.testproject.io/web/");
+
+        // Login using provided credentials
+        driver.findElement(By.cssSelector("#name")).sendKeys(username);
+        driver.findElement(By.cssSelector("#password")).sendKeys(password);
+        driver.findElement(By.cssSelector("#login")).click();
+
+        driver.quit();
+    }
+}
+```
+
 # Examples
 
 Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples):

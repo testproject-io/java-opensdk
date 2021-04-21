@@ -60,6 +60,8 @@ dependencies {
     // JUnit5
     implementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
 
+    implementation 'org.junit.jupiter:junit-jupiter-params:5.5.1'
+
     // Module "junit-jupiter-params" of JUnit 5.
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.5.1'
 
@@ -86,6 +88,8 @@ dependencies {
     // Maven Artifact
     implementation 'org.apache.maven:maven-artifact:3.6.3'
 
+    // Apache commons
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
 }
 
 checkstyle.configFile file("config/checkstyle/checkstyle.xml")
