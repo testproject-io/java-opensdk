@@ -509,10 +509,16 @@ public final class AgentClient implements Closeable {
                     capabilities.getCapability(TP_GUID))) {
 
                 // Close existing session if required
+                ReportSettings settings = reportSettings;
                 if (instance != null) {
-                    boolean sameReportSettings = instance.getReportSetting() != null
-                            && instance.getReportSetting().equals(reportSettings);
+                    // If either setting is null we need to re-infer settings.
+                    // Without it we can't reuse previously-inferred settings.
+                    if (settings.getProjectName() == null || settings.getJobName() == null) {
+                        settings = inferReportSettings(reportSettings);
+                    }
 
+                    boolean sameReportSettings = instance.getReportSetting() != null
+                            && instance.getReportSetting().equals(settings);
                     // If the report doesn't go to the same Project/Job,
                     // or Agent doesn't support session reuse - close it.
                     // and Cucumber does not force session reuse.
@@ -526,7 +532,7 @@ public final class AgentClient implements Closeable {
                 }
 
                 // No instance yet or it's for another driver and needs to be re-initialized
-                instance = new AgentClient(remoteAddress, token, capabilities, reportSettings, disableReports);
+                instance = new AgentClient(remoteAddress, token, capabilities, settings, disableReports);
             }
         }
 
