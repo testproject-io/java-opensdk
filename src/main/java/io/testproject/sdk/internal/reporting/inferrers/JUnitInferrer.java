@@ -166,7 +166,8 @@ public class JUnitInferrer implements ReportSettingsInferrer {
 
             // If not JUnit @Test method, nothing to infer.
             if (Arrays.stream(method.get().getDeclaredAnnotations())
-                    .noneMatch(a -> Arrays.asList(JUNIT4_TEST_ANNOTATION, JUNIT5_TEST_ANNOTATION)
+                    .noneMatch(a -> Arrays.asList(JUNIT4_TEST_ANNOTATION, JUNIT5_TEST_ANNOTATION,
+                            JUNIT5_PARAMETERIZED_TEST_ANNOTATION)
                                            .contains(a.annotationType().getName()))) {
                 LOG.trace("No JUnit test annotations detected, skipping inferring {} method name", method.get()
                         .getName());
