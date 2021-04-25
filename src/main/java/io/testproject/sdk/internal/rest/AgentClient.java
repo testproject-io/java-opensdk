@@ -768,7 +768,7 @@ public final class AgentClient implements Closeable {
      * @param reportSettings Project and Job names provided explicitly.
      * @return {@link ReportSettings} instance with discovered Project and Job names.
      */
-    private ReportSettings inferReportSettings(final ReportSettings reportSettings) {
+    private static ReportSettings inferReportSettings(final ReportSettings reportSettings) {
 
         if (reportSettings != null
                 && !StringUtils.isEmpty(reportSettings.getProjectName())
@@ -814,7 +814,7 @@ public final class AgentClient implements Closeable {
                 result.getProjectName(), result.getJobName());
 
         if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS")) {
-            skipInferring = true;
+            instance.skipInferring = true;
         }
 
         return result;
