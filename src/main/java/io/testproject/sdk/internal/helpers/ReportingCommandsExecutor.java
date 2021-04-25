@@ -192,11 +192,7 @@ public interface ReportingCommandsExecutor {
             getCurrentTest().set(testName);
         }
 
-        if (testName == null) {
-            return;
-        }
-
-        if (!testName.equals(getCurrentTest().get()) || force) {
+        if ((testName != null && !testName.equals(getCurrentTest().get())) || force) {
             if (isReportsDisabled()) {
                 LOG.trace("Test [{}] - [Passed]", getCurrentTest().get());
                 return;
