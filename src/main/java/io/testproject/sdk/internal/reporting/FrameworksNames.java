@@ -39,6 +39,11 @@ public final class FrameworksNames {
     public static final String JUNIT5_TEST_ANNOTATION = "org.junit.jupiter.api.Test";
 
     /**
+     * JUnit 5 @ParamaterizedTest Annotation.
+     */
+    public static final String JUNIT5_PARAMETERIZED_TEST_ANNOTATION = "org.junit.jupiter.params.ParameterizedTest";
+
+    /**
      * JUnit 5 Dynamic Test Descriptor class name.
      */
     public static final String JUNIT5_DYNAMIC_TEST_DESCRIPTOR
