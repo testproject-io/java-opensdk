@@ -639,9 +639,44 @@ public class IOSDriver<T extends WebElement>
                      final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
+        this(remoteAddress, token, capabilities, projectName, jobName, disableReports, reportType,
+                null,
+                null);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL, token, Project and Job names.
+     *
+     * @param remoteAddress  Agent API base URL (e.g. http://localhost:8585/)
+     * @param token          Development token that should be obtained from
+     *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param capabilities   take a look at {@link Capabilities}
+     * @param projectName    Project name to report
+     * @param jobName        Job name to report
+     * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
+     * @param reportName     The name of the generated report.
+     * @param reportPath     The path to the generated report.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public IOSDriver(final URL remoteAddress,
+                     final String token,
+                     final Capabilities capabilities,
+                     final String projectName,
+                     final String jobName,
+                     final boolean disableReports,
+                     final ReportType reportType,
+                     final String reportName,
+                     final String reportPath)
+            throws AgentConnectException, InvalidTokenException, MalformedURLException,
+            ObsoleteVersionException {
         super(DriverHelper.getHttpCommandExecutor(
                 AgentClient.getClient(remoteAddress, token, capabilities,
-                        new ReportSettings(projectName, jobName, reportType), disableReports), true),
+                        new ReportSettings(projectName, jobName, reportType, reportName, reportPath),
+                        disableReports), true),
                 AgentClient.getClient(capabilities).getSession().getCapabilities());
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));

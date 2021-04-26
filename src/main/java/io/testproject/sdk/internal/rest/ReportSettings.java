@@ -41,6 +41,16 @@ public class ReportSettings {
     private ReportType reportType;
 
     /**
+     * Name of the report generated.
+     */
+    private String reportName;
+
+    /**
+     * Path to the generated report.
+     */
+    private String reportPath;
+
+    /**
      * Getter for {@link #projectName} field.
      *
      * @return value of {@link #projectName} field
@@ -56,6 +66,24 @@ public class ReportSettings {
      */
     public String getJobName() {
         return jobName;
+    }
+
+    /**
+     * Getter for {@link #reportName} field.
+     *
+     * @return value of {@link #reportName} field
+     */
+    public String getReportName() {
+        return reportName;
+    }
+
+    /**
+     * Getter for {@link #reportPath} field.
+     *
+     * @return value of {@link #reportPath} field
+     */
+    public String getReportPath() {
+        return reportPath;
     }
 
     /**
@@ -90,6 +118,25 @@ public class ReportSettings {
         this.projectName = projectName;
         this.jobName = jobName;
         this.reportType = reportType;
+    }
+
+    /**
+     * Creates a new instance of the class.
+     *
+     * @param projectName Project name to report
+     * @param jobName     Job name to report
+     * @param reportType  Report type to produce - cloud, local or both.
+     * @param reportName  The name of the generated report.
+     * @param reportPath  The path to the generated report.
+     */
+    public ReportSettings(final String projectName, final String jobName, final ReportType reportType,
+                          final String reportName,
+                          final String reportPath) {
+        this.projectName = projectName;
+        this.jobName = jobName;
+        this.reportType = reportType;
+        this.reportName = reportName;
+        this.reportPath = reportPath;
     }
 
     /**

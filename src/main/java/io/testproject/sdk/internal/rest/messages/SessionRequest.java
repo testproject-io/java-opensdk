@@ -56,6 +56,14 @@ public class SessionRequest {
      * Type of report to produce - cloud, local or both.
      */
     private ReportType reportType;
+    /**
+     * The name of the generated report.
+     */
+    private String reportName;
+    /**
+     * The path to the generated report.
+     */
+    private String reportPath;
 
     /**
      * Creates a new instance using provided capabilities.
@@ -68,6 +76,8 @@ public class SessionRequest {
             this.projectName = reportSettings.getProjectName();
             this.jobName = reportSettings.getJobName();
             this.reportType = reportSettings.getReportType();
+            this.reportName = reportSettings.getReportName();
+            this.reportPath = reportSettings.getReportPath();
         }
 
         // Retrieves the version sent bu gradle when creating the JAR

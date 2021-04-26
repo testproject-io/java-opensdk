@@ -768,13 +768,15 @@ public final class AgentClient implements Closeable {
         ReportSettings result;
         if (reportSettings != null) {
             // Explicitly provided names override inferred names
-            // Explicitly requested report type must be honored
+            // Explicitly requested report type, path and name must be honored
             result = new ReportSettings(
                     !StringUtils.isEmpty(reportSettings.getProjectName())
                             ? reportSettings.getProjectName() : inferredReportSettings.getProjectName(),
                     !StringUtils.isEmpty(reportSettings.getJobName())
                             ? reportSettings.getJobName() : inferredReportSettings.getJobName(),
-                    reportSettings.getReportType());
+                    reportSettings.getReportType(),
+                    reportSettings.getReportName(),
+                    reportSettings.getReportPath());
         } else {
             // Nothing provided, using only inferred names
             result = inferredReportSettings;

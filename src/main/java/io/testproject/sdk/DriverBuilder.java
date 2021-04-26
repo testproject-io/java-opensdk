@@ -80,6 +80,16 @@ public final class DriverBuilder<T extends ReportingDriver> {
     private ReportType builderReportType;
 
     /**
+     * The name of the generated report.
+     */
+    private String builderReportName;
+
+    /**
+     * The path of the generated report.
+     */
+    private String builderReportPath;
+
+    /**
      * Initializes a new instance of the builder.
      * Builder can be conveniently used to initialize new Drivers.
      *
@@ -174,6 +184,26 @@ public final class DriverBuilder<T extends ReportingDriver> {
     }
 
     /**
+     * Set the name of the generated report.
+     * @param reportName The name to give to the generated report.
+     * @return Modified builder.
+     */
+    public DriverBuilder<T> withReportName(final String reportName) {
+        this.builderReportName = reportName;
+        return this;
+    }
+
+    /**
+     * Set the path of the generated report.
+     * @param reportPath The path to the generated report.
+     * @return Modified builder.
+     */
+    public DriverBuilder<T> withReportPath(final String reportPath) {
+        this.builderReportPath = reportPath;
+        return this;
+    }
+
+    /**
      * Builds an instance of the requested driver using set values.
      *
      * @param clazz Required driver type.
@@ -190,7 +220,9 @@ public final class DriverBuilder<T extends ReportingDriver> {
                         String.class,
                         String.class,
                         boolean.class,
-                        ReportType.class);
+                        ReportType.class,
+                        String.class,
+                        String.class);
 
         // Make sure that requested constructor was found
         if (constructor == null) {
@@ -207,7 +239,9 @@ public final class DriverBuilder<T extends ReportingDriver> {
                     builderProjectName,
                     builderJobName,
                     builderDisableReports,
-                    builderReportType);
+                    builderReportType,
+                    builderReportName,
+                    builderReportPath);
         } catch (Exception e) {
             throw new WebDriverException("Failed to create an instance of " + clazz.getName(), e);
         }
