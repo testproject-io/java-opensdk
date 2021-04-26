@@ -154,8 +154,9 @@ public ChromeDriver(final URL remoteAddress, final ChromeOptions options)
 
 It can also be set using the `TP_AGENT_URL` environment variable.
 
-**NOTE:** In order to be able to communicate with a remote agent, it must first start ready for external connectivity.
-For further instructions on starting agent in this manner, please refer to the *External Connectivity* section [here](https://docs.testproject.io/testproject-agents/testproject-agent-cli#start)
+**NOTE:** By default, the agent binds to localhost.
+In order to allow the SDK to communicate with agents running on a remote machine (*On the same network*), the agent should bind to an external interface.
+For additional documentation on how to achieve such, please refer [here](https://docs.testproject.io/testproject-agents/testproject-agent-cli#start)
 
 ## Remote (Cloud) Driver
 
