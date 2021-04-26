@@ -60,6 +60,11 @@ public class SessionResponse {
     private String localReport;
 
     /**
+     * Local Report URL from remote execution.
+     */
+    private String localReportUrl;
+
+    /**
      * Getter for {@link #devSocketPort} field.
      *
      * @return value of {@link #devSocketPort} field
@@ -111,6 +116,15 @@ public class SessionResponse {
      */
     public String getVersion() {
         return version;
+    }
+
+    /**
+     * Getter for {@link #localReportUrl} field.
+     *
+     * @return value of {@link #localReportUrl} field
+     */
+    public String getLocalReportUrl() {
+        return localReportUrl;
     }
 
     /**

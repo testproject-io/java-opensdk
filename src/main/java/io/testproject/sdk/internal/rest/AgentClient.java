@@ -37,6 +37,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -130,6 +131,11 @@ public final class AgentClient implements Closeable {
      * Class member to store Agent version obtained when session is initialized.
      */
     private static String version;
+
+    /**
+     * Flag which indicates if the execution is done on a local agent.
+     */
+    private static boolean isLocalExecution;
 
     /**
      * An instance of the Google JSON serializer to serialize and deserialize objects.
@@ -287,15 +293,23 @@ public final class AgentClient implements Closeable {
      * @throws MalformedURLException When provided URL is invalid.
      */
     private static URL inferRemoteAddress(final URL url) throws MalformedURLException {
+        List<String> localHosts = Arrays.asList("127.0.0.1", "localhost", "0.0.0.0");
+        URL result;
         if (url != null) {
-            return url;
+            result = url;
         } else {
             if (!StringUtils.isEmpty(System.getenv(TP_AGENT_URL))) {
-                return new URL(System.getenv(TP_AGENT_URL));
+                result = new URL(System.getenv(TP_AGENT_URL));
             } else {
-                return new URL(AGENT_DEFAULT_API_ADDRESS);
+                result = new URL(AGENT_DEFAULT_API_ADDRESS);
             }
         }
+
+        if (localHosts.contains(result.getHost())) {
+            isLocalExecution = true;
+        }
+
+        return result;
     }
 
     /**
@@ -656,6 +670,7 @@ public final class AgentClient implements Closeable {
             throw translateAgentConnectFailure(e);
         }
 
+
         // Handle unsuccessful response (not 2xx)
         if (response.getStatusLine().getStatusCode() < HttpURLConnection.HTTP_OK
                 || response.getStatusLine().getStatusCode() >= HttpURLConnection.HTTP_MULT_CHOICE) {
@@ -700,6 +715,19 @@ public final class AgentClient implements Closeable {
             // Set the server URL to null if using the Generic driver.
             URL serverUrl = ((capabilities.getPlatform() == Platform.ANY) ? null
                     : new URL(agentResponse.getServerAddress()));
+
+            try {
+                if (!StringUtils.isEmpty(agentResponse.getLocalReportUrl())) {
+                    String reportUrl = new URIBuilder(agentResponse.getLocalReportUrl())
+                            .setHost(remoteAddress.getHost())
+                            .build()
+                            .toString();
+                    LOG.info("Report URL: " + reportUrl);
+                }
+            } catch (URISyntaxException e) {
+                throw new AgentConnectException("Failed building URL from " + remoteAddress, e);
+            }
+
             this.session = new AgentSession(
                     serverUrl,
                     !StringUtils.isEmpty(agentResponse.getSessionId())
@@ -988,7 +1016,7 @@ public final class AgentClient implements Closeable {
 
         LOG.info("Session [{}] closed", this.getSession().getSessionId());
 
-        if (!StringUtils.isEmpty(agentResponse.getLocalReport())) {
+        if (!StringUtils.isEmpty(agentResponse.getLocalReport()) && isLocalExecution) {
             LOG.info("Execution Report: {}", agentResponse.getLocalReport());
         }
     }
