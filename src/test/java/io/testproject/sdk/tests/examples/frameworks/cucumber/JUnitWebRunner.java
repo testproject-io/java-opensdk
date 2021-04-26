@@ -24,22 +24,22 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * Example JUnit Cucumber runner.
+ * Example JUnit Cucumber web test runner.
  * Inside the CucumberOptions:
  *      features = path/to/feature/files/directory
  *      glue = package/of/step/definitions/implementations
  *      plugins = package/of/testproject/cucumber/reporting/plugin
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/java/io/testproject/sdk/tests/examples/frameworks/cucumber/features/",
+@CucumberOptions(features = "classpath:features/login_scenario.feature",
         glue = "io.testproject.sdk.tests.examples.frameworks.cucumber.stepdefinitions",
         plugin = "io.testproject.sdk.internal.reporting.extensions.cucumber.CucumberReporter")
-final class JUnitTestRunner {
+public final class JUnitWebRunner {
 
     /**
      * Default constructor.
      */
-    private JUnitTestRunner() {
+    private JUnitWebRunner() {
 
     }
 
@@ -48,7 +48,7 @@ final class JUnitTestRunner {
      */
     @BeforeClass
     public static void setUp() {
-        System.out.println("Starting feature test run");
+        System.out.println("Starting web test feature run");
     }
 
     /**
