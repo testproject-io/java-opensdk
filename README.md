@@ -471,6 +471,23 @@ ChromeDriver driver = new DriverBuilder<ChromeDriver>(new ChromeOptions())
   .build(ChromeDriver.class);
 ```
 
+## Control Path and Name of Local Reports
+
+
+By default, the local reports name is the timestamp of the test execution, and the path is the reports directory in the agent data folder.
+
+The SDK provides a way to override the default values of the generated local reports name and path.
+
+Via constructor or via Driver Builder:
+
+```java
+ChromeDriver driver = new DriverBuilder<ChromeDriver>(new ChromeOptions())
+        .withReportName("Test Report - 1")
+        .withReportPath("/tests/reports/")
+        .build(ChromeDriver.class);
+```
+
+
 # Logging
 
 TestProject SDK uses SLF4J API for logging.\
