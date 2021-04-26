@@ -674,9 +674,43 @@ public class SafariDriver extends org.openqa.selenium.safari.SafariDriver implem
                         final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
+        this(remoteAddress, token, options, projectName, jobName, disableReports, reportType,
+                null,
+                null);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL, token, Project and Job names.
+     *
+     * @param remoteAddress  Agent API base URL (e.g. http://localhost:8585/)
+     * @param token          Development token that should be obtained from
+     *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options        take a look at {@link SafariOptions}
+     * @param projectName    Project name to report
+     * @param jobName        Job name to report
+     * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
+     * @param reportName     The name of the generated report.
+     * @param reportPath     The path to the generated report.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public SafariDriver(final URL remoteAddress,
+                        final String token,
+                        final SafariOptions options,
+                        final String projectName,
+                        final String jobName,
+                        final boolean disableReports,
+                        final ReportType reportType,
+                        final String reportName,
+                        final String reportPath)
+            throws AgentConnectException, InvalidTokenException, MalformedURLException,
+            ObsoleteVersionException {
         super(new SafariOptions(AgentClient
                 .getClient(remoteAddress, token, options,
-                        new ReportSettings(projectName, jobName, reportType), disableReports)
+                        new ReportSettings(projectName, jobName, reportType, reportName, reportPath), disableReports)
                 .getSession().getCapabilities()));
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
