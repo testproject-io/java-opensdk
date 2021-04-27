@@ -6,11 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2021-04-27
+
 ### Added
 
+- Added Control for Reports configuration, it is now possible to state the name and path of the generated report.
+- Added Remote Execution Support, it is now possible to execute tests on remote agents in the same network.
+- Added Cucumber Examples for uploading tests to TestProject platform.
+- Added Session Reuse for Cucumber Tests who do not provide a Job Name.
+- Added support for JUnit4 assertion reporting.
+- Added Control for Reports configuration, it is now possible to state the name and path of the generated report.
+- Added Remote Execution Support, it is now possible to execute tests on remote agents in the same network.
 - Added data providers that allow uploading parameterized tests to TestProject platform.
 - ([#104](https://github.com/testproject-io/java-opensdk/issues/104)) - Fix for Report Type being ignored on Chrome Driver.
 
+### Fixed
+
+- Fixed test name inferring in JUnit.
+- Fixed multiple jobs reporting when running several tests without any given job name/project name.
+- Fixed ReportType ignored in ChromeDriver.
+- Fixed Cucumber tests reports which can sometimes be generated with steps out of order.
 
 ## [1.0.0] - 2021-04-01
 
