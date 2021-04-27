@@ -45,7 +45,7 @@ For a Maven project, add the following to your `pom.xml` file:
 <dependency>
   <groupId>io.testproject</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>1.0.0-RELEASE</version>
+  <version>1.1.0-RELEASE</version>
 </dependency>
 ```
 
