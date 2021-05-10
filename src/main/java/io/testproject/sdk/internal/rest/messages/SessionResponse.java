@@ -65,6 +65,11 @@ public class SessionResponse {
     private String localReportUrl;
 
     /**
+     * Agent connection validation uuid.
+     */
+    private String uuid;
+
+    /**
      * Getter for {@link #devSocketPort} field.
      *
      * @return value of {@link #devSocketPort} field
@@ -134,5 +139,14 @@ public class SessionResponse {
      */
     public String getLocalReport() {
         return localReport;
+    }
+
+    /**
+     * Getter for {@link #uuid} field.
+     *
+     * @return value of {@link #localReport} field
+     */
+    public String getUuid() {
+        return uuid;
     }
 }

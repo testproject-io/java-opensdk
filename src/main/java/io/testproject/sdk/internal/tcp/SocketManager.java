@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 TestProject LTD. and/or its affiliates
+ * Copyright (c) 2021 TestProject LTD. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,15 @@
  * limitations under the License.
  */
 
-/**
- * Extended Web driver for Desktop Browsers.
- */
-
 package io.testproject.sdk.internal.tcp;
 
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -53,6 +52,16 @@ public final class SocketManager {
      * Holds an instance of a TCP socket connection between the SDK and the Agent.
      */
     private Socket socket;
+
+    /**
+     * Timeout for validation between the socket and the Agent in milliseconds.
+     */
+    private static final int SOCKET_VALIDATION_TIMEOUT = 30000;
+
+    /**
+     * Minimum Agent version supporting message validation between the SDK and the Agent.
+     */
+    private static final String MIN_AGENT_SOCKET_VALIDATION_VERSION = "2.3.0";
 
     /**
      * Private constructor to prevent creating more than one instance.
@@ -95,9 +104,12 @@ public final class SocketManager {
      *
      * @param host Host to connect.
      * @param port Port to connect.
+     * @param version Agent version connecting to.
+     * @param uuid Uuid sent by the Agent to verify connection.
      * @throws AgentConnectException When connection fails.
      */
-    public void openSocket(final String host, final int port) throws AgentConnectException {
+    public void openSocket(final String host, final int port, final String uuid, final String version)
+            throws AgentConnectException {
         if (socket != null && socket.isConnected()) {
             LOG.debug("Development socket is already connected.");
             return;
@@ -107,6 +119,35 @@ public final class SocketManager {
             LOG.trace("Connecting to Agent socket: {}:{}", host, port);
             socket = new Socket();
             socket.connect(new InetSocketAddress(host, port), TIMEOUT_MILLISECONDS);
+
+            // Validate connection to the Agent by waiting for a message starting from Agent 2.3.0.
+            if (version != null && new ComparableVersion(version).compareTo(
+                    new ComparableVersion(MIN_AGENT_SOCKET_VALIDATION_VERSION)) >= 0) {
+
+                LOG.trace("Validating connection to the Agent...");
+                boolean connected = false;
+                long startTime = System.currentTimeMillis();
+                long endTime = startTime + SOCKET_VALIDATION_TIMEOUT;
+                DataInputStream inputStream = new DataInputStream(socket.getInputStream());
+
+                // Checks if the input stream has data up until the set timeout
+                while (System.currentTimeMillis() < endTime) {
+                    if (inputStream.available() > 2) {
+                        String message = inputStream.readUTF();
+                        if (StringUtils.equals(message, uuid)) {
+                            connected = true;
+                        }
+                        break;
+                    }
+                }
+
+                if (!connected) {
+                    throw new AgentConnectException("SDK failed to connect to the Agent via a TCP socket on port "
+                            + port
+                            + "\nPlease check if you have any interfering software installed, and disable it.");
+                }
+            }
+
             LOG.debug("Development socket connected");
         } catch (IOException e) {
             LOG.error("Failed connecting to Agent socket at {}:{}", host, port, e);

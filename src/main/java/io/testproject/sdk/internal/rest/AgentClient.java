@@ -714,7 +714,7 @@ public final class AgentClient implements Closeable {
             }
 
             // There's a chance that driver ignored our custom tracking capability
-            // And now does't return it with the actual driver capabilities
+            // And now doesn't return it with the actual driver capabilities
             // It has to be set again to avoid initializing an new AgentClient instance for these capabilities again
             mutableCapabilities.setCapability(TP_GUID, guid);
             version = agentResponse.getVersion();
@@ -747,7 +747,8 @@ public final class AgentClient implements Closeable {
         }
 
         // Open TCP socket
-        SocketManager.getInstance().openSocket(this.remoteAddress.getHost(), agentResponse.getDevSocketPort());
+        SocketManager.getInstance().openSocket(this.remoteAddress.getHost(), agentResponse.getDevSocketPort(),
+                agentResponse.getUuid(), version);
     }
 
     /**
