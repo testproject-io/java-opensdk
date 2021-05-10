@@ -12,12 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a new connection validation to TestProject Agents version 2.3.0 or greater.
 
+### Fixed
+
+- Fixed an issue where Cucumber tests with BeforeClass/BeforeSuit annotation reports were not correct.
+
 ## [1.1.0] - 2021-04-27
 
 ### Added
 
-- Added Control for Reports configuration, it is now possible to state the name and path of the generated report.
-- Added Remote Execution Support, it is now possible to execute tests on remote agents in the same network.
 - Added Cucumber Examples for uploading tests to TestProject platform.
 - Added Session Reuse for Cucumber Tests who do not provide a Job Name.
 - Added support for JUnit4 assertion reporting.
