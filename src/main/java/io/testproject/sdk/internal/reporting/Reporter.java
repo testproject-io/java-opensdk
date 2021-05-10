@@ -40,6 +40,11 @@ public final class Reporter {
     private static final Logger LOG = LoggerFactory.getLogger(Reporter.class);
 
     /**
+     * Regex which checks if the class is a Cucumber runner class.
+     */
+    private static final String CUCUMBER_OPTIONS_REGEX = "io\\.cucumber\\.\\w+\\.CucumberOptions";
+
+    /**
      * {@link AgentClient} instance to submit reports to the Agent.
      */
     private final AgentClient agentClient;
@@ -58,10 +63,51 @@ public final class Reporter {
     public Reporter(final ReportingDriver driver, final AgentClient agentClient) {
         this.agentClient = agentClient;
         this.driver = driver;
-        if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS")) {
+        if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS") || checkIfCucumber()) {
             this.disableTestAutoReports(true);
             this.disableCommandReports(true);
         }
+    }
+
+    /**
+     * Checks if the caller class is a runner class for Cucumber tests.
+     * @return True if the class is a Cucumber tests runner class, false otherwise.
+     */
+    private boolean checkIfCucumber() {
+        try {
+            List<StackTraceElement> traces = Arrays.asList(Thread.currentThread().getStackTrace());
+            return isCucumberPresent(traces);
+        } catch (ClassNotFoundException e) {
+            LOG.error("Unable to find calling class related to Cucumber", e);
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the current class is annotated with a cucumber annotation.
+     * @param callerClass The current class.
+     * @return True if the class is annotated with CucumberOptions, false otherwise.
+     */
+    private boolean isCucumberAnnotationPresent(final Class<?> callerClass) {
+        return callerClass != null && Arrays.stream(callerClass.getDeclaredAnnotations()).anyMatch(a ->
+                a.annotationType().getName().matches(CUCUMBER_OPTIONS_REGEX));
+    }
+
+    /**
+     * Helper method which scans the current stack trace for the cucumber runner class.
+     * @param traces Current thread stacktrace.
+     * @return True if one of the classes was annotated with Cucumber Annotations, false otherwise.
+     * @throws ClassNotFoundException If no class was found for the stacktrace element.
+     */
+    private boolean isCucumberPresent(final List<StackTraceElement> traces) throws ClassNotFoundException {
+        for (StackTraceElement ste : traces) {
+            if (isCucumberAnnotationPresent(Class.forName(ste.getClassName()))) {
+                return true;
+            }
+        }
+
+        // No annotation was found, return false.
+        return false;
     }
 
     /**
