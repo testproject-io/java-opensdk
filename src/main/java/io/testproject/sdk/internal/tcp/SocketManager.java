@@ -39,6 +39,11 @@ public final class SocketManager {
     private static final int TIMEOUT_MILLISECONDS = 5 * 1000;
 
     /**
+     * Connection validation sleep in milliseconds.
+     */
+    public static final int CONNECTION_SLEEP_TIME = 100;
+
+    /**
      * SocketManager singleton instance.
      */
     private static SocketManager instance;
@@ -139,6 +144,8 @@ public final class SocketManager {
                         }
                         break;
                     }
+
+                    Thread.sleep(CONNECTION_SLEEP_TIME);
                 }
 
                 if (!connected) {
@@ -149,7 +156,7 @@ public final class SocketManager {
             }
 
             LOG.debug("Development socket connected");
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             LOG.error("Failed connecting to Agent socket at {}:{}", host, port, e);
             throw new AgentConnectException("Failed connecting to Agent socket", e);
         }
