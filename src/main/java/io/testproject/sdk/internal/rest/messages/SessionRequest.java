@@ -81,7 +81,11 @@ public class SessionRequest {
         }
 
         // Retrieves the version sent bu gradle when creating the JAR
+        // If it contains a build number, generate a valid version for the agent
         this.sdkVersion = getClass().getPackage().getImplementationVersion();
+        if (this.sdkVersion != null && this.sdkVersion.contains("-")) {
+            sanitizeVersion();
+        }
 
         // Version is not available when running SDK from source
         // Checking environment variable TP_DEBUG_SDK_VERSION
@@ -93,6 +97,13 @@ public class SessionRequest {
         }
 
         this.capabilities = capabilities;
+    }
+
+    /**
+     * An helper method which sanitizes the SDK version, if required.
+     */
+    private void sanitizeVersion() {
+       this.sdkVersion = this.sdkVersion.split("-")[0];
     }
 
     /**
