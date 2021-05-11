@@ -259,7 +259,15 @@ public final class AgentClient implements Closeable {
 
         // Start Session
         this.reportsDisabled = disableReports;
-        ReportSettings sessionReportSettings = disableReports ? null : inferReportSettings(reportSettings);
+        ReportSettings sessionReportSettings = null;
+
+        if (!disableReports) {
+            if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS")) {
+                    this.skipInferring = true;
+            }
+
+            sessionReportSettings = inferReportSettings(reportSettings);
+        }
 
         try {
             startSession(capabilities, sessionReportSettings);
@@ -819,10 +827,6 @@ public final class AgentClient implements Closeable {
 
         LOG.info("Using [{}] and [{}] for Project and Job names accordingly.",
                 result.getProjectName(), result.getJobName());
-
-        if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS")) {
-            instance.skipInferring = true;
-        }
 
         return result;
     }
