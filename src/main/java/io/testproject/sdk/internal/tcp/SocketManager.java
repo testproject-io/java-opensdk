@@ -19,9 +19,9 @@ package io.testproject.sdk.internal.tcp;
 
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.util.Strings;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -64,11 +64,6 @@ public final class SocketManager {
     private static final int SOCKET_VALIDATION_TIMEOUT = 30000;
 
     /**
-     * Minimum Agent version supporting message validation between the SDK and the Agent.
-     */
-    private static final String MIN_AGENT_SOCKET_VALIDATION_VERSION = "2.3.0";
-
-    /**
      * Private constructor to prevent creating more than one instance.
      */
     private SocketManager() {
@@ -109,11 +104,10 @@ public final class SocketManager {
      *
      * @param host Host to connect.
      * @param port Port to connect.
-     * @param version Agent version connecting to.
      * @param uuid Uuid sent by the Agent to verify connection.
      * @throws AgentConnectException When connection fails.
      */
-    public void openSocket(final String host, final int port, final String uuid, final String version)
+    public void openSocket(final String host, final int port, final String uuid)
             throws AgentConnectException {
         if (socket != null && socket.isConnected()) {
             LOG.debug("Development socket is already connected.");
@@ -126,8 +120,8 @@ public final class SocketManager {
             socket.connect(new InetSocketAddress(host, port), TIMEOUT_MILLISECONDS);
 
             // Validate connection to the Agent by waiting for a message starting from Agent 2.3.0.
-            if (version != null && new ComparableVersion(version).compareTo(
-                    new ComparableVersion(MIN_AGENT_SOCKET_VALIDATION_VERSION)) >= 0) {
+            // Only agent 2.3.0 or greater will return a UUID.
+            if (Strings.isNotNullAndNotEmpty(uuid)) {
 
                 LOG.trace("Validating connection to the Agent...");
                 boolean connected = false;
