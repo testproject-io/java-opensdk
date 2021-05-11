@@ -652,6 +652,56 @@ public class FirefoxDriver extends org.openqa.selenium.firefox.FirefoxDriver imp
     }
 
     /**
+     * Initiates a new session with the Agent using provided Agent URL and token.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param token         Development token that should be obtained from
+     *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options       take a look at {@link FirefoxOptions}
+     * @param projectName   Project name to display in the report
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public FirefoxDriver(final URL remoteAddress,
+                        final String token,
+                        final FirefoxOptions options,
+                        final String projectName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, options, projectName, null, false, reportType);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and token.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param token         Development token that should be obtained from
+     *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options       take a look at {@link FirefoxOptions}
+     * @param projectName   Project name to display in the report
+     * @param jobName       Job name to display in the report
+     * @param reportType    A type of report to produce - cloud, local or both.
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws IOException              if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public FirefoxDriver(final URL remoteAddress,
+                        final String token,
+                        final FirefoxOptions options,
+                        final String projectName,
+                        final String jobName,
+                        final ReportType reportType)
+            throws InvalidTokenException, AgentConnectException, IOException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, options, projectName, jobName, false, reportType);
+    }
+
+    /**
      * Initiates a new session with the Agent using provided Agent URL, token, Project and Job names.
      *
      * @param remoteAddress  Agent API base URL (e.g. http://localhost:8585/)
