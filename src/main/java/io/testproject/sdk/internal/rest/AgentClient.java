@@ -748,7 +748,7 @@ public final class AgentClient implements Closeable {
 
         // Open TCP socket
         SocketManager.getInstance().openSocket(this.remoteAddress.getHost(), agentResponse.getDevSocketPort(),
-                agentResponse.getUuid(), version);
+                agentResponse.getUuid());
     }
 
     /**
