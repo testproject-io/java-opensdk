@@ -224,6 +224,7 @@ public final class Reporter {
 
         // If manual reporting is disabled, skip.
         if (Boolean.getBoolean("TP_DISABLE_MANUAL_REPORTS")) {
+            LOG.warn("Manual reporting is disabled");
             return;
         }
 
