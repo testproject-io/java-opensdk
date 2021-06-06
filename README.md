@@ -590,6 +590,8 @@ Instead, it will report:
 To use the plugin you must have an active TestProject driver instance before the execution of the features
 begins, either initializing the driver as the first step in your test or in a @BeforeClass annotated method.
 
+Please note that while using the CucumberReporter, manual test reporting will be disabled.
+
 If you are running your features via a JUnit Cucumber runner, you will need to specify the plugin from 
 the @CucumberOptions annotation as seen below:
 
