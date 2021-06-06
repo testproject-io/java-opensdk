@@ -265,7 +265,9 @@ public final class AgentClient implements Closeable {
             if (Boolean.getBoolean("TP_DISABLE_AUTO_REPORTS")) {
                     this.skipInferring = true;
             }
-
+            if (reportSettings.getJobName() != null) {
+                System.setProperty("TP_JOB_NAME_SET", "true");
+            }
             sessionReportSettings = inferReportSettings(reportSettings);
         }
 
@@ -532,6 +534,8 @@ public final class AgentClient implements Closeable {
                     // and Cucumber does not force session reuse.
                     if ((!sameReportSettings || !canReuseSession())
                             && !(Boolean.getBoolean("TP_FORCE_SESSION_REUSE"))) {
+                        // When session reset, job name is 'un-set' as well.
+                        System.setProperty("TP_JOB_NAME_SET", "false");
                         SocketManager.getInstance().closeSocket();
                     }
 

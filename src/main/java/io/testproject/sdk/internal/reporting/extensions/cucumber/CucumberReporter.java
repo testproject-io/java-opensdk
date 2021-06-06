@@ -184,6 +184,11 @@ public class CucumberReporter implements EventListener {
             return;
         }
 
+        // If job name already set, skip updating.
+        if (Boolean.getBoolean("TP_JOB_NAME_SET")) {
+            return;
+        }
+
         // Update the JobName by calling a REST endpoint in the Agent.
         if (AgentClient.getInstance().getSkipInferring()) {
             AgentClient.getInstance().updateJobName(updatedJobName);
