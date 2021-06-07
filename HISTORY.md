@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added warning log for when trying to use manual reporting while it is disabled.
 
+### Fixed
+
+- Fixed an issue where Cucumber report name would be overwritten despite being specified in driver construction.
+
 ## [1.2.0] - 2021-05-12
 
 ### Added
