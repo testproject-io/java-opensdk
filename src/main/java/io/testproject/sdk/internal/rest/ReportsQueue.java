@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.*;
 
 /**
  * A runnable class to manage reports queue.
@@ -65,6 +65,16 @@ public class ReportsQueue implements Runnable {
      * Flag to keep running the loop of taking items from the queue.
      */
     private boolean running;
+
+    /**
+     * Future to report remaining reports in queue.
+     */
+    private Future<?> progressFuture;
+
+    /**
+     * Progress report delay in seconds.
+     */
+    private static final int PROGRESS_REPORT_DELAY = 3;
 
     /**
      * Initializes a new instance of the class.
@@ -157,6 +167,22 @@ public class ReportsQueue implements Runnable {
         // This is required to to let it proceed with the loop to evaluate the condition (running?) again.
         // Note: Sending null as QueueItem is not possible since ArrayBlockingQueue prohibit null elements.
         this.queue.add(new QueueItem(null, null));
+
+        // Start a scheduled future when stopping the queue to log to console the remaining items left to be reported.
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        if (progressFuture == null) {
+            progressFuture = scheduler.scheduleAtFixedRate(() -> {
+                        Thread.currentThread().setName("Queue-Progress-Report");
+                        LOG.info("There are [{}] outstanding reports that should be transmitted to the Agent before"
+                                + " the process exits.", queue.size());
+                        if (queue.isEmpty()) {
+                            LOG.trace("Reporting queue is empty, stopping progress report...");
+                            progressFuture.cancel(true);
+                            scheduler.shutdown();
+                        }
+                    },
+                    0, PROGRESS_REPORT_DELAY, TimeUnit.SECONDS);
+        }
     }
 
     /**
