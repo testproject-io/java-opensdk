@@ -65,7 +65,7 @@ public final class AgentClient implements Closeable {
     /**
      * Maximum amount of time to wait in seconds before forcibly terminating the queue.
      */
-    public static final int REPORTS_QUEUE_TIMEOUT = 10;
+    public static final int REPORTS_QUEUE_TIMEOUT = 60 * 10;
 
     /**
      * Constant for a custom capability name used to track AgentClient instances.
