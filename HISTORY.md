@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2021-06-14
+
+### Added
+
+- Increased maximum timeout for reporting queue to 10 minutes.
+- Added logging for reporting queue progress.
+
 ## [1.2.1] - 2021-06-07
 
 ### Added
