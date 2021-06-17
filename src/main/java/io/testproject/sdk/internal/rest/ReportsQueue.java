@@ -49,7 +49,7 @@ public class ReportsQueue implements Runnable {
     /**
      * Queue to synchronize reports sent to Agent.
      */
-    private final ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(1024);
+    private final ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(1024 * 1024);
 
     /**
      * HTTP client to submit reports to the Agent.
