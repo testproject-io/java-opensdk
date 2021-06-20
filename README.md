@@ -142,6 +142,8 @@ Token can be also provided explicitly using this constructor:
 public ChromeDriver(final String token, final ChromeOptions options)
 ```
 
+> When a token is provided in both the constructor and an environment variable, the token in the environment variable will be used.
+
 ## Remote Agent
 
 By default, drivers communicate with the local Agent listening on http://localhost:8585.
