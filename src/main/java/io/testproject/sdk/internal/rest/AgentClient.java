@@ -240,10 +240,14 @@ public final class AgentClient implements Closeable {
         this.remoteAddress = inferRemoteAddress(remoteAddress);
 
         // Determine Development Token
-        if (!StringUtils.isEmpty(token)) {
-            this.token = token;
-        } else if (!StringUtils.isEmpty(System.getenv(TP_DEV_TOKEN))) {
+        // Prioritize token provided in environment variable
+        if (!StringUtils.isEmpty(System.getenv(TP_DEV_TOKEN))) {
+            if (!StringUtils.isEmpty(token)) {
+                LOG.info("Using {} parameter from environment", TP_DEV_TOKEN);
+            }
             this.token = System.getenv(TP_DEV_TOKEN);
+        } else if (!StringUtils.isEmpty(token)) {
+            this.token = token;
         } else {
             throw new InvalidTokenException("No token has been provided.");
         }
