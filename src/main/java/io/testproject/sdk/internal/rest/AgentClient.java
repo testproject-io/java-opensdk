@@ -738,6 +738,14 @@ public final class AgentClient implements Closeable {
             URL serverUrl = ((capabilities.getPlatform() == Platform.ANY) ? null
                     : new URL(agentResponse.getServerAddress()));
 
+            // Log various warnings received from the Agent.
+            List<String> warnings = agentResponse.getWarnings();
+            if (warnings != null) {
+                for (String warning: warnings) {
+                    LOG.warn(warning);
+                }
+            }
+
             try {
                 if (!StringUtils.isEmpty(agentResponse.getLocalReportUrl())) {
                     String reportUrl = new URIBuilder(agentResponse.getLocalReportUrl())

@@ -17,6 +17,7 @@
 
 package io.testproject.sdk.internal.rest.messages;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,6 +69,11 @@ public class SessionResponse {
      * Agent connection validation uuid.
      */
     private String uuid;
+
+    /**
+     * Warnings sent by the Agent for this development session.
+     */
+    private List<String> warnings;
 
     /**
      * Getter for {@link #devSocketPort} field.
@@ -148,5 +154,14 @@ public class SessionResponse {
      */
     public String getUuid() {
         return uuid;
+    }
+
+    /**
+     * Getter for {@link #warnings} field.
+     *
+     * @return value of {@link #warnings} field
+     */
+    public List<String> getWarnings() {
+        return warnings;
     }
 }
