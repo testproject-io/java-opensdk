@@ -99,7 +99,10 @@ public final class ProfilePage {
         phoneElement.sendKeys(phone);
     }
 
-    private void save() {
+    /**
+     * Save the profile form.
+     */
+    public void save() {
         saveElement.click();
     }
 
