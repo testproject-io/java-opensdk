@@ -35,27 +35,27 @@ public final class AutomationFlows {
     /**
      * Name.
      */
-    private static final String FULL_NAME = "John Smith";
+    public static final String FULL_NAME = "John Smith";
 
     /**
      * Password.
      */
-    private static final String PASSWORD = "12345";
+    public static final String PASSWORD = "12345";
 
     /**
      * Country.
      */
-    private static final String COUNTRY_NAME = "United States";
+    public static final String COUNTRY_NAME = "United States";
 
     /**
      * Address.
      */
-    private static final String ADDRESS = "Street number and name";
+    public static final String ADDRESS = "Street number and name";
 
     /**
      * Email.
      */
-    private static final String EMAIL = "john.smith@somewhere.tld";
+    public static final String EMAIL = "john.smith@somewhere.tld";
 
     /**
      * Phone.

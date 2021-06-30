@@ -614,7 +614,41 @@ in your program's Run/Debug configuration as :
 
     If executing without a runner, it is possible to initialize
     the driver as part of the step definition class constructor.
-  
+# Addon Proxy
+
+One of the greatest features of the TestProject platform is the ability to execute a code written by someone else. 
+It can be your account colleagues, writing actions that you can reuse, or TestProject community users creating addons and solving common automation challenges.
+
+To get started, download a source file with the proxy class for the Action(s) you want to execute. 
+It can be done by navigating to the [Addons page](https://app.testproject.io/#/addons), opening an addon, 
+and clicking on the `Proxy` link at the bottom left corner of the popup.
+
+Now, let's pretend that one of your colleagues coded and uploaded an Addon naming it - `Example Addon`. 
+To use it in your test, download its proxy source file, add it to your project and invoke the actions using the following driver method:
+
+```
+driver.addons().execute()
+```
+
+That expects an instance of the `ActionProxy` class. For example:
+
+```java
+ // Use Addon proxy to invoke 'Clear Fields' Action
+driver.addons().execute(JavaWebExampleAddon.getClearFieldsAction());
+```
+
+Following is an example of an element action invocation:
+
+```java
+// Use Addon proxy to invoke 'Type Random Phone' Action
+// Notice how the action parameters are provided using an action proxy convenience method
+driver.addons().execute(
+        JavaWebExampleAddon.typeRandomPhoneAction("44", 10),
+        // Passing a 'By' instance, provides an element action with it's target
+        By.cssSelector("#phone"));
+```
+
+Refer to the [Addon Proxy Test](/src/test/java/io/testproject/sdk/tests/examples/addons/WebAddonProxiesTest.java) for complete example source.
 # Package & Upload Tests to TestProject
 
 Tests can be executed locally using the SDK, or triggered remotely from the TestProject platform. \
@@ -845,6 +879,7 @@ Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples):
   * [Internet Explorer Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/InternetExplorerDriverTest.java)
   * [Safari Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/SafariDriverTest.java)
   * [Remote Web Driver Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/RemoteWebDriverTest.java)
+  * [Addon Proxy Test](/src/test/java/io/testproject/sdk/tests/examples/addons/WebAddonProxiesTest.java)
 * Android
   * [Native App Test](/src/test/java/io/testproject/sdk/tests/examples/drivers/AndroidDriverTest.java)
   * [Native App Source](https://github.com/testproject-io/android-demo-app)
