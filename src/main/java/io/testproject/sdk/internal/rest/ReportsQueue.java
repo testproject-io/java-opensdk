@@ -101,6 +101,22 @@ public class ReportsQueue implements Runnable {
     }
 
     /**
+     * Getter method for {@link #queue}.
+     * @return the reports queue.
+     */
+    protected LinkedBlockingQueue<QueueItem> getQueue() {
+        return queue;
+    }
+
+    /**
+     * Getter method for {@link #httpClient}.
+     * @return the httpClient.
+     */
+    protected CloseableHttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    /**
      * Adds a report to the queue.
      *
      * @param request Request to be sent over HTTP.
