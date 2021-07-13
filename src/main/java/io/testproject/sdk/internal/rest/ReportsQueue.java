@@ -188,7 +188,7 @@ public class ReportsQueue implements Runnable {
     /**
      * Internal class to keep the HTTP request and contained report together in the queue.
      */
-    private static class QueueItem {
+    static class QueueItem {
 
         /**
          * HTTP request.
