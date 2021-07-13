@@ -19,23 +19,24 @@ package io.testproject.sdk.internal.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.testproject.sdk.internal.exceptions.FailedReportException;
 import io.testproject.sdk.internal.rest.messages.Report;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.concurrent.*;
 
 /**
  * A runnable class to manage reports queue.
  */
 public class ReportsQueue implements Runnable {
-
     /**
      * Logger instance.
      */
@@ -44,10 +45,22 @@ public class ReportsQueue implements Runnable {
     /**
      * An instance of the Google JSON serializer to serialize and deserialize objects.
      */
-    private static final Gson GSON = new GsonBuilder().create();
+    protected static final Gson GSON = new GsonBuilder().create();
+
+    /**
+     * Progress report delay in seconds.
+     * Print the number of the remaining reports to send every 3 seconds.
+     */
+    private static final int PROGRESS_REPORT_DELAY = 3;
+
+    /**
+     * Maximum attempts to try sending a report to the Agent.
+     */
+    protected static final int MAX_REPORT_FAILURE_ATTEMPTS = 4;
 
     /**
      * Queue to synchronize reports sent to Agent.
+     * Queue depth defined as 10K - assuming that even with very high latency, the queue won't get full.
      */
     private final LinkedBlockingQueue<QueueItem> queue = new LinkedBlockingQueue<>(1024 * 10);
 
@@ -72,9 +85,9 @@ public class ReportsQueue implements Runnable {
     private Future<?> progressFuture;
 
     /**
-     * Progress report delay in seconds.
+     * A flag that is raised when all attempts submitting a report fail.
      */
-    private static final int PROGRESS_REPORT_DELAY = 3;
+    private boolean stopReports = false;
 
     /**
      * Initializes a new instance of the class.
@@ -94,7 +107,30 @@ public class ReportsQueue implements Runnable {
      * @param report  Report that this request contains.
      */
     void submit(final HttpEntityEnclosingRequestBase request, final Report report) {
-        this.queue.add(new QueueItem(request, report));
+        if (!this.stopReports) {
+            this.queue.add(new QueueItem(request, report));
+        }
+    }
+
+    /**
+     * For lower versions than 3.1.0 -> Send standalone reports.
+     * @throws InterruptedException in case reports queue was interrupted
+     * @throws FailedReportException in case of 4 failures to send reports to the agent
+     */
+    void handleReport() throws InterruptedException, FailedReportException {
+        QueueItem item = this.queue.take();
+
+        if (item.getRequest() == null && item.getReport() == null) {
+            if (this.running) {
+                // There nulls are not OK, something went wrong preparing the report/request.
+                LOG.error("Empty report and request were submitted to the queue!");
+            }
+
+            // These nulls are OK - they were added by stop() method on purpose.
+            return;
+        }
+
+        sendReport((HttpPost) item.getRequest());
     }
 
     /**
@@ -103,13 +139,15 @@ public class ReportsQueue implements Runnable {
     @Override
     public void run() {
         this.running = true;
-
-        while (this.running || queue.size() > 0) {
+        while (this.running || !this.queue.isEmpty()) {
             try {
-                sendReport(queue.take());
+                handleReport();
             } catch (InterruptedException e) {
                 LOG.error("Reports queue was interrupted");
                 break;
+            } catch (FailedReportException e) {
+                this.stopReports = true;
+                LOG.warn("Reports are disabled due to multiple failed attempts of sending reports to the agent.");
             }
         }
 
@@ -122,38 +160,47 @@ public class ReportsQueue implements Runnable {
 
     /**
      * Submits a report to the Agent via HTTP RESTFul API endpoint.
-     *
-     * @param item Item retrieved from the queue (report & HTTP request).
+     * @param httpPost For lower versions than 3.1.0 -> HTTP request retrieved from the queue.
+     *                 For versions 3.1.0 and greater -> Build reports batch HTTP request.
+     * @throws FailedReportException in case of 4 failures to send reports to the agent
      */
-    private void sendReport(final QueueItem item) {
-        if (item.getRequest() == null && item.getReport() == null) {
-            if (this.running) {
-                // There nulls are not OK, something went wrong preparing the report/request.
-                LOG.error("Empty report and request were submitted to the queue!");
-            }
-
-            // These nulls are OK - they were added by stop() method on purpose.
-            return;
-        }
-
+    void sendReport(final HttpPost httpPost) throws FailedReportException {
+        int reportAttemptsCount;
         CloseableHttpResponse response = null;
-        try {
-            response = this.httpClient.execute(item.getRequest());
-        } catch (IOException e) {
-            LOG.error("Failed to submit report: [{}]", item.getReport(), e);
-            return;
-        } finally {
-            // Consume response to release the resources
+        // Send the report to the agent.
+        // In case of failure - make 3 more attempts.
+        for (reportAttemptsCount = MAX_REPORT_FAILURE_ATTEMPTS; reportAttemptsCount > 0; reportAttemptsCount--) {
+            try {
+                response = this.getHttpClient().execute(httpPost);
+            } catch (IOException e) {
+                LOG.error("Failed to submit report.", e);
+            } finally {
+                // Consume response to release the resources
+                if (response != null) {
+                    EntityUtils.consumeQuietly(response.getEntity());
+                }
+            }
+
             if (response != null) {
-                EntityUtils.consumeQuietly(response.getEntity());
+                // If the reports were sent successfully, there is no need to continue to the rest of the code
+                // since it's handling unsuccessful response.
+                if (Response.Status.Family.familyOf(response.getStatusLine().getStatusCode())
+                    == Response.Status.Family.SUCCESSFUL) {
+                    return;
+                }
+
+                // Handle unsuccessful response
+                LOG.warn("Agent responded with an unexpected status {} to report.",
+                        response.getStatusLine().getStatusCode());
+                LOG.info("Failed to send a report to the Agent, {} attempts remaining...", reportAttemptsCount - 1);
             }
         }
 
-        // Handle unsuccessful response
-        if (response != null && response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
-            LOG.error("Agent responded with an unexpected status {} to report: [{}]",
-                    response.getStatusLine().getStatusCode(), item.getReport());
-        }
+        // In case all attempts to send the report are failed.
+        // If the report has been sent successfully - this code will not execute.
+        LOG.error("All {} attempts to send report have failed.", MAX_REPORT_FAILURE_ATTEMPTS);
+        throw new FailedReportException("All " + MAX_REPORT_FAILURE_ATTEMPTS
+                + " attempts to send report have failed.");
     }
 
     /**
