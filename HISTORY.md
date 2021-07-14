@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2021-07-14
+
 ### Added
 
 - When development token is provided in both environment variable and driver constructor, prioritize token in environment variable.
+- Added new class ReportsQueueBatch to support reporting at batches.
 
 ## [1.2.3] - 2021-06-17
 
