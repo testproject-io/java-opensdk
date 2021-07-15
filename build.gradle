@@ -90,6 +90,9 @@ dependencies {
 
     // Apache commons
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
+
+    // Java API for RESTful Web Services
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
 }
 
 checkstyle.configFile file("config/checkstyle/checkstyle.xml")
