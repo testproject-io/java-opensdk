@@ -864,6 +864,10 @@ public class TestNGExample {
 }
 ```
 
+**NOTE:**
+* **Once the ```TestProjectParameterizer``` class is added, the code won't run in the IDE and will throw an exception**
+* **Only String types are allowed as parameters**
+
 # Examples
 
 Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples):
