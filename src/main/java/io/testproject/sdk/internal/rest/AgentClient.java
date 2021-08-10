@@ -83,6 +83,11 @@ public final class AgentClient implements Closeable {
     private static final String TP_DEV_TOKEN = "TP_DEV_TOKEN";
 
     /**
+     * Constant for internet explorer browser name
+     */
+    private static final String INTERNET_EXPLORER = "internet explorer";
+
+    /**
      * Default Agent API base URL address.
      */
     private static final String AGENT_DEFAULT_API_ADDRESS = "http://localhost:8585";
@@ -521,7 +526,10 @@ public final class AgentClient implements Closeable {
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
 
         // If capabilities object doesn't have a custom session tracking capability - set it here
-        if (!capabilities.asMap().containsKey(TP_GUID)) {
+        if (!capabilities.asMap().containsKey(TP_GUID)
+                && !capabilities.getBrowserName().equals(INTERNET_EXPLORER)) {
+            // Passing this capability to internet explorer will cause
+            // an exception due to "tp:guid is an unknown extension capability for IE"
             MutableCapabilities newCapabilities = new MutableCapabilities();
             newCapabilities.setCapability(TP_GUID, UUID.randomUUID().toString());
             capabilities = capabilities.merge(newCapabilities);
@@ -531,8 +539,10 @@ public final class AgentClient implements Closeable {
         synchronized (AgentClient.class) {
 
             // Check if an instance of an AgentClient class has been already cached
-            if (instance == null || !instance.getSession().getCapabilities().getCapability(TP_GUID).equals(
-                    capabilities.getCapability(TP_GUID))) {
+            // only if we are not executing on IE
+            if (instance == null || (!capabilities.getBrowserName().equals(INTERNET_EXPLORER)
+                    && !instance.getSession().getCapabilities().getCapability(TP_GUID).equals(
+                    capabilities.getCapability(TP_GUID)))) {
 
                 // Close existing session if required
                 ReportSettings settings = reportSettings;
@@ -670,9 +680,11 @@ public final class AgentClient implements Closeable {
             DeviceNotConnectedException {
         LOG.info("Initializing new session...");
         LOG.trace("Initializing new session with capabilities: {}", GSON.toJson(capabilities));
-
-        // Extract TP_GUID capability
-        String guid = Objects.requireNonNull(capabilities.getCapability(TP_GUID)).toString();
+        String guid = "";
+        if (!capabilities.getBrowserName().equals(INTERNET_EXPLORER)) {
+            // Extract TP_GUID capability only if we are not executing on IE
+            guid = Objects.requireNonNull(capabilities.getCapability(TP_GUID)).toString();
+        }
 
         // Initialize POST request to Agent API
         HttpPost httpPost = new HttpPost(remoteAddress + Routes.DEVELOPMENT_SESSION);
@@ -741,10 +753,13 @@ public final class AgentClient implements Closeable {
                 mutableCapabilities = new MutableCapabilities();
             }
 
-            // There's a chance that driver ignored our custom tracking capability
-            // And now doesn't return it with the actual driver capabilities
-            // It has to be set again to avoid initializing an new AgentClient instance for these capabilities again
-            mutableCapabilities.setCapability(TP_GUID, guid);
+            if (StringUtils.isNotEmpty(guid)) {
+                // There's a chance that driver ignored our custom tracking capability
+                // And now doesn't return it with the actual driver capabilities
+                // It has to be set again to avoid initializing an new AgentClient instance for these capabilities again
+                // Do this only if we are not in InternetExplorer
+                mutableCapabilities.setCapability(TP_GUID, guid);
+            }
             version = agentResponse.getVersion();
             // Set the server URL to null if using the Generic driver.
             URL serverUrl = ((capabilities.getPlatform() == Platform.ANY) ? null
