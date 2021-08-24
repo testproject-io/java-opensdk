@@ -906,6 +906,8 @@ Here are more [examples](/src/test/java/io/testproject/sdk/tests/examples):
   * JUnit 5
     * [Inferred Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit5/InferredReportTest.java)
     * [Explicit Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit5/ExplicitReportTest.java)
+    * [Exceptions Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit5/ExceptionsReportTest.java)
+    * [Parameterized Test](src/test/java/io/testproject/sdk/tests/examples/frameworks/junit5/ParameterizedExampleTest.java)
   * TestNG
     * [Inferred Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/testng/InferredReportTest.java)
     * [Explicit Report](src/test/java/io/testproject/sdk/tests/examples/frameworks/testng/ExplicitReportTest.java)

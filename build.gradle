@@ -244,3 +244,6 @@ test {
         useJUnitPlatform()
     }
 }
+
+// Expose argument names in tests
+compileTestJava.options.compilerArgs.add '-parameters'
