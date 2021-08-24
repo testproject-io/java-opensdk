@@ -758,44 +758,56 @@ Save this file under `src/main/java/assembly` as `test-jar-with-dependencies.xml
 
 ## Uploading parameterized tests
 
-TestProject's platform supports running tests with dynamic parameter values. We can do this with OpenSDK tests as well, using the TestProjectParameterizer class.
+TestProject allows running recorded tests using a dynamic parameter values using data-sources. \
+Same can be achieved using the OpenSDK as explained below.
 
-**NOTE:** tests written in JUnit 4 do not support parameterization.
-
+> Notes:
+> 1. Tests created with JUnit 4, do not support parameterization.
+> 2. Only String types are allowed as parameters!
 ### Revealing parameter names
 
-If you want your test parameter names to show in TestProject platform, you must build your jar to expose them.
+If you want your test parameter names to get displayed in TestProject platform, 
+you must build your JAR with extra settings in order to expose them.
 
-Gradle configuration:
+Gradle:
 
-```
+```groovy
 // Place anywhere in the build.gradle file
 compileTestJava.options.compilerArgs.add '-parameters'
 ```
 
-Maven configuration:
+Maven:
 
-```
+```xml
 <!-- If you already have a compiler plugin, just add the compilerArgs tag. -->
-    <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                    <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-   </plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.7.0</version>
+    <configuration>
+        <source>11</source>
+        <target>11</target>
+        <encoding>UTF-8</encoding>
+        <compilerArgs>
+            <arg>-parameters</arg>
+        </compilerArgs>
+    </configuration>
+</plugin>
 ```
+
+To allow parameterization with JUnit 5, OpenSDK provides a special data-source class: `TestProjectParameterizer`.
+
+This class expects the TestProject Agent to set a path to a CSV data-source file, **in runtime**. 
+However during debugging or when running the test locally, it will throw an exception saying that _No data provider was specified._. 
+
+To avoid this, there are two options:
+
+* Use a hard-coded `@ValueSource` annotation that should be removed before packaging the JAR file and uploading to TestProject.
+* Specify a path to a local CSV file using the `TP_TEST_DATA_PROVIDER` environment variable, and mimic Agent's behavior.
 
 ### JUnit 5
 
-To let TestProject parameterize JUnit 5, OpenSDK provided a custom *ArgumentsSource* class called `TestProjectParameterizer`.
-Here's a simple example of a parameterized test that is ready for upload:
+Here's a simple example of a parameterized test using JUnit5:
 
 ```java
 import io.testproject.sdk.drivers.web.ChromeDriver;
@@ -830,8 +842,7 @@ public class JUnit5Example {
 
 ### TestNG
 
-To let TestProject parameterize JUnit 5, OpenSDK provided a custom *dataProvider* inside the `TestProjectParameterizer` class called "TestProject".
-Here's a simple example of a parameterized test that is ready for upload:
+Here's a simple example of a parameterized test using TestNG:
 
 ```java
 import io.testproject.sdk.drivers.web.ChromeDriver;
@@ -863,10 +874,6 @@ public class TestNGExample {
     }
 }
 ```
-
-**NOTE:**
-* **Once the ```TestProjectParameterizer``` class is added, the code won't run in the IDE and will throw an exception**
-* **Only String types are allowed as parameters**
 
 # Examples
 
