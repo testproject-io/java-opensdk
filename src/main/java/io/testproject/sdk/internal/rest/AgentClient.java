@@ -237,7 +237,7 @@ public final class AgentClient implements Closeable {
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    private AgentClient(final URL remoteAddress, final String token, final Capabilities capabilities,
+    private AgentClient(final URL remoteAddress, final String token, final MutableCapabilities capabilities,
                         final ReportSettings reportSettings, final boolean disableReports)
             throws MalformedURLException, InvalidTokenException, AgentConnectException,
             ObsoleteVersionException {
@@ -379,14 +379,14 @@ public final class AgentClient implements Closeable {
     /**
      * Creates (or searches for an existing) instance of {@link AgentClient} using provided capabilities.
      *
-     * @param capabilities {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public static AgentClient getClient(final Capabilities capabilities)
+    public static AgentClient getClient(final MutableCapabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
         return getClient(null, null, capabilities, null, false);
     }
@@ -394,7 +394,7 @@ public final class AgentClient implements Closeable {
     /**
      * Creates (or searches for an existing) instance of {@link AgentClient} using provided capabilities.
      *
-     * @param capabilities   {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities   {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @param reportSettings {@link ReportSettings} with Project and Job names to report
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -402,7 +402,7 @@ public final class AgentClient implements Closeable {
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public static AgentClient getClient(final Capabilities capabilities, final ReportSettings reportSettings)
+    public static AgentClient getClient(final MutableCapabilities capabilities, final ReportSettings reportSettings)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
         return getClient(null, null, capabilities, reportSettings, true);
     }
@@ -414,14 +414,14 @@ public final class AgentClient implements Closeable {
      *                     If not provided, will attempt to get the value from <b>TP_DEV_TOKEN</b>
      *                     environment variable.<br>
      *                     It can be obtained from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page.
-     * @param capabilities {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public static AgentClient getClient(final String token, final Capabilities capabilities)
+    public static AgentClient getClient(final String token, final MutableCapabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
         return getClient(null, token, capabilities, null, false);
     }
@@ -434,7 +434,7 @@ public final class AgentClient implements Closeable {
      *                       environment variable.<br>
      *                       It can be obtained from
      *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page.
-     * @param capabilities   {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities   {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @param reportSettings {@link ReportSettings} with Project and Job names to report
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -442,7 +442,7 @@ public final class AgentClient implements Closeable {
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public static AgentClient getClient(final String token, final Capabilities capabilities,
+    public static AgentClient getClient(final String token, final MutableCapabilities capabilities,
                                         final ReportSettings reportSettings)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
         return getClient(null, token, capabilities, reportSettings, true);
@@ -456,7 +456,7 @@ public final class AgentClient implements Closeable {
      *                       If not provided, will attempt to get the value from <b>TP_AGENT_URL</b>
      *                       environment variable.<br>
      *                       If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
-     * @param capabilities   {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities   {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @param reportSettings {@link ReportSettings} with Project and Job names to report
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -464,7 +464,7 @@ public final class AgentClient implements Closeable {
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public static AgentClient getClient(final URL remoteAddress, final Capabilities capabilities,
+    public static AgentClient getClient(final URL remoteAddress, final MutableCapabilities capabilities,
                                         final ReportSettings reportSettings)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
         return getClient(remoteAddress, null, capabilities, reportSettings, true);
@@ -478,14 +478,14 @@ public final class AgentClient implements Closeable {
      *                      If not provided, will attempt to get the value from <b>TP_AGENT_URL</b>
      *                      environment variable.<br>
      *                      If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
-     * @param capabilities  {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities  {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public static AgentClient getClient(final URL remoteAddress, final Capabilities capabilities)
+    public static AgentClient getClient(final URL remoteAddress, final MutableCapabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
         return getClient(remoteAddress, null, capabilities, null, false);
     }
@@ -503,7 +503,7 @@ public final class AgentClient implements Closeable {
      *                       environment variable.<br>
      *                       It can be obtained from
      *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page.
-     * @param capabilities   {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
+     * @param capabilities   {@link MutableCapabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @param reportSettings {@link ReportSettings} with Project and Job names to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
      * @return An instance of an AgentClient class.
@@ -515,7 +515,7 @@ public final class AgentClient implements Closeable {
     public static AgentClient getClient(final URL remoteAddress, final String token,
                                         // Below is an ugly trick to make sure TP_GUID capability is always set
                                         // It changed the method parameter 'capabilities' and hence it's not final
-                                        @SuppressWarnings("checkstyle:finalparameters") Capabilities capabilities,
+                                        @SuppressWarnings("checkstyle:finalparameters") MutableCapabilities capabilities,
                                         final ReportSettings reportSettings,
                                         final boolean disableReports)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
@@ -665,7 +665,7 @@ public final class AgentClient implements Closeable {
      * @throws MissingBrowserException if the requested browser is not installed.
      * @throws DeviceNotConnectedException if the requested device is not found.
      */
-    private void startSession(final Capabilities capabilities, final ReportSettings reportSettings)
+    private void startSession(final MutableCapabilities capabilities, final ReportSettings reportSettings)
             throws InvalidTokenException, AgentConnectException, ObsoleteVersionException, MissingBrowserException,
             DeviceNotConnectedException {
         LOG.info("Initializing new session...");
@@ -686,8 +686,9 @@ public final class AgentClient implements Closeable {
                 .build();
         httpPost.setConfig(config);
 
+//        ((MutableCapabilities) capabilities).toJson()
         // Prepare Payload
-        SessionRequest request = new SessionRequest(reportSettings, capabilities.asMap());
+        SessionRequest request = new SessionRequest(reportSettings, capabilities.toJson());
 
         // Save report settings
         this.projectName = request.getProjectName();
@@ -886,7 +887,7 @@ public final class AgentClient implements Closeable {
      * @throws MissingBrowserException if the requested browser is not installed.
      * @throws DeviceNotConnectedException if the requested device is not found.
      */
-    private void handleSessionStartFailure(final CloseableHttpResponse response, final Capabilities capabilities)
+    private void handleSessionStartFailure(final CloseableHttpResponse response, final MutableCapabilities capabilities)
             throws InvalidTokenException, ObsoleteVersionException, AgentConnectException, MissingBrowserException,
             DeviceNotConnectedException {
         String statusMessage = null;

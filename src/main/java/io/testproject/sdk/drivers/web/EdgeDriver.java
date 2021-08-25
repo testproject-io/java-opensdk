@@ -30,6 +30,7 @@ import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -765,7 +766,7 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
                         new ReportSettings(projectName, jobName, reportType, reportName, reportPath), disableReports)
                 .getSession().getCapabilities()));
 
-        this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
+        this.reporter = new Reporter(this, AgentClient.getClient((MutableCapabilities) this.getCapabilities()));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
 
         ShutdownThreadManager.getInstance().addDriver(this, this::stop);
@@ -777,7 +778,7 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
     @Override
     protected void startSession(final Capabilities capabilities) {
         try {
-            AgentClient agentClient = AgentClient.getClient(capabilities);
+            AgentClient agentClient = AgentClient.getClient((MutableCapabilities) capabilities);
             DriverHelper.setCapabilities(this, capabilities);
             setSessionId(agentClient.getSession().getSessionId());
             setCommandExecutor(DriverHelper.getHttpCommandExecutor(agentClient, false));

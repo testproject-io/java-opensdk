@@ -30,6 +30,7 @@ import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
@@ -73,13 +74,13 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities)
+    public AndroidDriver(final MutableCapabilities capabilities)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
         this(null, null, capabilities, null, null, false, ReportType.CLOUD_AND_LOCAL);
@@ -96,14 +97,14 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param reportType A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities, final ReportType reportType)
+    public AndroidDriver(final MutableCapabilities capabilities, final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
         this(null, null, capabilities, null, null, false, reportType);
@@ -120,14 +121,14 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities   take a look at {@link Capabilities}
+     * @param capabilities   take a look at {@link MutableCapabilities}
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities,
+    public AndroidDriver(final MutableCapabilities capabilities,
                          final boolean disableReports)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
@@ -145,7 +146,7 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities   take a look at {@link Capabilities}
+     * @param capabilities   take a look at {@link MutableCapabilities}
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
      * @param reportType     A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -153,7 +154,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities,
+    public AndroidDriver(final MutableCapabilities capabilities,
                          final boolean disableReports,
                          final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
@@ -172,14 +173,14 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities,
+    public AndroidDriver(final MutableCapabilities capabilities,
                          final String projectName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
@@ -197,7 +198,7 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @param reportType   A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -205,7 +206,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities,
+    public AndroidDriver(final MutableCapabilities capabilities,
                          final String projectName,
                          final ReportType reportType)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
@@ -224,7 +225,7 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @param jobName      Job name to report
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -232,7 +233,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities,
+    public AndroidDriver(final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName)
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
@@ -251,7 +252,7 @@ public class AndroidDriver<T extends WebElement>
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @param jobName      Job name to report
      * @param reportType   A type of report to produce - cloud, local or both.
@@ -260,7 +261,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
-    public AndroidDriver(final Capabilities capabilities,
+    public AndroidDriver(final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName,
                          final ReportType reportType)
@@ -279,14 +280,14 @@ public class AndroidDriver<T extends WebElement>
      *
      * @param token        Development token that should be obtained from
      *                     <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final String token,
-                         final Capabilities capabilities)
+                         final MutableCapabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
         this(null, token, capabilities, null, null, false, ReportType.CLOUD_AND_LOCAL);
@@ -302,7 +303,7 @@ public class AndroidDriver<T extends WebElement>
      *
      * @param token        Development token that should be obtained from
      *                     <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param reportType   A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -310,7 +311,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
@@ -327,7 +328,7 @@ public class AndroidDriver<T extends WebElement>
      *
      * @param token        Development token that should be obtained from
      *                     <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -335,7 +336,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
@@ -352,7 +353,7 @@ public class AndroidDriver<T extends WebElement>
      *
      * @param token        Development token that should be obtained from
      *                     <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @param reportType   A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -361,7 +362,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
@@ -379,7 +380,7 @@ public class AndroidDriver<T extends WebElement>
      *
      * @param token        Development token that should be obtained from
      *                     <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @param jobName      Job name to report
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -388,7 +389,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
@@ -406,7 +407,7 @@ public class AndroidDriver<T extends WebElement>
      *
      * @param token        Development token that should be obtained from
      *                     <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities take a look at {@link Capabilities}
+     * @param capabilities take a look at {@link MutableCapabilities}
      * @param projectName  Project name to report
      * @param jobName      Job name to report
      * @param reportType   A type of report to produce - cloud, local or both.
@@ -416,7 +417,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName,
                          final ReportType reportType)
@@ -434,14 +435,14 @@ public class AndroidDriver<T extends WebElement>
      * Creates a new instance based on {@code capabilities}.
      *
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final URL remoteAddress,
-                         final Capabilities capabilities)
+                         final MutableCapabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
         this(remoteAddress, null, capabilities, null, null, false, ReportType.CLOUD_AND_LOCAL);
@@ -456,7 +457,7 @@ public class AndroidDriver<T extends WebElement>
      * Creates a new instance based on {@code capabilities}.
      *
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param reportType    A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -464,7 +465,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final URL remoteAddress,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
@@ -480,7 +481,7 @@ public class AndroidDriver<T extends WebElement>
      * Creates a new instance based on {@code capabilities}.
      *
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param projectName   Project name to report
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -488,7 +489,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final URL remoteAddress,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
@@ -504,7 +505,7 @@ public class AndroidDriver<T extends WebElement>
      * Creates a new instance based on {@code capabilities}.
      *
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param projectName   Project name to report
      * @param reportType    A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -513,7 +514,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final URL remoteAddress,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
@@ -530,7 +531,7 @@ public class AndroidDriver<T extends WebElement>
      * Creates a new instance based on {@code capabilities}.
      *
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param projectName   Project name to report
      * @param jobName       Job name to report
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -539,7 +540,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final URL remoteAddress,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
@@ -556,7 +557,7 @@ public class AndroidDriver<T extends WebElement>
      * Creates a new instance based on {@code capabilities}.
      *
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param projectName   Project name to report
      * @param jobName       Job name to report
      * @param reportType    A type of report to produce - cloud, local or both.
@@ -566,7 +567,7 @@ public class AndroidDriver<T extends WebElement>
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     public AndroidDriver(final URL remoteAddress,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName,
                          final ReportType reportType)
@@ -581,7 +582,7 @@ public class AndroidDriver<T extends WebElement>
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
      * @param token         Development token that should be obtained from
      *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
@@ -589,7 +590,7 @@ public class AndroidDriver<T extends WebElement>
      */
     public AndroidDriver(final URL remoteAddress,
                          final String token,
-                         final Capabilities capabilities)
+                         final MutableCapabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
         this(remoteAddress, token, capabilities, null, null, false, ReportType.CLOUD_AND_LOCAL);
@@ -601,7 +602,7 @@ public class AndroidDriver<T extends WebElement>
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
      * @param token         Development token that should be obtained from
      *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param reportType    A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -610,7 +611,7 @@ public class AndroidDriver<T extends WebElement>
      */
     public AndroidDriver(final URL remoteAddress,
                          final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
             ObsoleteVersionException {
@@ -623,7 +624,7 @@ public class AndroidDriver<T extends WebElement>
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
      * @param token         Development token that should be obtained from
      *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param projectName   The project name to display in the report
      * @param reportType    A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -633,7 +634,7 @@ public class AndroidDriver<T extends WebElement>
      */
     public AndroidDriver(final URL remoteAddress,
                          final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final ReportType reportType)
             throws AgentConnectException, InvalidTokenException, MalformedURLException,
@@ -647,7 +648,7 @@ public class AndroidDriver<T extends WebElement>
      * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
      * @param token         Development token that should be obtained from
      *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities  take a look at {@link Capabilities}
+     * @param capabilities  take a look at {@link MutableCapabilities}
      * @param projectName   The project name to display in the report
      * @param jobName       The job name to display in the report
      * @param reportType    A type of report to produce - cloud, local or both.
@@ -658,7 +659,7 @@ public class AndroidDriver<T extends WebElement>
      */
     public AndroidDriver(final URL remoteAddress,
                          final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName,
                          final ReportType reportType)
@@ -673,7 +674,7 @@ public class AndroidDriver<T extends WebElement>
      * @param remoteAddress  Agent API base URL (e.g. http://localhost:8585/)
      * @param token          Development token that should be obtained from
      *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities   take a look at {@link Capabilities}
+     * @param capabilities   take a look at {@link MutableCapabilities}
      * @param projectName    Project name to report
      * @param jobName        Job name to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
@@ -685,7 +686,7 @@ public class AndroidDriver<T extends WebElement>
      */
     public AndroidDriver(final URL remoteAddress,
                          final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName,
                          final boolean disableReports,
@@ -703,7 +704,7 @@ public class AndroidDriver<T extends WebElement>
      * @param remoteAddress  Agent API base URL (e.g. http://localhost:8585/)
      * @param token          Development token that should be obtained from
      *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
-     * @param capabilities   take a look at {@link Capabilities}
+     * @param capabilities   take a look at {@link MutableCapabilities}
      * @param projectName    Project name to report
      * @param jobName        Job name to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
@@ -717,7 +718,7 @@ public class AndroidDriver<T extends WebElement>
      */
     public AndroidDriver(final URL remoteAddress,
                          final String token,
-                         final Capabilities capabilities,
+                         final MutableCapabilities capabilities,
                          final String projectName,
                          final String jobName,
                          final boolean disableReports,
@@ -732,7 +733,7 @@ public class AndroidDriver<T extends WebElement>
                         disableReports), true),
                 AgentClient.getClient(capabilities).getSession().getCapabilities());
 
-        this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
+        this.reporter = new Reporter(this, AgentClient.getClient((MutableCapabilities) this.getCapabilities()));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
 
         ShutdownThreadManager.getInstance().addDriver(this, this::stop);
@@ -745,7 +746,7 @@ public class AndroidDriver<T extends WebElement>
     protected void startSession(final Capabilities capabilities) {
         try {
             DriverHelper.setCapabilities(this, capabilities);
-            setSessionId(AgentClient.getClient(capabilities).getSession().getSessionId());
+            setSessionId(AgentClient.getClient((MutableCapabilities) capabilities).getSession().getSessionId());
         } catch (Exception e) {
             throw new WebDriverException(e);
         }
