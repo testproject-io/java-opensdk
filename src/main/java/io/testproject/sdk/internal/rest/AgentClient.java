@@ -905,15 +905,9 @@ public final class AgentClient implements Closeable {
                 LOG.error("Failed to initialize a session with the Agent - token is invalid");
                 throw new InvalidTokenException();
             case HttpURLConnection.HTTP_NOT_ACCEPTABLE:
-                LOG.error("Failed to initialize a session with the Agent - obsolete SDK version");
-                throw new ObsoleteVersionException(statusMessage);
             case HttpURLConnection.HTTP_NOT_FOUND:
-                if (statusMessage != null && capabilities.getBrowserName().equals("")) {
-                    LOG.error("Failed to initialize a session with the Agent - Requested device is not connected");
-                    throw new DeviceNotConnectedException();
-                }
-                LOG.error("Failed to initialize a session with the Agent - requested browser is not installed");
-                throw new MissingBrowserException();
+                LOG.error("Failed to initialize a session with the Agent");
+                throw new AgentConnectException(statusMessage);
             default:
                 LOG.error("Failed to initialize a session with the Agent");
                 throw new AgentConnectException("Agent responded with status "
