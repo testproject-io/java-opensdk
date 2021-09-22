@@ -63,6 +63,11 @@ import java.util.concurrent.*;
 public final class AgentClient implements Closeable {
 
     /**
+     * New Session HTTP connection request timeout in milliseconds.
+     */
+    public static final int NEW_SESSION_SOCKET_TIMEOUT_MS = 120 * 1000;
+
+    /**
      * Maximum amount of time to wait in seconds before forcibly terminating the queue.
      */
     public static final int REPORTS_QUEUE_TIMEOUT = 60 * 10;
@@ -96,11 +101,6 @@ public final class AgentClient implements Closeable {
      * HTTP connection request timeout in milliseconds.
      */
     private static final int CONNECTION_REQUEST_TIMEOUT_MS = 5 * 1000;
-
-    /**
-     * New Session HTTP connection request timeout in milliseconds.
-     */
-    private static final int NEW_SESSION_SOCKET_TIMEOUT_MS = 120 * 1000;
 
     /**
      * Addon execution HTTP connection request timeout in milliseconds.
@@ -188,6 +188,11 @@ public final class AgentClient implements Closeable {
     private String jobName;
 
     /**
+     * The connection timeout to the agent in milliseconds.
+     */
+    private int sessionSocketTimeout;
+
+    /**
      * When getting the AgentClient instance warn only once
      * that there is no active AgentClient instance.
      */
@@ -232,19 +237,22 @@ public final class AgentClient implements Closeable {
      * @param capabilities   capabilities to use for initializing the driver.
      * @param reportSettings {@link ReportSettings} with Project and Job names to report
      * @param disableReports True to enable automatic reporting of driver commands and tests, otherwise False.
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws MalformedURLException    if the Agent API base URL provided is malformed
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
      */
     private AgentClient(final URL remoteAddress, final String token, final Capabilities capabilities,
-                        final ReportSettings reportSettings, final boolean disableReports)
+                        final ReportSettings reportSettings,
+                        final boolean disableReports, final int sessionSocketTimeout)
             throws MalformedURLException, InvalidTokenException, AgentConnectException,
             ObsoleteVersionException {
 
         // Determine Agent API address
         this.remoteAddress = inferRemoteAddress(remoteAddress);
 
+        this.sessionSocketTimeout = sessionSocketTimeout;
         // Determine Development Token
         // Prioritize token provided in environment variable
         if (!StringUtils.isEmpty(System.getenv(TP_DEV_TOKEN))) {
@@ -388,7 +396,7 @@ public final class AgentClient implements Closeable {
      */
     public static AgentClient getClient(final Capabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
-        return getClient(null, null, capabilities, null, false);
+        return getClient(null, null, capabilities, null, false, NEW_SESSION_SOCKET_TIMEOUT_MS);
     }
 
     /**
@@ -404,7 +412,7 @@ public final class AgentClient implements Closeable {
      */
     public static AgentClient getClient(final Capabilities capabilities, final ReportSettings reportSettings)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
-        return getClient(null, null, capabilities, reportSettings, true);
+        return getClient(null, null, capabilities, reportSettings, true, NEW_SESSION_SOCKET_TIMEOUT_MS);
     }
 
     /**
@@ -423,7 +431,7 @@ public final class AgentClient implements Closeable {
      */
     public static AgentClient getClient(final String token, final Capabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
-        return getClient(null, token, capabilities, null, false);
+        return getClient(null, token, capabilities, null, false, NEW_SESSION_SOCKET_TIMEOUT_MS);
     }
 
     /**
@@ -445,7 +453,7 @@ public final class AgentClient implements Closeable {
     public static AgentClient getClient(final String token, final Capabilities capabilities,
                                         final ReportSettings reportSettings)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
-        return getClient(null, token, capabilities, reportSettings, true);
+        return getClient(null, token, capabilities, reportSettings, true, NEW_SESSION_SOCKET_TIMEOUT_MS);
     }
 
     /**
@@ -467,7 +475,7 @@ public final class AgentClient implements Closeable {
     public static AgentClient getClient(final URL remoteAddress, final Capabilities capabilities,
                                         final ReportSettings reportSettings)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
-        return getClient(remoteAddress, null, capabilities, reportSettings, true);
+        return getClient(remoteAddress, null, capabilities, reportSettings, true, NEW_SESSION_SOCKET_TIMEOUT_MS);
     }
 
     /**
@@ -487,7 +495,7 @@ public final class AgentClient implements Closeable {
      */
     public static AgentClient getClient(final URL remoteAddress, final Capabilities capabilities)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
-        return getClient(remoteAddress, null, capabilities, null, false);
+        return getClient(remoteAddress, null, capabilities, null, false, NEW_SESSION_SOCKET_TIMEOUT_MS);
     }
 
     /**
@@ -506,6 +514,7 @@ public final class AgentClient implements Closeable {
      * @param capabilities   {@link Capabilities} to be used for creating {@link AgentClient} or finding a cached one
      * @param reportSettings {@link ReportSettings} with Project and Job names to report
      * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
      * @return An instance of an AgentClient class.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -517,7 +526,8 @@ public final class AgentClient implements Closeable {
                                         // It changed the method parameter 'capabilities' and hence it's not final
                                         @SuppressWarnings("checkstyle:finalparameters") Capabilities capabilities,
                                         final ReportSettings reportSettings,
-                                        final boolean disableReports)
+                                        final boolean disableReports,
+                                        final int sessionSocketTimeout)
             throws AgentConnectException, InvalidTokenException, MalformedURLException, ObsoleteVersionException {
 
         // If capabilities object doesn't have a custom session tracking capability - set it here
@@ -560,7 +570,8 @@ public final class AgentClient implements Closeable {
                 }
 
                 // No instance yet or it's for another driver and needs to be re-initialized
-                instance = new AgentClient(remoteAddress, token, capabilities, settings, disableReports);
+                instance = new AgentClient(remoteAddress, token, capabilities, settings,
+                        disableReports, sessionSocketTimeout);
             }
         }
 
@@ -682,7 +693,7 @@ public final class AgentClient implements Closeable {
         RequestConfig config = RequestConfig.custom()
                 .setConnectionRequestTimeout(CONNECTION_TIMEOUT_MS)
                 .setConnectTimeout(CONNECTION_TIMEOUT_MS)
-                .setSocketTimeout(NEW_SESSION_SOCKET_TIMEOUT_MS)
+                .setSocketTimeout(this.sessionSocketTimeout)
                 .build();
         httpPost.setConfig(config);
 
