@@ -166,6 +166,8 @@ By default, TestProject Agent communicates with the local Selenium or Appium ser
 In order to initialize a remote driver for cloud providers such as SauceLabs or BrowserStack, \
 a custom capability `cloud:URL` should be set, for example:
 
+<details><summary>SauceLabs</summary>
+
 ```java
 import io.testproject.sdk.drivers.web.ChromeDriver;
 import io.testproject.sdk.drivers.TestProjectCapabilityType;
@@ -176,6 +178,21 @@ chromeOptions.setCapability(
         "https://{USERNAME}:{PASSWORD}@ondemand.us-west-1.saucelabs.com:443/wd/hub");
 ChromeDriver driver = new ChromeDriver(chromeOptions);
 ```
+</details>
+
+<details><summary>BrowserStack</summary>
+
+```java
+import io.testproject.sdk.drivers.web.ChromeDriver;
+import io.testproject.sdk.drivers.TestProjectCapabilityType;
+
+ChromeOptions chromeOptions = new ChromeOptions();
+chromeOptions.setCapability(
+        TestProjectCapabilityType.CLOUD_URL,
+        "https://{USERNAME}:{PASSWORD}@hub-cloud.browserstack.com/wd/hub");
+ChromeDriver driver = new ChromeDriver(chromeOptions);
+```
+</details>
 
 ## Driver Builder
 
