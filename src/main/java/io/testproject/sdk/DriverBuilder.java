@@ -90,6 +90,11 @@ public final class DriverBuilder<T extends ReportingDriver> {
     private String builderReportPath;
 
     /**
+     * The connection timeout to the agent in milliseconds.
+     */
+    private int builderSocketSessionTimeout;
+
+    /**
      * Initializes a new instance of the builder.
      * Builder can be conveniently used to initialize new Drivers.
      *
@@ -204,6 +209,16 @@ public final class DriverBuilder<T extends ReportingDriver> {
     }
 
     /**
+     * Set the connection timeout to the agent in milliseconds.
+     * @param sessionSocketTimeout timeout to the agent in milliseconds.
+     * @return Modified builder.
+     */
+    public DriverBuilder<T> withSessionSocketTimeout(final int sessionSocketTimeout) {
+        this.builderSocketSessionTimeout = sessionSocketTimeout;
+        return this;
+    }
+
+    /**
      * Builds an instance of the requested driver using set values.
      *
      * @param clazz Required driver type.
@@ -222,7 +237,8 @@ public final class DriverBuilder<T extends ReportingDriver> {
                         boolean.class,
                         ReportType.class,
                         String.class,
-                        String.class);
+                        String.class,
+                        Integer.class);
 
         // Make sure that requested constructor was found
         if (constructor == null) {
@@ -241,7 +257,8 @@ public final class DriverBuilder<T extends ReportingDriver> {
                     builderDisableReports,
                     builderReportType,
                     builderReportName,
-                    builderReportPath);
+                    builderReportPath,
+                    builderSocketSessionTimeout);
         } catch (Exception e) {
             throw new WebDriverException("Failed to create an instance of " + clazz.getName(), e);
         }

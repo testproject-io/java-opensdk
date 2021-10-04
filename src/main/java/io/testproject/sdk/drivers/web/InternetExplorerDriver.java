@@ -143,6 +143,30 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
+     * @param options take a look at {@link InternetExplorerOptions}
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final InternetExplorerOptions options, final int sessionSocketTimeout)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, null, options, sessionSocketTimeout);
+    }
+
+    /**
+     * Initiates a new session with the Agent using default token and URL.
+     * <p>
+     * Default <em>Agent URL</em> can be set using <b>TP_AGENT_URL</b> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Default <em>token</em> can be set using <b>TP_DEV_TOKEN</b> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
      * @param options    take a look at {@link InternetExplorerOptions}
      * @param reportType A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
@@ -347,6 +371,32 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * <p>
      * Creates a new instance based on {@code capabilities}.
      *
+     * @param token   Development token that should be obtained from
+     *                <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options take a look at {@link InternetExplorerOptions}
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final String token,
+                                  final InternetExplorerOptions options,
+                                  final int sessionSocketTimeout)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(null, token, options, null, null, false,
+                ReportType.CLOUD_AND_LOCAL, sessionSocketTimeout);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided token and default URL.
+     * <p>
+     * Default Agent URL can be set using <em>TP_AGENT_URL</em> environment variable.
+     * If the environment variable is not set, default URL <b>http://localhost:8585</b> is used.
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
      * @param token      Development token that should be obtained from
      *                   <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
      * @param options    take a look at {@link InternetExplorerOptions}
@@ -491,6 +541,30 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
             throws InvalidTokenException, AgentConnectException, MalformedURLException,
             ObsoleteVersionException {
         this(remoteAddress, null, options, null, null, false, ReportType.CLOUD_AND_LOCAL);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and default token.
+     * <p>
+     * Default token can be set using <em>TP_DEV_TOKEN</em> environment variable.
+     * You can get a token from <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * <p>
+     * Creates a new instance based on {@code capabilities}.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param options       take a look at {@link InternetExplorerOptions}
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress, final InternetExplorerOptions options,
+                                  final int sessionSocketTimeout)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, null, options, null, null, false,
+                ReportType.CLOUD_AND_LOCAL, sessionSocketTimeout);
     }
 
     /**
@@ -648,6 +722,29 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * @param token         Development token that should be obtained from
      *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
      * @param options       take a look at {@link InternetExplorerOptions}
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress,
+                                  final String token,
+                                  final InternetExplorerOptions options,
+                                  final int sessionSocketTimeout)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, options, null, null, false,
+                ReportType.CLOUD_AND_LOCAL, sessionSocketTimeout);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL and token.
+     *
+     * @param remoteAddress Agent API base URL (e.g. http://localhost:8585/)
+     * @param token         Development token that should be obtained from
+     *                      <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options       take a look at {@link InternetExplorerOptions}
      * @param reportType    A type of report to produce - cloud, local or both.
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
@@ -690,7 +787,41 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
             ObsoleteVersionException {
         this(remoteAddress, token, options, projectName, jobName, disableReports, reportType,
                 null,
-                null);
+                null,
+                AgentClient.NEW_SESSION_SOCKET_TIMEOUT_MS);
+    }
+
+    /**
+     * Initiates a new session with the Agent using provided Agent URL, token, Project and Job names.
+     *
+     * @param remoteAddress  Agent API base URL (e.g. http://localhost:8585/)
+     * @param token          Development token that should be obtained from
+     *                       <a href="https://app.testproject.io/#/integrations/sdk">SDK</a> page
+     * @param options        take a look at {@link InternetExplorerOptions}
+     * @param projectName    Project name to report
+     * @param jobName        Job name to report
+     * @param disableReports True to disable automatic reporting of driver commands and tests, otherwise False.
+     * @param reportType     A type of report to produce - cloud, local or both.
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
+     * @throws AgentConnectException    if Agent is not responding or responds with an error
+     * @throws InvalidTokenException    if the token provided is invalid
+     * @throws MalformedURLException    if the Agent API base URL provided is malformed
+     * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
+     */
+    public InternetExplorerDriver(final URL remoteAddress,
+                                  final String token,
+                                  final InternetExplorerOptions options,
+                                  final String projectName,
+                                  final String jobName,
+                                  final boolean disableReports,
+                                  final ReportType reportType,
+                                  final int sessionSocketTimeout)
+            throws InvalidTokenException, AgentConnectException, MalformedURLException,
+            ObsoleteVersionException {
+        this(remoteAddress, token, options, projectName, jobName, disableReports, reportType,
+                null,
+                null,
+                sessionSocketTimeout);
     }
 
     /**
@@ -756,6 +887,7 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
      * @param reportType     A type of report to produce - cloud, local or both.
      * @param reportName     The name of the generated report.
      * @param reportPath     The path to the generated report.
+     * @param sessionSocketTimeout The connection timeout to the agent in milliseconds
      * @throws AgentConnectException    if Agent is not responding or responds with an error
      * @throws InvalidTokenException    if the token provided is invalid
      * @throws ObsoleteVersionException if the SDK version is incompatible with the Agent
@@ -769,12 +901,14 @@ public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplo
                         final boolean disableReports,
                         final ReportType reportType,
                         final String reportName,
-                        final String reportPath)
+                        final String reportPath,
+                        final int sessionSocketTimeout)
             throws InvalidTokenException, AgentConnectException,
             ObsoleteVersionException, MalformedURLException {
         super(fakeDriverService(), new InternetExplorerOptions().merge(AgentClient
                 .getClient(remoteAddress, token, options,
-                        new ReportSettings(projectName, jobName, reportType, reportName, reportPath), disableReports)
+                        new ReportSettings(projectName, jobName, reportType, reportName, reportPath),
+                        disableReports, sessionSocketTimeout)
                 .getSession().getCapabilities()));
 
         this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
