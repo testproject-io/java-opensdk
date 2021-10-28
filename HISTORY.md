@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2021-10-28
+
 ### Added
 
 - When development token is provided in both environment variable and driver constructor, prioritize token in environment variable.
+- [#158](https://github.com/testproject-io/java-opensdk/issues/158) - Added parameter that allows increasing session creation timeout.
+- [#145](https://github.com/testproject-io/java-opensdk/issues/145) - Steps are now reported in batches to improve performance.
 
 ## [1.2.3] - 2021-06-17
 
