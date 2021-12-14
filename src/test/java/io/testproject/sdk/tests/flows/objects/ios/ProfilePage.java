@@ -17,10 +17,10 @@
 
 package io.testproject.sdk.tests.flows.objects.ios;
 
-import io.appium.java_client.ios.IOSElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import io.testproject.sdk.drivers.ios.IOSDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 import java.time.Duration;
@@ -41,49 +41,49 @@ public final class ProfilePage {
      * Element object for the 'name' label.
      */
     @iOSXCUITFindBy(id = "greetings")
-    private IOSElement greetingsElement;
+    private WebElement greetingsElement;
 
     /**
      * Element object for the 'logout' button.
      */
     @iOSXCUITFindBy(id = "logout")
-    private IOSElement logoutElement;
+    private WebElement logoutElement;
 
     /**
      * Element object for the 'country' drop-down.
      */
     @iOSXCUITFindBy(id = "country")
-    private IOSElement countryElement;
+    private WebElement countryElement;
 
     /**
      * Element object for the 'address' field.
      */
     @iOSXCUITFindBy(id = "address")
-    private IOSElement addressElement;
+    private WebElement addressElement;
 
     /**
      * Element object for the 'email' field.
      */
     @iOSXCUITFindBy(id = "email")
-    private IOSElement emailElement;
+    private WebElement emailElement;
 
     /**
      * Element object for the 'phone' field.
      */
     @iOSXCUITFindBy(id = "phone")
-    private IOSElement phoneElement;
+    private WebElement phoneElement;
 
     /**
      * Element object for the 'save' button.
      */
     @iOSXCUITFindBy(id = "save")
-    private IOSElement saveElement;
+    private WebElement saveElement;
 
     /**
      * Element object for the 'saved' label.
      */
     @iOSXCUITFindBy(id = "saved")
-    private IOSElement savedElement;
+    private WebElement savedElement;
 
     /**
      * Creates a new instance and initializes the page objects.

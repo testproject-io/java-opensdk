@@ -17,12 +17,12 @@
 
 package io.testproject.sdk.tests.flows.objects.android;
 
-import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.testproject.sdk.drivers.android.AndroidDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 public final class LoginPage {
@@ -36,25 +36,25 @@ public final class LoginPage {
      * Element object for the software keyboard.
      */
     @AndroidFindBy(className = "UIAKeyboard")
-    private AndroidElement keyboard;
+    private WebElement keyboard;
 
     /**
      * Element object for the 'name' field.
      */
     @AndroidFindBy(id = "name")
-    private AndroidElement nameElement;
+    private WebElement nameElement;
 
     /**
      * Element object for the 'password' field.
      */
     @AndroidFindBy(id = "password")
-    private AndroidElement passwordElement;
+    private WebElement passwordElement;
 
     /**
      * Element object for the 'login' button.
      */
     @AndroidFindBy(id = "login")
-    private AndroidElement loginElement;
+    private WebElement loginElement;
 
     /**
      * Creates a new instance and initializes the page objects.
