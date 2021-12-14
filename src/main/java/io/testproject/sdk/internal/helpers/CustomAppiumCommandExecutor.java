@@ -25,8 +25,8 @@ import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.CommandCodec;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.Response;
+import org.openqa.selenium.remote.codec.w3c.W3CHttpCommandCodec;
 import org.openqa.selenium.remote.http.HttpRequest;
-import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
 
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;

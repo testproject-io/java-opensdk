@@ -20,12 +20,12 @@ package io.testproject.sdk.internal.reporting.extensions.junit5;
 
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.rest.messages.StepReport;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 

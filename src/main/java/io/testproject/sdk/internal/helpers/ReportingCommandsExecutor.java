@@ -17,6 +17,7 @@
 
 package io.testproject.sdk.internal.helpers;
 
+import io.appium.java_client.AppiumFluentWait;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.messages.TestReport;
@@ -24,7 +25,6 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.Response;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,7 +160,7 @@ public interface ReportingCommandsExecutor {
         }
 
         // Check if executed from a FluentWait loop
-        boolean isFluentWait = traces.stream().anyMatch(t -> t.getClassName().equals(FluentWait.class.getName()));
+        boolean isFluentWait = traces.stream().anyMatch(t -> t.getClassName().equals(AppiumFluentWait.class.getName()));
         if (isFluentWait) {
             // Stash command - same one might follow with different response (result)
             // Only the last one executed will be stashed, having the "final" result

@@ -18,6 +18,8 @@
 package io.testproject.sdk.tests.examples.frameworks.cucumber.stepdefinitions;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.InteractsWithApps;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
@@ -81,7 +83,14 @@ public class MobileStepDefinitions {
         }
 
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.MILLISECONDS);
-        driver.resetApp();
+
+        // Reset App
+        String appCapability = AndroidDriver.class.isAssignableFrom(driver.getClass())
+                ? AndroidMobileCapabilityType.APP_PACKAGE
+                : IOSMobileCapabilityType.BUNDLE_ID;
+        String bundleId = (String) driver.getCapabilities().getCapability(appCapability);
+        ((InteractsWithApps) driver).terminateApp(bundleId);
+        ((InteractsWithApps) driver).activateApp(bundleId);
     }
 
     /**
@@ -109,7 +118,12 @@ public class MobileStepDefinitions {
      */
     @And("I close the app")
     public void closeApplication() {
-        driver.closeApp();
+        String appCapability = AndroidDriver.class.isAssignableFrom(driver.getClass())
+                ? AndroidMobileCapabilityType.APP_PACKAGE
+                : IOSMobileCapabilityType.BUNDLE_ID;
+
+        String bundleId = (String) driver.getCapabilities().getCapability(appCapability);
+        ((InteractsWithApps) driver).terminateApp(bundleId);
     }
 
 }

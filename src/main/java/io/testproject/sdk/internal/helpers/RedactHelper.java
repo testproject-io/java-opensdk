@@ -17,10 +17,10 @@
 
 package io.testproject.sdk.internal.helpers;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.*;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +86,7 @@ public final class RedactHelper {
         // Check if element is a mobile password element
         if (platformName.equalsIgnoreCase(Platform.ANDROID.name())) {
             // Making sure it's not Mobile Web
-            if (StringUtils.isEmpty(capabilities.getCapability(CapabilityType.BROWSER_NAME))) {
+            if (StringUtils.isEmpty(capabilities.getCapability(CapabilityType.BROWSER_NAME).toString())) {
                 return isAndroidPasswordElement(executor, command.getSessionId(), elementId);
             }
         }

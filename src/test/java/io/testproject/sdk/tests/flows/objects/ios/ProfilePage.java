@@ -112,7 +112,7 @@ public final class ProfilePage {
     }
 
     private void hideKeyboard() {
-        driver.hideKeyboard();
+        driver.hideKeyboard("return");
     }
 
     private void save() {

@@ -29,8 +29,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.CapabilityType;
 
 import java.net.MalformedURLException;
@@ -63,7 +63,7 @@ class AndroidDriverChromeTest {
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
-        capabilities.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
+        capabilities.setCapability(CapabilityType.BROWSER_NAME, Browser.CHROME.browserName());
 
         driver = new AndroidDriver(capabilities, "Examples");
     }
