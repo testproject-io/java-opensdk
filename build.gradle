@@ -42,12 +42,13 @@ println("> Building ${version}")
 
 repositories {
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
 
     // Java client for Appium Mobile Webdriver
-    api (group: 'io.appium', name: 'java-client', version: '7.3.0') {
+    api ('com.github.appium:java-client:07483273030fe97045caa89c01279f9bf3842dbb') {
         exclude group: 'com.google.guava', module: 'guava'
     }
 
@@ -93,6 +94,12 @@ dependencies {
 
     // Java API for RESTful Web Services
     implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+
+    api 'org.apache.httpcomponents:httpclient:4.5.13'
+    api 'com.google.code.gson:gson:2.8.9'
+    api 'org.apache.commons:commons-lang3:3.12.0'
+    api 'org.seleniumhq.selenium:selenium-java:4.0.0'
+    api "commons-io:commons-io:2.6"
 }
 
 checkstyle.configFile file("config/checkstyle/checkstyle.xml")
