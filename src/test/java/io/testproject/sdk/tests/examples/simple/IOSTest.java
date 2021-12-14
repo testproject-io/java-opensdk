@@ -22,8 +22,8 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.testproject.sdk.drivers.ios.IOSDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +43,7 @@ public final class IOSTest {
      * @throws Exception is thrown when driver initialization fails.
      */
     public static void main(final String[] args) throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
         capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");

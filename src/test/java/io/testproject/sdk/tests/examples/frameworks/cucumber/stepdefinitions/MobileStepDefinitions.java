@@ -30,8 +30,8 @@ import io.testproject.sdk.drivers.ios.IOSDriver;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.concurrent.TimeUnit;
 
@@ -64,7 +64,7 @@ public class MobileStepDefinitions {
             throw new IllegalArgumentException("Specified driver type was not Android or iOS !");
         }
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
         if (StringUtils.equals(osType, "Android")) {
             capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
             capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");

@@ -30,8 +30,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.MutableCapabilities;
 
 import java.net.MalformedURLException;
 
@@ -70,11 +69,10 @@ class AndroidDriverTest {
         assertNotNull(AUT_PACKAGE_NAME, "TP_ANDROID_AUT_PACKAGE environment variable is not set");
         assertNotNull(AUT_ACTIVITY, "TP_ANDROID_AUT_ACTIVITY environment variable is not set");
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
-        capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
         capabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, AUT_PACKAGE_NAME);
         capabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, AUT_ACTIVITY);
 

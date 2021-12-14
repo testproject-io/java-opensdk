@@ -30,8 +30,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 
@@ -64,7 +64,7 @@ class IOSSafariDriverTest {
         assertNotNull(DUT_UDID, "TP_ANDROID_DUT_UDID environment variable is not set");
         assertNotNull(DUT_NAME, "TP_IOS_DUT_NAME environment variable is not set");
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);

@@ -26,10 +26,10 @@ import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Command;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.DriverCommand;
 
 import java.io.IOException;
@@ -558,7 +558,7 @@ public final class GenericDriver implements ReportingDriver {
             throws InvalidTokenException, AgentConnectException, IOException,
             ObsoleteVersionException {
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
         capabilities.setCapability(CapabilityType.PLATFORM_NAME, Platform.ANY);
 
         String version = AgentClient.getVersion(remoteAddress);
