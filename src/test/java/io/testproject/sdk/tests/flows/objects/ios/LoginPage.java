@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.flows.objects.ios;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.ios.IOSElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
@@ -48,7 +47,7 @@ public final class LoginPage {
      * Creates a new instance and initializes the page objects.
      * @param driver driver to use for page objects initialization
      */
-    public LoginPage(final IOSDriver<MobileElement> driver) {
+    public LoginPage(final IOSDriver driver) {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 

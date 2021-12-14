@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.flows;
 
-import io.appium.java_client.MobileElement;
 import io.testproject.sdk.drivers.android.AndroidDriver;
 import io.testproject.sdk.drivers.ios.IOSDriver;
 import io.testproject.sdk.tests.flows.objects.android.LoginPage;
@@ -107,7 +106,7 @@ public final class AutomationFlows {
      * Executes a simple test flow on the example Android App.
      * @param driver AndroidDriver to use for automating the application
      */
-    public static void runFlow(final AndroidDriver<MobileElement> driver) {
+    public static void runAndroidFlow(final AndroidDriver driver) {
         // Reset app to pristine state
         driver.resetApp();
 
@@ -129,7 +128,7 @@ public final class AutomationFlows {
      * Executes a simple test flow on the example iOS App.
      * @param driver IOSDriver to use for automating the application
      */
-    public static void runFlow(final IOSDriver<MobileElement> driver) {
+    public static void runIOSFlow(final IOSDriver driver) {
         // Reset app to pristine state
         driver.resetApp();
 

@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -49,7 +48,7 @@ class AndroidDriverChromeTest {
     /**
      * Driver instance.
      */
-    private static AndroidDriver<WebElement> driver;
+    private static AndroidDriver driver;
     /**
      * UDID of the device to run the test.
      */
@@ -66,7 +65,7 @@ class AndroidDriverChromeTest {
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
         capabilities.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
 
-        driver = new AndroidDriver<>(capabilities, "Examples");
+        driver = new AndroidDriver(capabilities, "Examples");
     }
 
     @Test

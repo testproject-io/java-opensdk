@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.examples.drivers;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
@@ -48,7 +47,7 @@ class IOSDriverTest {
     /**
      * Driver instance.
      */
-    private static IOSDriver<MobileElement> driver;
+    private static IOSDriver driver;
 
     /**
      * UDID (Universally unique identifier) of the device under test (DUT).
@@ -82,7 +81,7 @@ class IOSDriverTest {
         // Compile and deploy the App from source https://github.com/testproject-io/ios-demo-app
         capabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, AUT_BUNDLE_ID);
 
-        driver = new IOSDriver<>(capabilities, "Examples");
+        driver = new IOSDriver(capabilities, "Examples");
     }
 
     @Test

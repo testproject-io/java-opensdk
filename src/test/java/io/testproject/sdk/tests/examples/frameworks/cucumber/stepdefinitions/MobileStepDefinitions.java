@@ -18,7 +18,6 @@
 package io.testproject.sdk.tests.examples.frameworks.cucumber.stepdefinitions;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
@@ -44,7 +43,7 @@ public class MobileStepDefinitions {
     /**
      * Appium Driver.
      */
-    private AppiumDriver<MobileElement> driver;
+    private AppiumDriver driver;
 
     /**
      * Driver implicit wait timeout.
@@ -71,14 +70,14 @@ public class MobileStepDefinitions {
             capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");
             capabilities.setCapability(MobileCapabilityType.APP,
                     "https://github.com/testproject-io/android-demo-app/raw/master/APK/testproject-demo-app.apk");
-            driver = new AndroidDriver<>(capabilities, "Cucumber", "Android Test");
+            driver = new AndroidDriver(capabilities, "Cucumber", "Android Test");
         } else if (StringUtils.equals(osType, "iOS")) {
             capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
             capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");
             capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "{YOUR_DEVICE_NAME}");
             // Compile and deploy the App from source https://github.com/testproject-io/ios-demo-app
             capabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "io.testproject.Demo");
-            driver = new IOSDriver<>(capabilities, "Cucumber", "iOS Test");
+            driver = new IOSDriver(capabilities, "Cucumber", "iOS Test");
         }
 
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.MILLISECONDS);

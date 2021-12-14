@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.examples.simple;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.testproject.sdk.drivers.android.AndroidDriver;
@@ -51,7 +50,7 @@ public final class AndroidTest {
         capabilities.setCapability(MobileCapabilityType.APP,
                 "https://github.com/testproject-io/android-demo-app/raw/master/APK/testproject-demo-app.apk");
 
-        AndroidDriver<MobileElement> driver = new AndroidDriver<>(capabilities);
+        AndroidDriver driver = new AndroidDriver(capabilities);
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
 
         // Reset App

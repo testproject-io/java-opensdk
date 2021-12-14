@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -48,7 +47,7 @@ class IOSSafariDriverTest {
     /**
      * Driver instance.
      */
-    private static IOSDriver<WebElement> driver;
+    private static IOSDriver driver;
     /**
      * UDID of the device to run the test.
      */
@@ -72,7 +71,7 @@ class IOSSafariDriverTest {
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, DUT_NAME);
         capabilities.setCapability(CapabilityType.BROWSER_NAME, BrowserType.SAFARI);
 
-        driver = new IOSDriver<>(capabilities, "Examples");
+        driver = new IOSDriver(capabilities, "Examples");
     }
 
     @Test

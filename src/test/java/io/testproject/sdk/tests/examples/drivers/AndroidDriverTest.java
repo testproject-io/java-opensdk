@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.examples.drivers;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
@@ -48,7 +47,7 @@ class AndroidDriverTest {
     /**
      * Driver instance.
      */
-    private static AndroidDriver<MobileElement> driver;
+    private static AndroidDriver driver;
     /**
      * UDID (Universally unique identifier) of the device under test (DUT).
      */
@@ -79,7 +78,7 @@ class AndroidDriverTest {
         capabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, AUT_PACKAGE_NAME);
         capabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, AUT_ACTIVITY);
 
-        driver = new AndroidDriver<>(capabilities, "Examples");
+        driver = new AndroidDriver(capabilities, "Examples");
     }
 
     @Test

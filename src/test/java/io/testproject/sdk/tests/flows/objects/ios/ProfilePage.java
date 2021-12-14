@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.flows.objects.ios;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.ios.IOSElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
@@ -36,7 +35,7 @@ public final class ProfilePage {
     /**
      * Driver to use for AUT automation.
      */
-    private final IOSDriver<MobileElement> driver;
+    private final IOSDriver driver;
 
     /**
      * Element object for the 'name' label.
@@ -90,7 +89,7 @@ public final class ProfilePage {
      * Creates a new instance and initializes the page objects.
      * @param driver driver to use for page objects initialization
      */
-    public ProfilePage(final IOSDriver<MobileElement> driver) {
+    public ProfilePage(final IOSDriver driver) {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(TIMEOUT)), this);
     }

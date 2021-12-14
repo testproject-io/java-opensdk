@@ -17,7 +17,6 @@
 
 package io.testproject.sdk.tests.examples.simple;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
@@ -54,7 +53,7 @@ public final class IOSTest {
         // Compile and deploy the App from source https://github.com/testproject-io/ios-demo-app
         capabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "io.testproject.Demo");
 
-        IOSDriver<MobileElement> driver = new IOSDriver<>(capabilities);
+        IOSDriver driver = new IOSDriver(capabilities);
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
 
         // Reset App

@@ -18,7 +18,6 @@
 package io.testproject.sdk.tests.flows.objects.android;
 
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
@@ -39,7 +38,7 @@ public final class ProfilePage {
     /**
      * Driver to use for AUT automation.
      */
-    private final AndroidDriver<MobileElement> driver;
+    private final AndroidDriver driver;
 
     /**
      * Element object for the software keyboard.
@@ -99,7 +98,7 @@ public final class ProfilePage {
      * Creates a new instance and initializes the page objects.
      * @param driver driver to use for page objects initialization
      */
-    public ProfilePage(final AndroidDriver<MobileElement> driver) {
+    public ProfilePage(final AndroidDriver driver) {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(TIMEOUT)), this);
     }

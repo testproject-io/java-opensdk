@@ -31,7 +31,6 @@ import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,14 +38,6 @@ import java.net.URL;
 /**
  * Extension of the original {@link io.appium.java_client.android.AndroidDriver AndroidDriver}
  * Instead of initializing a new session, it starts it in the TestProject Agent and then reconnects to it.
- *
- * @param <T> the required type of class which implement {@link org.openqa.selenium.WebElement}.
- *            Instances of the defined type will be returned via findElement* and findElements*.
- *            Warning (!!!). Allowed types:
- *            {@link org.openqa.selenium.WebElement}
- *            {@link org.openqa.selenium.remote.RemoteWebElement}
- *            {@link io.appium.java_client.MobileElement}
- *            {@link io.appium.java_client.android.AndroidElement}
  */
 @SuppressFBWarnings(
         value = "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS",
@@ -54,8 +45,7 @@ import java.net.URL;
 // Prevent compiler complaining about unused overloaded constructors
 // Prevent compiler complaining about type safety caused by raw types
 @SuppressWarnings({"WeakerAccess", "unchecked"})
-public class AndroidDriver<T extends WebElement>
-        extends io.appium.java_client.android.AndroidDriver<T> implements ReportingDriver {
+public class AndroidDriver extends io.appium.java_client.android.AndroidDriver implements ReportingDriver {
 
     /**
      * Steps reporter instance.
