@@ -30,6 +30,7 @@ import io.testproject.sdk.internal.reporting.Reporter;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -37,6 +38,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Extension of the original {@link org.openqa.selenium.edge.EdgeDriver EdgeDriver}
@@ -856,7 +858,8 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
                         disableReports, sessionSocketTimeout)
                 .getSession().getCapabilities()));
 
-        this.reporter = new Reporter(this, AgentClient.getClient(this.getCapabilities()));
+        this.reporter = new Reporter(this, AgentClient.getClient(
+                new MutableCapabilities(this.getCapabilities())));
         this.getReportingCommandExecutor().setReportsDisabled(disableReports);
 
         ShutdownThreadManager.getInstance().addDriver(this, this::stop);
@@ -868,7 +871,7 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
     @Override
     protected void startSession(final Capabilities capabilities) {
         try {
-            AgentClient agentClient = AgentClient.getClient(capabilities);
+            AgentClient agentClient = AgentClient.getClient((MutableCapabilities) capabilities);
             DriverHelper.setCapabilities(this, capabilities);
             setSessionId(agentClient.getSession().getSessionId());
             setCommandExecutor(DriverHelper.getHttpCommandExecutor(agentClient, false));
@@ -923,7 +926,7 @@ public class EdgeDriver extends org.openqa.selenium.edge.EdgeDriver implements R
          * @throws IOException If an I/O error occurs.
          */
         FakeDriverService() throws IOException {
-            super(new File(""), 0, null, null);
+            super(new File(""), 0, null, null, new HashMap<>());
         }
     }
 }
