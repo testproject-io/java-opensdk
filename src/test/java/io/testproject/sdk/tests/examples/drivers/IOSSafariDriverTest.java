@@ -77,7 +77,7 @@ class IOSSafariDriverTest {
     @Test
     @DisplayName("Example Test")
     void basicTest() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll

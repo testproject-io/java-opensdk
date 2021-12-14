@@ -82,7 +82,7 @@ class AndroidDriverTest {
     @Test
     @DisplayName("Example Test")
     void basicTest() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runAndroidFlow(driver);
     }
 
     @AfterAll

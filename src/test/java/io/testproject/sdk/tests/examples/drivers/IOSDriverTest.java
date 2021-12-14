@@ -87,7 +87,7 @@ class IOSDriverTest {
     @Test
     @DisplayName("Example Test")
     void basicTest() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runIOSFlow(driver);
     }
 
     @AfterAll

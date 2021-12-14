@@ -52,7 +52,7 @@ class CloudDriverTest {
     @Test
     @DisplayName("Example Test on Cloud Driver")
     void testExample() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll

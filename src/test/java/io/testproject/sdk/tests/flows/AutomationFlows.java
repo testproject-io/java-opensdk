@@ -23,7 +23,6 @@ import io.testproject.sdk.drivers.android.AndroidDriver;
 import io.testproject.sdk.drivers.ios.IOSDriver;
 import io.testproject.sdk.tests.flows.objects.android.ProfilePage;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -86,10 +85,7 @@ public final class AutomationFlows {
      * Executes a simple test flow on the example website.
      * @param driver WebDriver to use for autoamting the browser
      */
-    public static void runFlow(final WebDriver driver) {
-        // Setting window size to avoid element being obscured in headless mode
-        driver.manage().window().setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-
+    public static void runWebFlow(final WebDriver driver) {
         // Navigate to TestProject Example website
         driver.navigate().to("https://example.testproject.io/web/");
 

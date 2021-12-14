@@ -71,7 +71,7 @@ class AndroidDriverChromeTest {
     @Test
     @DisplayName("Example Test")
     void basicTest() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll

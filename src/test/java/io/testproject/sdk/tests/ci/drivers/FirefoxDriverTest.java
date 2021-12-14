@@ -50,7 +50,7 @@ class FirefoxDriverTest {
     @Test
     @DisplayName("Example Test")
     void testExample() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll

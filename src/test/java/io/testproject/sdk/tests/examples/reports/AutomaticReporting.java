@@ -53,13 +53,13 @@ class AutomaticReporting {
     @Test
     @DisplayName("Example Test #1")
     void testExample1() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @Test
     @DisplayName("Example Test #2 with Exception")
     void testExample2() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
 
         // Fail the test on purpose by searching for a non-existing element
         driver.findElement(By.id("NO_SUCH_ELEMENT")).click();
@@ -68,7 +68,7 @@ class AutomaticReporting {
     @Test
     @DisplayName("Example Test #3")
     void testExample3() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll
