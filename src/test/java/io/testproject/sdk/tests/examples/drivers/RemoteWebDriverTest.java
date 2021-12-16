@@ -49,7 +49,7 @@ class RemoteWebDriverTest {
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new ChromeOptions(),
                 "Examples");
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
         driver.quit();
     }
 
@@ -59,7 +59,7 @@ class RemoteWebDriverTest {
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new FirefoxOptions(),
                 "Examples");
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
         driver.quit();
     }
 
@@ -70,7 +70,7 @@ class RemoteWebDriverTest {
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new SafariOptions(),
                 "Examples");
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
         driver.quit();
     }
 
@@ -81,7 +81,7 @@ class RemoteWebDriverTest {
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new InternetExplorerOptions(),
                 "Examples");
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
         driver.quit();
     }
 
@@ -91,7 +91,7 @@ class RemoteWebDriverTest {
             throws MalformedURLException, InvalidTokenException, AgentConnectException, ObsoleteVersionException {
         org.openqa.selenium.WebDriver driver = new RemoteWebDriver(new EdgeOptions(),
                 "Examples");
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
         driver.quit();
     }
 }

@@ -46,17 +46,17 @@ class ExplicitReportTest {
 
     @Test
     void testExample() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @Test
     void testExample2() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @Test
     void testExample3() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterClass

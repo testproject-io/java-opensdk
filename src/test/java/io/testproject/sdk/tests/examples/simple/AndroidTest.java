@@ -17,13 +17,12 @@
 
 package io.testproject.sdk.tests.examples.simple;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.testproject.sdk.drivers.android.AndroidDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +42,7 @@ public final class AndroidTest {
      * @throws Exception is thrown when driver initialization fails.
      */
     public static void main(final String[] args) throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");
@@ -51,7 +50,7 @@ public final class AndroidTest {
         capabilities.setCapability(MobileCapabilityType.APP,
                 "https://github.com/testproject-io/android-demo-app/raw/master/APK/testproject-demo-app.apk");
 
-        AndroidDriver<MobileElement> driver = new AndroidDriver<>(capabilities);
+        AndroidDriver driver = new AndroidDriver(capabilities);
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
 
         // Reset App

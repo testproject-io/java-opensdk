@@ -18,13 +18,12 @@
 package io.testproject.sdk.tests.flows.objects.android;
 
 
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.testproject.sdk.drivers.android.AndroidDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 import java.time.Duration;
@@ -39,67 +38,67 @@ public final class ProfilePage {
     /**
      * Driver to use for AUT automation.
      */
-    private final AndroidDriver<MobileElement> driver;
+    private final AndroidDriver driver;
 
     /**
      * Element object for the software keyboard.
      */
     @AndroidFindBy(className = "UIAKeyboard")
-    private AndroidElement keyboard;
+    private WebElement keyboard;
 
     /**
      * Element object for the 'name' label.
      */
     @AndroidFindBy(id = "greetings")
-    private AndroidElement greetingsElement;
+    private WebElement greetingsElement;
 
     /**
      * Element object for the 'logout' button.
      */
     @AndroidFindBy(id = "logout")
-    private AndroidElement logoutElement;
+    private WebElement logoutElement;
 
     /**
      * Element object for the 'country' drop-down.
      */
     @AndroidFindBy(id = "country")
-    private AndroidElement countryElement;
+    private WebElement countryElement;
 
     /**
      * Element object for the 'address' field.
      */
     @AndroidFindBy(id = "address")
-    private AndroidElement addressElement;
+    private WebElement addressElement;
 
     /**
      * Element object for the 'email' field.
      */
     @AndroidFindBy(id = "email")
-    private AndroidElement emailElement;
+    private WebElement emailElement;
 
     /**
      * Element object for the 'phone' field.
      */
     @AndroidFindBy(id = "phone")
-    private AndroidElement phoneElement;
+    private WebElement phoneElement;
 
     /**
      * Element object for the 'save' button.
      */
     @AndroidFindBy(id = "save")
-    private AndroidElement saveElement;
+    private WebElement saveElement;
 
     /**
      * Element object for the 'saved' label.
      */
     @AndroidFindBy(id = "saved")
-    private AndroidElement savedElement;
+    private WebElement savedElement;
 
     /**
      * Creates a new instance and initializes the page objects.
      * @param driver driver to use for page objects initialization
      */
-    public ProfilePage(final AndroidDriver<MobileElement> driver) {
+    public ProfilePage(final AndroidDriver driver) {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(TIMEOUT)), this);
     }

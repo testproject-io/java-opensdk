@@ -17,11 +17,10 @@
 
 package io.testproject.sdk.tests.flows.objects.ios;
 
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.ios.IOSElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import io.testproject.sdk.drivers.ios.IOSDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 public final class LoginPage {
@@ -30,25 +29,25 @@ public final class LoginPage {
      * Element object for the 'name' field.
      */
     @iOSXCUITFindBy(id = "name")
-    private IOSElement nameElement;
+    private WebElement nameElement;
 
     /**
      * Element object for the 'password' field.
      */
     @iOSXCUITFindBy(id = "password")
-    private IOSElement passwordElement;
+    private WebElement passwordElement;
 
     /**
      * Element object for the 'login' button.
      */
     @iOSXCUITFindBy(id = "login")
-    private IOSElement loginElement;
+    private WebElement loginElement;
 
     /**
      * Creates a new instance and initializes the page objects.
      * @param driver driver to use for page objects initialization
      */
-    public LoginPage(final IOSDriver<MobileElement> driver) {
+    public LoginPage(final IOSDriver driver) {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 

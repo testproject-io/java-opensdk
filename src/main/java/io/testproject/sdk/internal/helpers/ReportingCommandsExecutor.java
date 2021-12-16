@@ -17,18 +17,21 @@
 
 package io.testproject.sdk.internal.helpers;
 
+import io.appium.java_client.AppiumFluentWait;
 import io.testproject.sdk.internal.reporting.inferrers.InferrerFactory;
 import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.messages.TestReport;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.DriverCommand;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -160,7 +163,7 @@ public interface ReportingCommandsExecutor {
         }
 
         // Check if executed from a FluentWait loop
-        boolean isFluentWait = traces.stream().anyMatch(t -> t.getClassName().equals(FluentWait.class.getName()));
+        boolean isFluentWait = traces.stream().anyMatch(t -> t.getClassName().equals(AppiumFluentWait.class.getName()));
         if (isFluentWait) {
             // Stash command - same one might follow with different response (result)
             // Only the last one executed will be stashed, having the "final" result
@@ -270,10 +273,17 @@ public interface ReportingCommandsExecutor {
      * @return Exception message (in case of an exception response), or original response.
      */
     default Object extractResponse(final Response response) {
-        if (response.getValue() != null && Exception.class.isAssignableFrom(response.getValue().getClass())) {
-            return ((Exception) response.getValue()).getMessage();
+        if (response.getValue() != null) {
+            if (Exception.class.isAssignableFrom(response.getValue().getClass())) {
+                return ((Exception) response.getValue()).getMessage();
+            } else if (response.getValue() instanceof RemoteWebElement) {
+                // Return old element object
+                String id = ((RemoteWebElement) response.getValue()).getId();
+                HashMap<String, String> newValue = new LinkedHashMap<>();
+                newValue.put("element-6066-11e4-a52e-4f735466cecf", id);
+                response.setValue(newValue);
+            }
         }
-
         return response.getValue();
     }
 

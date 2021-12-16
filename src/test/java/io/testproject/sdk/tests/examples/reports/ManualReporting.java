@@ -63,7 +63,7 @@ class ManualReporting {
     @Test
     @DisplayName("Example Test")
     void testExample1() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
         driver.report().test("Test #1", true).submit();
     }
 
@@ -76,7 +76,7 @@ class ManualReporting {
     @DisplayName("Example Test with Exception")
     void testExample2() {
         try (ClosableTestReport testReport = driver.report().test("Example Test with Exception")) {
-            AutomationFlows.runFlow(driver);
+            AutomationFlows.runWebFlow(driver);
 
             // Fail the test on purpose by searching for a non-existing element
             driver.findElement(By.id("NO_SUCH_ELEMENT")).click();
@@ -95,7 +95,7 @@ class ManualReporting {
         justification = "Java 11 spotbugs issue: https://github.com/spotbugs/spotbugs/issues/756")
     void testExample3() {
         try (ClosableTestReport testReport = driver.report().test("Example Test with result override")) {
-            AutomationFlows.runFlow(driver);
+            AutomationFlows.runWebFlow(driver);
 
             testReport.setResult(true);
         }

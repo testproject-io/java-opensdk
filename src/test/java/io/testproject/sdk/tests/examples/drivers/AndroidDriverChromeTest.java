@@ -29,10 +29,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 
@@ -49,7 +48,7 @@ class AndroidDriverChromeTest {
     /**
      * Driver instance.
      */
-    private static AndroidDriver<WebElement> driver;
+    private static AndroidDriver driver;
     /**
      * UDID of the device to run the test.
      */
@@ -60,19 +59,19 @@ class AndroidDriverChromeTest {
             throws InvalidTokenException, AgentConnectException, MalformedURLException, ObsoleteVersionException {
         assertNotNull(DUT_UDID, "TP_ANDROID_DUT_UDID environment variable is not set");
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
 
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.UDID, DUT_UDID);
-        capabilities.setCapability(CapabilityType.BROWSER_NAME, BrowserType.CHROME);
+        capabilities.setCapability(CapabilityType.BROWSER_NAME, Browser.CHROME.browserName());
 
-        driver = new AndroidDriver<>(capabilities, "Examples");
+        driver = new AndroidDriver(capabilities, "Examples");
     }
 
     @Test
     @DisplayName("Example Test")
     void basicTest() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll

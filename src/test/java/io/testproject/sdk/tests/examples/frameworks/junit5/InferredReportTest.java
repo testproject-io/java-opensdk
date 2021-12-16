@@ -51,17 +51,17 @@ class InferredReportTest {
     @Test
     @DisplayName("Example Test #1")
     void testExample() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @DisplayName("Example Test #2")
     void testExample2() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @DisplayName("Example Test #3")
     void testExample3() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterAll

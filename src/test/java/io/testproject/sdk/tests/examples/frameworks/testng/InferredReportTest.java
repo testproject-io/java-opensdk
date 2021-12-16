@@ -22,8 +22,8 @@ import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
 import io.testproject.sdk.tests.flows.AutomationFlows;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.util.StringUtils;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,17 +51,17 @@ public class InferredReportTest {
 
     @Test(testName = "Example Test #1")
     void testExample1() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @Test(testName = "Example Test #2")
     void testExample2() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @Test(testName = "Example Test #3")
     void testExample3() {
-        AutomationFlows.runFlow(driver);
+        AutomationFlows.runWebFlow(driver);
     }
 
     @AfterClass

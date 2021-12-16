@@ -17,13 +17,12 @@
 
 package io.testproject.sdk.tests.flows;
 
-import io.appium.java_client.MobileElement;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
+import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.testproject.sdk.drivers.android.AndroidDriver;
 import io.testproject.sdk.drivers.ios.IOSDriver;
-import io.testproject.sdk.tests.flows.objects.android.LoginPage;
 import io.testproject.sdk.tests.flows.objects.android.ProfilePage;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -73,6 +72,11 @@ public final class AutomationFlows {
     public static final int DEFAULT_HEIGHT = 1080;
 
     /**
+     *
+     */
+    public static final String APPIUM_CAPABILITY_PREFIX = "appium:";
+
+    /**
      * Private default constructor to prevent instance initialization of this utility class.
      */
     private AutomationFlows() { }
@@ -81,10 +85,7 @@ public final class AutomationFlows {
      * Executes a simple test flow on the example website.
      * @param driver WebDriver to use for autoamting the browser
      */
-    public static void runFlow(final WebDriver driver) {
-        // Setting window size to avoid element being obscured in headless mode
-        driver.manage().window().setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-
+    public static void runWebFlow(final WebDriver driver) {
         // Navigate to TestProject Example website
         driver.navigate().to("https://example.testproject.io/web/");
 
@@ -107,13 +108,19 @@ public final class AutomationFlows {
      * Executes a simple test flow on the example Android App.
      * @param driver AndroidDriver to use for automating the application
      */
-    public static void runFlow(final AndroidDriver<MobileElement> driver) {
+    public static void runAndroidFlow(final AndroidDriver driver) {
         // Reset app to pristine state
-        driver.resetApp();
+        String appId = (String) driver.getCapabilities().getCapability(AndroidMobileCapabilityType.APP_PACKAGE);
+        if (null == appId) {
+            appId = (String) driver.getCapabilities().getCapability(
+                    APPIUM_CAPABILITY_PREFIX.concat(AndroidMobileCapabilityType.APP_PACKAGE));
+        }
+        driver.terminateApp(appId);
+        driver.activateApp(appId);
 
         // Login using provided credentials
-        LoginPage loginPage =
-                new LoginPage(driver);
+        io.testproject.sdk.tests.flows.objects.android.LoginPage loginPage =
+                new io.testproject.sdk.tests.flows.objects.android.LoginPage(driver);
         loginPage.login(FULL_NAME, PASSWORD);
 
         // Complete profile forms and save it
@@ -129,9 +136,16 @@ public final class AutomationFlows {
      * Executes a simple test flow on the example iOS App.
      * @param driver IOSDriver to use for automating the application
      */
-    public static void runFlow(final IOSDriver<MobileElement> driver) {
+    public static void runIOSFlow(final IOSDriver driver) {
         // Reset app to pristine state
-        driver.resetApp();
+        String bundleId = (String) driver.getCapabilities().getCapability(IOSMobileCapabilityType.BUNDLE_ID);
+        if (null == bundleId) {
+            bundleId = (String) driver.getCapabilities().getCapability(
+                    APPIUM_CAPABILITY_PREFIX.concat(IOSMobileCapabilityType.BUNDLE_ID));
+        }
+        driver.terminateApp(bundleId);
+        driver.activateApp(bundleId);
+
 
         // Login using provided credentials
         io.testproject.sdk.tests.flows.objects.ios.LoginPage loginPage =
