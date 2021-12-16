@@ -27,6 +27,8 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Runs tests on {@link ChromeDriver}.
@@ -45,7 +47,13 @@ class CloudDriverTest {
         Assertions.assertNotNull(System.getenv().get("TP_CLOUD_URL"));
 
         ChromeOptions options = new ChromeOptions();
+
+        // Set SouceLab options to be recognized as W3C driver.
+        Map<String, Object> sauceOptions = new HashMap<>();
+        sauceOptions.put("name", "test");
+        options.setCapability("sauce:options", sauceOptions);
         options.setCapability(TestProjectCapabilityType.CLOUD_URL, System.getenv().get("TP_CLOUD_URL"));
+
         driver = new ChromeDriver(options, "CI - Java");
     }
 
