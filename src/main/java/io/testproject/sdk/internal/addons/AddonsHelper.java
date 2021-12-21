@@ -31,8 +31,7 @@ import java.util.Optional;
 /**
  * Helper class allowing to execute Addons.
  */
-public class AddonsHelper {
-
+public class AddonsHelper extends GenericAddonsHelper {
     /**
      * Logger instance.
      */
@@ -49,7 +48,7 @@ public class AddonsHelper {
      * @param agentClient Agent client to use for communicating with the Agent.
      */
     public AddonsHelper(final AgentClient agentClient) {
-        this.agentClient = agentClient;
+        super(null, agentClient);
     }
 
     /**
@@ -89,56 +88,6 @@ public class AddonsHelper {
      * <a href="https://app.testproject.io/#/addons">TestProject</a> App.
      *
      * @param action  Specific Action proxy.
-     * @param timeout maximum amount of time allowed to wait for action execution to complete.
-     * @return Presumably modified class with updated output fields.
-     */
-    public ActionProxy execute(final ActionProxy action, final int timeout) {
-        // Send execution request to the Agent
-        ActionExecutionResponse response = agentClient.executeProxy(action, timeout);
-        if (response.getResultType() != ActionExecutionResponse.ExecutionResultType.Passed) {
-            throw new WebDriverException(response.getMessage());
-        }
-
-        // Copy response fields to proxy fields
-        for (ActionExecutionResponse.ResultField field : response.getFields()) {
-
-            // Ignore input fields (even if they are updated - it's wrong!)
-            // Actions should consider input fields readonly,
-            // and set values only into the output fields.
-            if (!field.isOutput()) {
-                continue;
-            }
-
-            // Get the field of the proxy class to update.
-            // This should never fail, but still making sure.
-            Optional<Field> proxyField = Arrays.stream(action.getClass().getDeclaredFields())
-                    .filter(m -> m.getName().equals(field.getName())).findFirst();
-
-            if (proxyField.isEmpty()) {
-                continue;
-            }
-
-            // Use reflection to set the output value
-            proxyField.get().setAccessible(true);
-            try {
-                proxyField.get().set(action, convertToType(proxyField.get().getType(), (String) field.getValue()));
-            } catch (IllegalAccessException e) {
-                LOG.error("Failed to set field [{}] value to [{}]", field.getName(), field.getValue());
-            }
-        }
-
-        // Return potentially updated proxy.
-        return action;
-    }
-
-    /**
-     * Executes an Action using it's proxy.
-     * <p>
-     * Addons are tiny automation building blocks that have one or more actions.
-     * Addon Proxy can be obtained from the Addons page at:
-     * <a href="https://app.testproject.io/#/addons">TestProject</a> App.
-     *
-     * @param action  Specific Action proxy.
      * @param by      Element locator in case the Action needs one.
      * @param timeout maximum amount of time allowed to wait for action execution to complete.
      * @return Potentially modified class with updated output fields (if any).
@@ -149,39 +98,4 @@ public class AddonsHelper {
         return execute(action, timeout);
     }
 
-    /**
-     * Convert string to specified type.
-     * @param clazz target type for conversion..
-     * @param value the value that will be converted.
-     * @return value converted to correct type.
-     */
-    private Object convertToType(final Class<?> clazz, final String value) {
-        if (Boolean.class == clazz || boolean.class == clazz) {
-            return Boolean.parseBoolean(value);
-        }
-        try {
-            if (Byte.class == clazz || byte.class == clazz) {
-                return Byte.parseByte(value);
-            }
-            if (Short.class == clazz || short.class == clazz) {
-                return Short.parseShort(value);
-            }
-            if (Integer.class == clazz || int.class == clazz) {
-                return Integer.parseInt(value);
-            }
-            if (Long.class == clazz || long.class == clazz) {
-                return Long.parseLong(value);
-            }
-            if (Float.class == clazz || float.class == clazz) {
-                return Float.parseFloat(value);
-            }
-            if (Double.class == clazz || double.class == clazz) {
-                return Double.parseDouble(value);
-            }
-            return value;
-        } catch (NumberFormatException e) {
-            LOG.error("Error parsing {} to {}", value, clazz.toString(), e);
-            throw new IllegalArgumentException(String.format("Could not parse %s to %s", value, clazz.toString()));
-        }
-    }
 }
