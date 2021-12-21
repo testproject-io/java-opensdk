@@ -17,6 +17,7 @@
 
 package io.testproject.sdk.drivers;
 
+import io.testproject.sdk.internal.addons.GenericAddonsHelper;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
 import io.testproject.sdk.internal.exceptions.InvalidTokenException;
 import io.testproject.sdk.internal.exceptions.ObsoleteVersionException;
@@ -612,5 +613,14 @@ public final class GenericDriver implements ReportingDriver {
             Command command = new Command(null, DriverCommand.QUIT);
             reportingCommandExecutor.reportCommand(command, null);
         }
+    }
+
+    /**
+     * Provides access to the addons functionality.
+     *
+     * @return {@link io.testproject.sdk.internal.addons.GenericAddonsHelper} instance.
+     */
+    public GenericAddonsHelper addons() {
+        return new GenericAddonsHelper(this, getReportingCommandExecutor().getAgentClient());
     }
 }
