@@ -63,7 +63,7 @@ public class AddonsHelper {
      * @return Presumably modified class with updated output fields.
      */
     public ActionProxy execute(final ActionProxy action) {
-        return execute(action, null);
+        return execute(action, -1);
     }
 
     /**
@@ -93,25 +93,6 @@ public class AddonsHelper {
      * @return Presumably modified class with updated output fields.
      */
     public ActionProxy execute(final ActionProxy action, final int timeout) {
-        return execute(action, null, timeout);
-    }
-
-    /**
-     * Executes an Action using it's proxy.
-     * <p>
-     * Addons are tiny automation building blocks that have one or more actions.
-     * Addon Proxy can be obtained from the Addons page at:
-     * <a href="https://app.testproject.io/#/addons">TestProject</a> App.
-     *
-     * @param action  Specific Action proxy.
-     * @param by      Element locator in case the Action needs one.
-     * @param timeout maximum amount of time allowed to wait for action execution to complete.
-     * @return Potentially modified class with updated output fields (if any).
-     */
-    public ActionProxy execute(final ActionProxy action, final By by, final int timeout) {
-        // Set element locator
-        action.getDescriptor().setBy(by);
-
         // Send execution request to the Agent
         ActionExecutionResponse response = agentClient.executeProxy(action, timeout);
         if (response.getResultType() != ActionExecutionResponse.ExecutionResultType.Passed) {
@@ -148,6 +129,24 @@ public class AddonsHelper {
 
         // Return potentially updated proxy.
         return action;
+    }
+
+    /**
+     * Executes an Action using it's proxy.
+     * <p>
+     * Addons are tiny automation building blocks that have one or more actions.
+     * Addon Proxy can be obtained from the Addons page at:
+     * <a href="https://app.testproject.io/#/addons">TestProject</a> App.
+     *
+     * @param action  Specific Action proxy.
+     * @param by      Element locator in case the Action needs one.
+     * @param timeout maximum amount of time allowed to wait for action execution to complete.
+     * @return Potentially modified class with updated output fields (if any).
+     */
+    public ActionProxy execute(final ActionProxy action, final By by, final int timeout) {
+        // Set element locator
+        action.getDescriptor().setBy(by);
+        return execute(action, timeout);
     }
 
     /**
