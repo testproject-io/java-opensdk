@@ -20,6 +20,7 @@ package io.testproject.sdk.drivers.web;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.testproject.sdk.drivers.ActionRunner;
 import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
@@ -35,6 +36,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +56,7 @@ import java.net.URL;
         justification = "Minimize changes required in any migrated tests")
 @SuppressWarnings("WeakerAccess") // Prevent compiler complaining about unused overloaded constructors
 public class InternetExplorerDriver extends org.openqa.selenium.ie.InternetExplorerDriver
-        implements ReportingDriver {
+        implements ReportingDriver, ActionRunner<RemoteWebDriver> {
 
     /**
      * Steps reporter instance.

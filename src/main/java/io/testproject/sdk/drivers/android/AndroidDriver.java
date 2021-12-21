@@ -18,6 +18,7 @@
 package io.testproject.sdk.drivers.android;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.testproject.sdk.drivers.ActionRunner;
 import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
@@ -55,7 +56,8 @@ import java.net.URL;
 // Prevent compiler complaining about type safety caused by raw types
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class AndroidDriver<T extends WebElement>
-        extends io.appium.java_client.android.AndroidDriver<T> implements ReportingDriver {
+        extends io.appium.java_client.android.AndroidDriver<T>
+        implements ReportingDriver, ActionRunner<AndroidDriver> {
 
     /**
      * Steps reporter instance.
