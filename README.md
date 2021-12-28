@@ -51,7 +51,7 @@ For a Maven project, add the following to your `pom.xml` file:
 
 For a Gradle project, add the following to your `build.gradle` file:
 ```
-implementation 'io.testproject:java-sdk:1.2.3-RELEASE'
+compileOnly 'io.testproject:java-sdk:1.2.4-RELEASE'
 ```
 
 # Test Development
@@ -891,6 +891,488 @@ public class TestNGExample {
     }
 }
 ```
+
+# Addons
+
+An [Addon](https://addons.testproject.io/) is a collection of actions you can use within any [recorded test](https://testproject.io/smart-test-recorder/) to extend the recorder’s capabilities. \
+Addons can be element based or non-UI based:
+
+* Element based Addons provide extended functionalities on customized UI elements.
+* Non-UI based Addons combine steps within your recorded tests, such as: File operations, REST API commands, image comparison, etc. 
+
+There are hundreds of Addons to choose from, or you can build your own. 
+
+Addons are developed in Java and uploaded to a collaborative library to the user’s account. \
+Once uploaded, all team members in the account can use the Addons as part of their tests.
+
+TestProject’s Agent automatically distributes Addons based on the account member’s usage. \
+You can update new versions for Addons, and add more actions or change their functionality according to your needs (All tests using the newly versioned Addon will be updated as well).
+
+There are two types of Addons: 
+
+1. **Community Addons**: Community Addons are shared by the entire TestProject community and give you the power to effortlessly extend your tests while saving valuable time. 
+    * The usage of community addon is identical to account addons: Once the community-based action is selected within the [Smart Test Recorder](https://testproject.io/smart-test-recorder/), the Addon is automatically downloaded and installed to the account. 
+    * Before being shared with the entire community, the TestProject team reviews the code and approves the Addon for public usage.
+2.	**Account Private Addons**: Account Addons are private and only accessible to account team members. These Addons do not need to be approved by TestProject before the upload/usage.
+
+## Addon development
+
+Developing an addon is a very simple process. It can be done in 4 easy step:
+
+1. Implement the addon.
+2. Test your addon locally.
+3. Download a manifest.
+4. Upload to TestProject.
+
+### Implement the Addon
+
+Lets review a simple Addon with a **ClearFields** action that clears a form. \
+It can be used on the login form in TestProject Demo website or mobile App.
+
+```java
+package io.testproject.sdk.tests.examples.addons.actions;
+
+import io.testproject.sdk.internal.addons.annotations.AddonAction;
+import io.testproject.sdk.internal.addons.interfaces.Action;
+import io.testproject.sdk.internal.addons.Platform;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+
+@AddonAction(platforms = Platform.Web, name = "Clear Fields")
+public final class ClearFields implements Action<WebDriver> {
+    @Override
+    public boolean run(final WebDriver driver) {
+        // Search for Form elements
+        for (WebElement form : driver.findElements(By.tagName("form"))) {
+
+            // Ignore invisible forms
+            if (!form.isDisplayed()) {
+                continue;
+            }
+
+            // Clear all inputs
+            for (WebElement element : form.findElements(By.tagName("input"))) {
+                element.clear();
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+#### Addon Actions
+
+In order to build an Action that can be executed by TestProject, the class has to implement one of the interfaces that the SDK provides.\
+
+Interface implementation requires an implementation of the *run()* method, that will be be invoked by the platform to run the Action.\
+The *run()* method returns *boolean* indicating if the action is passed. It will also fail if an exception is thrown from the action's code.
+
+<details><summary>Web Action</summary>
+<p>
+
+```java
+package io.testproject.sdk.tests.examples.addons.actions;
+
+import io.testproject.sdk.internal.addons.annotations.AddonAction;
+import io.testproject.sdk.internal.addons.interfaces.Action;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+import io.testproject.sdk.internal.addons.Platform;
+
+/**
+ * Clears fields in a web application.
+ * This action can work for all browsers and must therefore use selenium's RemoteWebDriver as its driver type.
+ * To prevent it from being available for mobile, we add the AddonAction annotation.
+ */
+@AddonAction(Platforms = Platform.Web, name = "Clear Fields")
+public final class ClearFields implements Action<WebDriver> {
+    @Override
+    public boolean run(final WebDriver driver) {
+        // Search for Form elements
+        for (WebElement form : driver.findElements(By.tagName("form"))) {
+
+            // Ignore invisible forms
+            if (!form.isDisplayed()) {
+                continue;
+            }
+
+            // Clear all inputs
+            for (WebElement element : form.findElements(By.tagName("input"))) {
+                element.clear();
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+</p>
+</details>
+
+<details><summary>Android Action</summary>
+<p>
+
+```java
+package io.testproject.sdk.tests.examples.addons.actions;
+
+import io.testproject.sdk.drivers.android.AndroidDriver;
+import io.testproject.sdk.internal.addons.interfaces.Action;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+/**
+ * Clears all edit text boxes in android.
+ * This action can run on android only and therefore supports only AndroidDriver.
+ * However, it doesn't require a specific annotation since the driver is specific enough.
+ */
+public final class ClearFields implements Action<AndroidDriver<WebElement>> {
+    @Override
+    public boolean run(final AndroidDriver<WebElement> driver) {
+        for (WebElement element : driver.findElements(By.className("android.widget.EditText"))) {
+            element.clear();
+        }
+
+        return true;
+    }
+}
+```
+
+</p>
+</details>
+
+<details><summary>IOS Action</summary>
+<p>
+
+```java
+package io.testproject.sdk.tests.examples.addons.actions;
+
+import io.testproject.sdk.drivers.android.IOSDriver;
+import io.testproject.sdk.internal.addons.interfaces.Action;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+/**
+ * Clears all edit text boxes in android.
+ * This action can run on ios only and therefore supports only IOSDriver.
+ * However, it doesn't require a specific annotation since the driver is specific enough.
+ */
+public final class ClearFields implements Action<IOSDriver<WebElement>> {
+    @Override
+    public boolean run(final IOSDriver<WebElement> driver) {
+        for (IOSElement element : helper.getDriver().findElements(By.className("XCUIElementTypeTextField"))) {
+            element.clear();
+        }
+
+        for (IOSElement element : helper.getDriver().findElements(By.className("XCUIElementTypeSecureTextField"))) {
+            element.clear();
+        }
+
+        for (IOSElement element : helper.getDriver().findElements(By.className("XCUIElementTypeSearchField"))) {
+            element.clear();
+        }
+
+        return true;
+    }
+}
+```
+
+</p>
+</details>
+
+#### Element Actions
+
+Actions can be element based, when their scope is limited to operations on a specific element and not the whole DOM.\
+This allows creating smart crowd based addons for industry common elements and libraries.\
+The action receives the element search criteria and has to search for the element on its own.
+
+*TypeRandomPhone* is an example of an Element Action:
+
+```java
+package io.testproject.sdk.tests.examples.addons.actions;
+
+import io.testproject.sdk.internal.addons.annotations.AddonAction;
+import io.testproject.sdk.internal.addons.interfaces.Action;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
+
+/**
+ * Types a random phone number in the requested element.
+ * This action is the same for all platforms, and therefore uses Selenium's WebDriver with no annotations.
+ * There is no need to implement this action more than once.
+ */
+public final class TypeRandomPhoneNumber implements Action<WebDriver> {
+    @Override
+    public boolean run(final WebDriver driver, final By elementSearchCriteria) {
+        long number = (long) (Math.random() * Math.pow(10, 7));
+        phone = String.format("+1%s", number);
+        WebElement element = helper.getDriver().findElement(elementSearchCriteria);
+        element.sendKeys(phone);
+        return true;
+    }
+}
+```
+
+#### Generic Actions
+
+Some actions do not require a driver to work. We can run such actions on any platform:
+
+```java
+package io.testproject.sdk.tests.examples.addons.actions;
+
+import io.testproject.sdk.internal.addons.interfaces.GenericAction;
+import io.testproject.sdk.drivers.ReportingDriver;
+
+/**
+ * Types a random phone number in the requested element.
+ * This action is the same for all platforms, and therefore uses Selenium's RemoteWebDriver with no annotations.
+ * There is no need to implement this action more than once.
+ */
+public final class Addition implements GenericAction {
+    @Parameter(direction = ParameterDirection.OUTPUT)
+    public int total;
+
+    @Override
+    public boolean run(final ReportingDriver driver) {
+        // If this was a real action, a and b would be input parameters.
+        int a = 1;
+        int b = 2;
+        total = a + b;
+        return true;
+    }
+}
+```
+
+#### Action Annotations
+
+TestProject SDK provides annotations to describe the action:
+
+ 1. The ***AddonAction*** annotation is used to better describe your action and define how it will appear later in TestProject UI: \
+    * **platforms** - A _mandatory_ field that explains which platform this action applies to. 
+    * **name** - The name of the action (if omitted, the name of the class will be used).
+    * **description** - A description of the test which is shown in various places in TestProject platform (reports for example). The description can use placeholders {{propertyName}} do dynamically change the text according to test properties.
+    * **version** - A version string which is used for future reference.
+ 1. The ***Parameter*** annotation is used to better describe your action's inputs and outputs, in the example above there are two parameters - *question* and *answer*.
+    * **description** - The description of the parameter
+    * **direction** - Defines the parameter as an *input* (default if omitted) or an *output* parameter. An *input* parameter will able to receive values when it is being executed while the *output* parameter value will be retrieved at the end of test execution (and can be used in other places later on in the automation scenario).
+    * **defaultValue** - Defines a default value that will be used for the parameter.
+
+### Debugging / Running Actions
+
+Actions run in context of a test and assume that required UI state is already in place.\
+When the action will be used in a test it will be represented as a single step, usually preceded by other steps.\
+However, when debugging it locally, preparations should be done by creating a driver to start from expected UI state:
+
+<details><summary>Web - State Preparation</summary>
+<p>
+
+```java
+// Create Action
+ClearFields action = new ClearFields();
+
+// Initialize Driver - using chrome but this will work on any web driver.
+ChromeDriver driver = new ChromeDriver(new ChromeOptions()));
+
+// Prepare state
+driver.navigate().to("https://example.testproject.io/web/");
+driver.findElement(By.cssSelector("#name")).sendKeys("John Smith");
+driver.findElement(By.cssSelector("#password")).sendKeys("12345");
+
+// Run action
+driver.addons().run(action);
+```
+
+</p>
+</details>
+
+<details><summary>Android - State Preparation</summary>
+<p>
+
+```java
+// Create Action
+ClearFields action = new ClearFields();
+
+// Initialize Driver
+DesiredCapabilities capabilities = new DesiredCapabilities();
+
+capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
+capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");
+capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
+capabilities.setCapability(MobileCapabilityType.APP, "https://github.com/testproject-io/android-demo-app/raw/master/APK/testproject-demo-app.apk");
+
+AndroidDriver<MobileElement> driver = new AndroidDriver<>(capabilities);
+
+// Prepare state
+driver.findElement(By.id("name")).sendKeys("John Smith");
+driver.findElement(By.id("password")).sendKeys("12345");
+
+// Run action
+driver.addons().run(action);
+```
+
+</p>
+</details>
+
+<details><summary>iOS - State Preparation</summary>
+<p>
+
+```java
+// Create Action
+ClearFields action = new ClearFields();
+
+// Initialize Driver
+DesiredCapabilities capabilities = new DesiredCapabilities();
+
+capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
+capabilities.setCapability(MobileCapabilityType.UDID, "{YOUR_DEVICE_UDID}");
+capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "{YOUR_DEVICE_NAME}");
+capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
+
+// Compile and deploy the App from source https://github.com/testproject-io/ios-demo-app
+capabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "io.testproject.demo");
+IOSDriver<WebElement> driver = new IOSDriver<>(capabilities);
+
+// Prepare state
+driver.findElement(By.id("name")).sendKeys("John Smith");
+driver.findElement(By.id("password")).sendKeys("12345");
+
+// Run action
+driver.addons().run(action);
+```
+
+</p>
+</details>
+
+### Addon Manifest
+
+To upload an Addon a manifest file is required. \
+The manifest is a descriptor of your Addon, it contains a unique GUID for the addon and a list of required permissions. \
+Create an Addon in the [Addons](https://app.testproject.io/#/addons/account) screen and download the generated manifest, placing it in your project resources folder.
+
+### Package & Upload your Addon
+
+Tests can be executed locally using the SDK, or triggered remotely from the TestProject platform. \
+Before uploading your Tests, they should be packaged into a JAR.
+
+This JAR must contain all the dependencies (except for the TestProject SDK) and your action, but not your tests. \
+Since dependencies are not packaged by default, they must be included explicitly during build.
+
+#### Gradle
+
+Here's an example of additions to `build.gradle` that will create a JAR with dependencies and test classes:
+
+<details><summary>build.gradle</summary>
+<p>
+
+```gradle
+dependencies {
+    // Add TestProject SDK for compilation only.
+    compileOnly 'io.testproject:java-sdk:1.2.3-RELEASE'
+    
+    // Other dependencies go here
+}
+
+jar {
+    // Collect & zip all dependencies (except OpenSDK)
+    from {
+        (configurations.runtimeClasspath).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    // Extract SDK version
+    from {
+        (configurations.compileClasspath).collect {
+            zipTree(it).matching {
+                include 'testproject-opensdk.properties'
+            }
+        }
+    }
+}
+```
+
+#### Maven
+
+Here's an example of additions to `pom.xml` and a descriptor that will create a JAR with dependencies and test classes:
+
+<details><summary>pom.xml</summary>
+<p>
+
+```xml
+<build>
+    <plugins>
+        <!-- Use maven-jar-plugin to include tests -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>test-jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <!-- Use maven-assembly-plugin plugin with a custom descriptor -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptors>
+                    <!-- Path to the descriptor file -->
+                    <descriptor>src/main/java/assembly/jar-with-dependencies.xml</descriptor>
+                </descriptors>
+            </configuration>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+</p>
+</details>
+
+<br>
+
+<details><summary>Assembly Descriptor</summary>
+<p>
+
+Save this file under `src/main/java/assembly` as `jar-with-dependencies.xml`:
+
+```xml
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>jar-with-dependencies</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <useProjectAttachments>true</useProjectAttachments>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
+```
+
+</p>
+</details>
 
 # Examples
 
