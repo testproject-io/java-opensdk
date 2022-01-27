@@ -1,13 +1,10 @@
 # This workflow builds the SDK using Java 11
 name: Build
 
+# This is a reusable workflow.
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  release:
-    types: [published]
+  workflow_call:
+
 jobs:
   # Build and test the SDK
   build-test-publish:
@@ -86,35 +83,15 @@ jobs:
       with:
         name: reports
         path: build/reports
-    - name: Define uberJAR name
+    - name: Define uberJAR file name
       if: startsWith(github.ref, 'refs/tags/v')
       run: |
-        export TP_SDK_VARIANT="RELEASE"
-        echo "TP_SDK_VARIANT=RELEASE" >> $GITHUB_ENV
-        export TP_SDK_JAR_NAME="testproject-java-sdk"
-        export TP_SDK_UBER_JAR_EXT="with-dependencies.jar"
-        echo "TP_SDK_JAR_NAME=testproject-java-sdk" >> $GITHUB_ENV
-        echo "TP_SDK_UBER_JAR_EXT=with-dependencies.jar" >> $GITHUB_ENV
-        echo "TP_SDK_JAR_EXT=.jar" >> $GITHUB_ENV
-    - name: Upload uberJAR to release
+        export TP_SDK_JAR_NAME="testproject-java-sdk.jar"
+        echo "TP_SDK_JAR_NAME=testproject-java-sdk.jar" >> $GITHUB_ENV
+        mkdir -p build/libs/upload && cp build/libs/*with-dependencies.jar build/libs/upload/"${TP_SDK_JAR_NAME}"
+    - name: Upload uberJAR workflow artifact
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: svenstaro/upload-release-action@v2
+      uses: actions/upload-artifact@v2
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/libs/${{ env.TP_SDK_JAR_NAME }}-${{ env.TP_SDK_VERSION }}-${{ env.TP_SDK_VARIANT}}-${{ env.TP_SDK_UBER_JAR_EXT }}
-        asset_name: ${{ env.TP_SDK_JAR_NAME }}${{ env.TP_SDK_JAR_EXT }}
-        tag: ${{ github.ref }}
-        overwrite: true
-    - name: Create uberJAR hash file
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: |
-        md5sum build/libs/${{ env.TP_SDK_JAR_NAME }}-${{ env.TP_SDK_VERSION }}-${{ env.TP_SDK_VARIANT}}-${{ env.TP_SDK_UBER_JAR_EXT }} > build/libs/jar-hash.md
-    - name: Upload hash artifact
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/libs/jar-hash.md
-        asset_name: ${{ env.TP_SDK_JAR_NAME }}.md5
-        tag: ${{ github.ref }}
-        overwrite: true
+        name: ${{ env.TP_SDK_JAR_NAME }}
+        path: build/libs/upload/${{ env.TP_SDK_JAR_NAME }}
