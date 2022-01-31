@@ -1,0 +1,44 @@
+# This workflow is triggering the reusable build workflow.
+# It's also extend the logic to upload uberJAR, and it's hash as release artifacts.
+
+name: BuildRelease
+
+on:
+  release:
+    types: [created]
+
+jobs:
+
+  build_and_test:
+    uses: ./.github/workflows/build.yml
+  upload_release_artifacts:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Define uberJAR file name
+        run: |
+          export TP_SDK_JAR_NAME="testproject-java-sdk.jar"
+          echo "TP_SDK_JAR_NAME=testproject-java-sdk.jar" >> $GITHUB_ENV
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.TP_SDK_JAR_NAME }}
+      - name: Upload uberJAR to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.TP_SDK_JAR_NAME }}
+          asset_name: ${{ env.TP_SDK_JAR_NAME }}
+          tag: ${{ github.ref }}
+          overwrite: true
+      - name: Create uberJAR hash file
+        run: |
+          md5sum "${TP_SDK_JAR_NAME}" > ./jar-hash.md
+      - name: Upload hash artifact
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./jar-hash.md
+          asset_name: ${{ env.TP_SDK_JAR_NAME }}.md5
+          tag: ${{ github.ref }}
+          overwrite: true
