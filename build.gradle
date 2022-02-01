@@ -144,6 +144,25 @@ jar {
     }
 }
 
+task jarWithDependencies (type: Jar) {
+    mustRunAfter(jar, javadocJar, sourcesJar)
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    manifest {
+        attributes 'Compile-Title': project.name,
+                'Compile-Version': project.version
+    }
+
+    archiveFileName = project.name + "-" + project.version + "-with-dependencies.jar"
+    from configurations.compileClasspath.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }
+    with jar
+}
+
+// Add the jar with dependencies task to the build lifecycle.
+processTestResources.dependsOn(jarWithDependencies)
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
