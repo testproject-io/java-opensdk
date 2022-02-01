@@ -72,13 +72,13 @@ jobs:
         ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
         ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
         ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
-        ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}        
+        ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}
       run: ./gradlew publish -Pversion=$TP_SDK_VERSION $SDK_BUILD_ARGS
     - name: Publish to Maven
       if: startsWith(github.ref, 'refs/tags/v')
       env:
         ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
-        ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}        
+        ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}
       run: ./gradlew closeAndReleaseRepository
     - name: Archive reports
       if: ${{ failure() }}
@@ -86,3 +86,35 @@ jobs:
       with:
         name: reports
         path: build/reports
+    - name: Define uberJAR name
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        export TP_SDK_VARIANT="RELEASE"
+        echo "TP_SDK_VARIANT=RELEASE" >> $GITHUB_ENV
+        export TP_SDK_JAR_NAME="testproject-java-sdk"
+        export TP_SDK_UBER_JAR_EXT="with-dependencies.jar"
+        echo "TP_SDK_JAR_NAME=testproject-java-sdk" >> $GITHUB_ENV
+        echo "TP_SDK_UBER_JAR_EXT=with-dependencies.jar" >> $GITHUB_ENV
+        echo "TP_SDK_JAR_EXT=.jar" >> $GITHUB_ENV
+    - name: Upload uberJAR to release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/libs/${{ env.TP_SDK_JAR_NAME }}-${{ env.TP_SDK_VERSION }}-${{ env.TP_SDK_VARIANT}}-${{ env.TP_SDK_UBER_JAR_EXT }}
+        asset_name: ${{ env.TP_SDK_JAR_NAME }}${{ env.TP_SDK_JAR_EXT }}
+        tag: ${{ github.ref }}
+        overwrite: true
+    - name: Create uberJAR hash file
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        md5sum build/libs/${{ env.TP_SDK_JAR_NAME }}-${{ env.TP_SDK_VERSION }}-${{ env.TP_SDK_VARIANT}}-${{ env.TP_SDK_UBER_JAR_EXT }} > build/libs/jar-hash.md
+    - name: Upload hash artifact
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/libs/jar-hash.md
+        asset_name: ${{ env.TP_SDK_JAR_NAME }}.md5
+        tag: ${{ github.ref }}
+        overwrite: true
