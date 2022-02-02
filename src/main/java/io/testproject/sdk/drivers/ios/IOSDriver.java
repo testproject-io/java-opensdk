@@ -18,6 +18,7 @@
 package io.testproject.sdk.drivers.ios;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.testproject.sdk.drivers.ActionRunner;
 import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
@@ -32,6 +33,7 @@ import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,7 +58,8 @@ import java.net.URL;
 // Prevent compiler complaining about type safety caused by raw types
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class IOSDriver<T extends WebElement>
-        extends io.appium.java_client.ios.IOSDriver<T> implements ReportingDriver {
+        extends io.appium.java_client.ios.IOSDriver<T>
+        implements ReportingDriver, ActionRunner<RemoteWebDriver> {
 
     /**
      * Steps reporter instance.

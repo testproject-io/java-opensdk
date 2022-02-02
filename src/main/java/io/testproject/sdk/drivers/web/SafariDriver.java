@@ -18,6 +18,7 @@
 package io.testproject.sdk.drivers.web;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.testproject.sdk.drivers.ActionRunner;
 import io.testproject.sdk.drivers.ReportType;
 import io.testproject.sdk.drivers.ReportingDriver;
 import io.testproject.sdk.internal.exceptions.AgentConnectException;
@@ -31,6 +32,7 @@ import io.testproject.sdk.internal.rest.AgentClient;
 import io.testproject.sdk.internal.rest.ReportSettings;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariOptions;
 
 import java.io.IOException;
@@ -45,7 +47,8 @@ import java.net.URL;
         value = "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS",
         justification = "Minimize changes required in any migrated tests")
 @SuppressWarnings("WeakerAccess") // Prevent compiler complaining about unused overloaded constructors
-public class SafariDriver extends org.openqa.selenium.safari.SafariDriver implements ReportingDriver {
+public class SafariDriver extends org.openqa.selenium.safari.SafariDriver
+        implements ReportingDriver, ActionRunner<RemoteWebDriver> {
 
     /**
      * Steps reporter instance.

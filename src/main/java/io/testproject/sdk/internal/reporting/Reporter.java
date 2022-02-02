@@ -55,6 +55,11 @@ public final class Reporter {
     private final ReportingDriver driver;
 
     /**
+     * An action's result. This value will be reported after the addon is uploaded.
+     */
+    private String result;
+
+    /**
      * Initializes a new instance using provided driver and agentClient.
      *
      * @param driver      Driver instance to be used for taking screenshots.
@@ -292,5 +297,13 @@ public final class Reporter {
         }
 
         return new ClosableTestReport(agentClient, driver, name, passed, message);
+    }
+
+    /**
+     * Reports the result of an action execution. This is only sent when addon is executed after upload.
+     * @param message Action result.
+     */
+    public void result(final String message) {
+        this.result = message;
     }
 }
