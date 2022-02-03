@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2021-02-03
+
+### Added
+- [#171](https://github.com/testproject-io/java-opensdk/issues/171) - Added jar with dependencies & md5 hash to release artifacts.
+- [#166](https://github.com/testproject-io/java-opensdk/issues/166) - Added logic that allows developing addons using the java openSDK.
+
 ## [1.2.4] - 2021-10-28
 
 ### Added
